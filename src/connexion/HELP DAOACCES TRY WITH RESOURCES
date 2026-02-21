@@ -1,0 +1,191 @@
+1. L'ordre de fermeture (LIFO : Last In, First Out)
+C'est comme une poupée russe : tu dois fermer les objets dans l'ordre inverse de leur création.
+
+Fermer le ResultSet (le contenu).
+
+Fermer le PreparedStatement (le messager).
+
+NE PAS fermer le DAOAcces (car c'est ta connexion statique partagée).
+
+2. Le code sans Try-with-resources
+Tu es obligé d'utiliser un bloc finally pour garantir que la fermeture aura lieu, même si le SQL plante.
+
+Java
+public void maRequete() {
+    String sql = "SELECT * FROM joueurs";
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    try {
+        // 1. On récupère la connexion et on prépare
+        pst = DAOAcces.getConnexion().prepareStatement(sql);
+        rs = pst.executeQuery();
+
+        while (rs.next()) {
+            // ... traitement ...
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        // 2. LE NETTOYAGE MANUEL
+        try {
+            if (rs != null) rs.close();   // On ferme le résultat en premier
+            if (pst != null) pst.close(); // Puis le statement
+            // SURTOUT : On ne touche pas à DAOAcces.getConnexion()
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+3. Pourquoi c'est "dangereux" de ne pas utiliser le try-with-resources ?
+L'oubli : Il est très facile d'oublier un close() dans un coin du code.
+
+La lourdeur : Tu vois que le bloc finally contient lui-même un try-catch. Ça rend le code illisible (on appelle ça le "code spaghetti").
+
+Fuite de mémoire (Memory Leak) : Si ton pst.close() n'est pas appelé, le curseur reste ouvert côté serveur SQL. Au bout de quelques heures de jeu, ton Monopoly s'arrêtera brusquement car la base de données dira : "Stop, trop de requêtes ouvertes en même temps !".
+
+4. Rappel sur le DAOAcces
+Comme tu as choisi un modèle statique (une seule connexion pour tout le monde) :
+
+Tu ne dois JAMAIS faire pst.getConnection().close() ou DAOAcces.close() à l'intérieur d'une méthode de requête.
+
+Tu ne fermes le DAOAcces que lorsque tu quittes le jeu complètement.
+
+Ma recommandation
+Utilise toujours le try-with-resources. C'est plus court, plus propre, et c'est Java qui gère la sécurité pour toi.
+
+Java
+// Version propre et courte
+try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(sql);
+     ResultSet rs = pst.executeQuery()) {
+    while (rs.next()) { /* ... */ }
+} catch (SQLException e) {
+    e.printStackTrace();
+}
+// Ici, RS et PST sont fermés automatiquement, la connexion reste ouverte.
+Veux-tu que je te montre comment gérer le ResultSet directement dans le même try-with-resources pour que tout soit automatique ?
+
+
+
+
+2. Pourquoi cet ordre est important ?
+Dans un try (...), Java ferme les ressources dans l'ordre inverse de leur déclaration :
+
+Il ferme d'abord le ResultSet rs.
+
+Il ferme ensuite le PreparedStatement pst.
+
+C'est exactement ce qu'il faut faire. Si tu fermais le pst avant le rs, le rs deviendrait invalide et pourrait causer une erreur.
+
+3. Les 3 règles d'or à retenir
+Règle 1 : Tout ce qui est ouvert dans les parenthèses du try sera fermé, quoi qu'il arrive (même s'il y a un return ou une Exception au milieu).
+
+Règle 2 : Ne mets jamais DAOAcces.getConnexion() tout seul dans le try, sinon tu fermes la prise générale du jeu.
+
+Règle 3 : Si tu as besoin d'envoyer des données (un INSERT ou UPDATE), tu n'as pas de ResultSet, donc tu n'utilises que le pst dans ton try.
+
+4. Cas particulier : Les requêtes avec paramètres
+Si tu as des ? dans ton SQL, tu ne peux pas ouvrir le ResultSet immédiatement dans le try, car tu dois d'abord remplir les ?. Dans ce cas, on "imbrique" deux blocs :
+
+Java
+public void findUser(String pseudo) {
+    String sql = "SELECT * FROM joueurs WHERE pseudo = ?";
+
+    try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(sql)) {
+        pst.setString(1, pseudo); // On remplit le ?
+
+        try (ResultSet rs = pst.executeQuery()) { // Deuxième try pour le RS
+            if (rs.next()) {
+                // ...
+            }
+        } // RS se ferme ici
+    } catch (SQLException e) { e.printStackTrace(); } // PST se ferme ici
+}
+Est-ce que tu veux qu'on passe à l'étape suivante et que je t'aide à coder la logique qui va chercher les propriétés d'un joueur en base de données pour remplir sa Map de compteurs au démarrage du jeu ?
+
+
+
+
+
+
+
+SANS TRY WITH RESOURCES :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Faire une requête préparée sans le try-with-resources, c'est un peu comme démonter un moteur pièce par pièce manuellement : c'est plus long, et si tu oublies de remettre une vis (de fermer une ressource), tout finit par casser.Voici à quoi ressemble le code "à l'ancienne" (avant Java 7).Le code complet (Manuel)Note l'utilisation obligatoire du bloc finally pour garantir que le nettoyage se fait même si le programme plante.Javapublic void requeteManuelle(String nomCherche) {
+    String sql = "SELECT * FROM joueurs WHERE nom = ?";
+
+    // 1. On déclare les variables à l'extérieur pour qu'elles soient visibles dans le finally
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    try {
+        // 2. Initialisation
+        pst = DAOAcces.getConnexion().prepareStatement(sql);
+        pst.setString(1, nomCherche);
+
+        // 3. Exécution
+        rs = pst.executeQuery();
+
+        while (rs.next()) {
+            System.out.println("Joueur trouvé : " + rs.getString("nom"));
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Erreur SQL : " + e.getMessage());
+    } finally {
+        // 4. LE NETTOYAGE MANUEL (obligatoire et verbeux)
+        // On ferme dans l'ordre inverse : d'abord le RS, puis le PST
+        try {
+            if (rs != null) {
+                rs.close();
+                System.out.println("ResultSet fermé");
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+
+        try {
+            if (pst != null) {
+                pst.close();
+                System.out.println("PreparedStatement fermé");
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+
+        // RAPPEL : On ne ferme PAS la connexion ici car elle est statique
+    }
+}
+Pourquoi c'est beaucoup moins bien ?Le "Double Try-Catch" : Tu as remarqué ? Le bloc finally doit lui-même contenir des blocs try-catch parce que la méthode .close() peut elle-même générer une erreur SQL. C'est ce qu'on appelle du code "verbeux".Le risque de fuite : Si tu oublies le bloc finally, et qu'une erreur survient pendant le while(rs.next()), le programme saute directement au catch et ne ferme jamais le pst. Le curseur reste ouvert sur ton serveur MySQL.La visibilité des variables : Tu es obligé de déclarer pst et rs en dehors du bloc (avec = null) pour pouvoir les "voir" dans le bloc finally. C'est moins propre pour la mémoire.Comparaison visuelleActionAvec Try-with-resourcesSans Try-with-resourcesFermetureAutomatique (garantie)Manuelle (risquée)Nombre de lignes~5-8 lignes~20-25 lignesGestion des erreursPropre et centraliséeLourde (imbriquée)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

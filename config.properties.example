@@ -1,0 +1,56 @@
+# config.properties.example
+# ✅ CE FICHIER EST SUR GITHUB (exemple pour les autres développeurs)
+# ⚠️ Ne contient PAS de vrais mots de passe !
+
+# ═══════════════════════════════════════════════════════════════
+# INSTRUCTIONS POUR CONFIGURER LE PROJET
+# ═══════════════════════════════════════════════════════════════
+# 1. Copier ce fichier en "config.properties"
+# 2. Remplacer les valeurs par les vôtres
+# 3. Ne JAMAIS commit config.properties (dans .gitignore)
+# ═══════════════════════════════════════════════════════════════
+
+
+# ═══════════════════════════════════════════════════════════════
+# CONFIGURATION BASE DE DONNÉES
+# ═══════════════════════════════════════════════════════════════
+
+# Driver JDBC MySQL
+db.driver=com.mysql.cj.jdbc.Driver
+
+# URL de connexion
+# Remplacer "monopoly_db" par le nom de VOTRE base de données
+db.url=jdbc:mysql://localhost:3306/VOTRE_BASE_DE_DONNEES
+
+# Identifiants MySQL
+# Remplacer par VOS identifiants
+db.username=VOTRE_USERNAME
+db.password=VOTRE_PASSWORD
+
+# Paramètres de connexion
+db.autoReconnect=true
+db.useSSL=false
+db.serverTimezone=UTC
+db.useUnicode=true
+db.characterEncoding=UTF-8
+
+# Pool de connexions (optionnel)
+db.pool.minSize=5
+db.pool.maxSize=20
+db.pool.connectionTimeout=30000
+
+
+# ═══════════════════════════════════════════════════════════════
+# CONFIGURATION APPLICATION
+# ═══════════════════════════════════════════════════════════════
+
+# Mode (dev, test, prod)
+app.mode=dev
+
+# Logs
+app.log.level=DEBUG
+app.log.file=monopoly.log
+
+# Jeu
+game.maxPlayers=6
+game.startingMoney=1500
