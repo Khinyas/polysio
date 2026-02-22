@@ -1,15 +1,14 @@
-package View.composants;
 
-import View.ViewAccueil;
+package View.composants;
+import View.ViewConnexion;
 import javafx.animation.ScaleTransition;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 import main.MainApp;
-import model.ModelUser;
 
-public class BoutonAcceuil extends Button {
+public class BoutonConnexion extends Button {
     private ImageView iconBuouton;
     private static final String STYLE_BASE =
             "-fx-background-color: #34495e; " +
@@ -24,8 +23,8 @@ public class BoutonAcceuil extends Button {
                     "-fx-padding: 10 20;";
     private AudioClip soundClick;
 
-    public BoutonAcceuil () {
-        super("ACCUEIL");
+    public BoutonConnexion () {
+        super("CONNEXION");
         this.setStyle(STYLE_BASE);
         this.setCursor(javafx.scene.Cursor.HAND);
         // --- 1. CHARGEMENT DU SON ---
@@ -67,15 +66,11 @@ public class BoutonAcceuil extends Button {
         });
         // LIEN DU BOUTON VERS ACCUEIL : ON LE MET DANS LE CONSTRUCTOR CAR CE BOUTON AURA TOUJOURS LE MEME LIEN
         this.setOnAction(event -> {
-            System.out.println("Direction le Menu !");
-            // 1 On récupère le profil stocké dans MainApp
-            ModelUser userActuel = MainApp.getUtilisateurConnecte();
-
-            // 2 On crée la vue Accueil en lui passant ce profil
-            View.ViewAccueil vueAccueil = new View.ViewAccueil(userActuel);
-
-            // 3 On utilise la méthode magique pour changer de page
-            MainApp.changerDePage(vueAccueil);
+            System.out.println("Direction la Connexion !");
+            // 1. On prépare la vue suivante
+            ViewConnexion accueil = new ViewConnexion();
+            // 2. On demande au Main de l'afficher
+            MainApp.changerDePage(accueil);
         });
     }
 }

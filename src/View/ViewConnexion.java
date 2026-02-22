@@ -2,6 +2,7 @@ package View;
 
 import View.composants.Footer;
 import View.composants.Header;
+import controller.ControllerConnexion;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,14 +18,15 @@ public class ViewConnexion extends ViewTemplate {
     private Button btnLogin;
 
     public ViewConnexion() {
-        super("/images/connexion.png");
+        super("/images/connexion.png", null); // UserProfil = null , pas encore connecté.
 
         setContenuCentral(creerContenuCentral());
     }
 
     private HBox creerContenuCentral() {
-        HBox contenuH = new HBox(40); // Espace entre les deux zones
+        HBox contenuH = new HBox(140); // Espace entre les deux zones
         contenuH.setAlignment(Pos.CENTER);
+
 
         // --- GAUCHE : TEXTE AJUSTÉ À L'HEXAGONE ---
         VBox zoneTexte = new VBox(5);
@@ -91,6 +93,12 @@ public class ViewConnexion extends ViewTemplate {
                 "-fx-border-radius: 15; " +
                 "-fx-cursor: hand;");
 
+        // ACTION btnLogin
+        btnLogin.setOnAction(event -> {
+            String username = txtUsername.getText();
+            String password = txtPassword.getText();
+            new ControllerConnexion(username, password);
+        } );
         boxFormConnexion.getChildren().addAll(txtUsername, txtPassword, btnLogin);
         return boxFormConnexion;
     }

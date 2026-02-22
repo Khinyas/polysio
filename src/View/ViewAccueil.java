@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import model.ModelUser;
 
 public class ViewAccueil extends ViewTemplate {
     private TextField txtUsername;
@@ -12,8 +13,17 @@ public class ViewAccueil extends ViewTemplate {
 
     public ViewAccueil() {
         // Appelle le constructeur de ViewAbstraite (Fond + Header + Footer)
-        super("/images/accueil.png"); //fond d ecran dans le constructeur
+        super("/images/accueil.png", null); //fond d ecran dans le constructeur
         // On place uniquement le formulaire au centre
+        setContenuCentral(creerContenuCentral());
+    }
+    // CONSTRUCTEUR 2 : Utilisé par le contrôleur après la connexion
+    public ViewAccueil(ModelUser profil) {
+        // C'est ICI que le dynamisme se joue :
+        // Si 'profil' est l'objet de Kévin, le Header affichera Kévin.
+        // Si 'profil' est null, le Header restera vide.
+        super("/images/accueil.png", profil);
+
         setContenuCentral(creerContenuCentral());
     }
 
@@ -23,6 +33,7 @@ public class ViewAccueil extends ViewTemplate {
         contenuH.setPadding(new Insets(90, 0, 30, 20));
 
         // ... Ton code pour zoneTexte et formulaireConnexion() reste identique ...
+
 
         contenuH.getChildren().addAll();
         return contenuH;

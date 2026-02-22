@@ -6,11 +6,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import model.ModelUser;
 
 public class ViewTemplate extends StackPane {
     protected BorderPane layoutPrincipal;
     private ImageView background;
-    public ViewTemplate(String cheminImageBackground) {
+    public ViewTemplate(String cheminImageBackground, ModelUser profilUserP) {
         // 1. Fond d'écran (commun)
         // Le fond est créé ici, mais l'image dépend du chemin reçu
         background = new ImageView(new Image(cheminImageBackground));
@@ -20,7 +21,7 @@ public class ViewTemplate extends StackPane {
 
         // 2. Structure
         layoutPrincipal = new BorderPane();
-        layoutPrincipal.setTop(new Header());
+        layoutPrincipal.setTop(new Header(profilUserP));
         layoutPrincipal.setBottom(new Footer());
 
         this.getChildren().addAll(background, layoutPrincipal);

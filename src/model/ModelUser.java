@@ -2,6 +2,7 @@ package model;
 
 import connexion.DAOAcces;
 import connexion.DAOAccesOld;
+import service.Securite;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,10 +34,10 @@ public class ModelUser {
 
     // REQUETES SQL
     // VERIFIER EXISTENCE UTILISATEUR
-    public boolean reqVerifierUserExiste(int idP) {
-        String reqSQL = "SELECT id, username FROM polysio WHERE id = ?";
+    public static boolean reqVerifierUserExiste(String usernameP) {
+        String reqSQL = "SELECT id, username FROM polysio WHERE username = ?";
         try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
-                pst.setInt(1, idP);
+                pst.setString(1, usernameP);
                 try (ResultSet rs = pst.executeQuery()) {
                         return rs.next(); // Si resultat alors il existe
                 }
@@ -46,9 +47,70 @@ public class ModelUser {
         }
         return false; // L'UTILISATEUR N EXISTE PAS = FALSE (VALEUR PAR DEFAULT PRESUME)
     }
+    // CONNECTER UN UTILISATEUR
+    public static ModelUser connexionUtilisateur(String usernameP, String passwordP) {
+        String reqSQL = "SELECT * FROM polysio WHERE username = ? AND password = ?";
+        try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
+            pst.setString(1, usernameP);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    // Utilisateur Existe en base de données
+                    //On verifie ensuite le password en BDD et celui donné par l utilisateur
+                    String hashedPasswordBDD = rs.getString("password");
+                    if (Securite.verifyPassword(passwordP, hashedPasswordBDD)) {
+                        //On utilise le constructeur de PROFIL pour ne pas renvoyer mot de pass pour l'instant
+                        return new ModelUser(
+                                rs.getInt("id"),
+                                rs.getString("username"),
+                                rs.getString("email"),
+                                ModelUserRole.valueOf(rs.getString("role").toUpperCase())
+                        );
+                    }
+                }
+            }
+        } catch (SQLException erreur) {
+            // Un seul CATCH : erreurs SQL
+            System.err.println("Erreur SQL Impossible d'authentifier l'utilisateur : " + erreur.getMessage());
+            erreur.printStackTrace();
+        }
+        return null; // Aucun utilisateur en Base de données ou erreur
+    }
+
+
+
+
+    // CONNECTER UN UTILISATEUR OLD VERSION SANS HASHING
+    // todo: A supprimer plus tard, obsolete avec hashing
+    /*
+    public static ModelUser connexionUtilisateur(String usernameP, String passwordP) {
+        String reqSQL = "SELECT * FROM polysio WHERE username = ? AND password = ?";
+        try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
+            pst.setString(1, usernameP);
+            pst.setString(2,passwordP);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    // Utilisateur Existe en base de données
+                    //On utilise le constructeur de PROFIL pour ne pas renvoyer mot de pass pour l'instant
+                    return new ModelUser(
+                            rs.getInt("id"),
+                            rs.getString("username"),
+                            rs.getString("email"),
+                            ModelUserRole.valueOf(rs.getString("role").toUpperCase())
+                    );
+                }
+            }
+        } catch (SQLException erreur) {
+            // Un seul CATCH : erreurs SQL
+            System.err.println("Erreur SQL Impossible d'authentifier l'utilisateur : " + erreur.getMessage());
+            erreur.printStackTrace();
+        }
+        return null; // Aucun utilisateur en Base de données ou erreur
+    }
+*/
 
     // RECUPERER UTILISATEUR EN BDD : RETURN UN OBJET DE TYPE MODELUSER :
-    public ModelUser reqRecupererUser(int idP) {
+    public static ModelUser reqRecupererUser(int idP) {
         String reqSQL = "SELECT * FROM polysio WHERE id = ?";
 
         try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
@@ -77,12 +139,12 @@ public class ModelUser {
 
 
     // INSERTION UTILISATEUR EN BASE DE DONNEES
-    public Boolean insererUser(String usernameP, String passwordP, String emailP)  {
+    public static Boolean insererUser(String usernameP, String passwordP, String emailP)  {
         String reqSQL = "INSERT INTO polysio (username, password, email) VALUES (?,?,?)";
         try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
-            pst.setString(2, usernameP);
+            pst.setString(1, usernameP); // Ici 1 = (1er "?") et pas l index de colonne BDD 1 ( id )
             pst.setString(2, passwordP);
-            pst.setString(2, emailP);
+            pst.setString(3, emailP);
             int lignesAffectees = pst.executeUpdate();
             return lignesAffectees > 0;
         } catch (SQLException erreur) {
@@ -93,7 +155,7 @@ public class ModelUser {
     }
 
     // DELETE UTILISATEUR
-    public Boolean deleteUSer(int idP) {
+    public static Boolean deleteUSer(int idP) {
         String reqSQL = "DELETE FROM polysio WHERE id = ?";
         try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
             pst.setInt(1, idP);
