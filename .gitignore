@@ -1,10 +1,10 @@
-
 # ═══════════════════════════════════════════════════════════════
-# GITIGNORE JAVA + ECLIPSE + MAVEN
+# GITIGNORE JAVA + ECLIPSE + MAVEN + INTELLIJ
 # ═══════════════════════════════════════════════════════════════
 # Ce fichier indique à Git quels fichiers/dossiers NE PAS suivre
 # (ne pas commit sur GitHub)
 # ═══════════════════════════════════════════════════════════════
+
 # ═══════════════════════════════════════════════════════════════
 # 0. FICHIERS PERSO
 # ═══════════════════════════════════════════════════════════════
@@ -17,172 +17,111 @@ HELPER
 # Pourquoi ignorer ?
 # - Les .class sont générés automatiquement par javac
 # - Pas besoin de les sauvegarder (on a le .java source)
-# - Prennent de la place inutilement sur GitHub
 # ═══════════════════════════════════════════════════════════════
 
 *.class
 # ↑ Ignore TOUS les fichiers .class (bytecode compilé)
-# Exemple : User.class, MonopolyGame.class
 
 *.jar
-# ↑ Ignore les fichiers JAR (sauf si c'est une dépendance nécessaire)
-# Les JAR sont générés par Maven
+# ↑ Ignore les fichiers JAR (sauf dépendance spécifique)
 
 *.war
 *.ear
-# ↑ Fichiers d'archive Java (pour applications web)
+# ↑ Fichiers d'archive Java
 
 hs_err_pid*
 # ↑ Fichiers de crash de la JVM
-# Générés quand Java plante
 
 
 # ═══════════════════════════════════════════════════════════════
-# 2. DOSSIER TARGET (Maven)
+# 2. DOSSIERS DE SORTIE (Maven, Eclipse, IntelliJ)
 # ═══════════════════════════════════════════════════════════════
 # Pourquoi ignorer ?
-# - Maven compile et met tout dans target/
-# - Contient : .class, .jar, fichiers temporaires
-# - Se régénère à chaque compilation (mvn compile)
+# - Contiennent la compilation et les fichiers temporaires
+# - Se régénèrent à chaque "Build" ou "Compile"
 # ═══════════════════════════════════════════════════════════════
 
 target/
-# ↑ TOUT le dossier target/
-# Contient :
-#   - target/classes/          → Fichiers .class compilés
-#   - target/test-classes/     → Tests compilés
-#   - target/*.jar             → JAR généré
-#   - target/maven-status/     → Infos Maven
+# ↑ Sortie Maven
+
+bin/
+# ↑ Sortie Eclipse
+
+out/
+# ↑ Sortie IntelliJ IDEA
 
 
 # ═══════════════════════════════════════════════════════════════
 # 3. LOGS ET FICHIERS TEMPORAIRES
 # ═══════════════════════════════════════════════════════════════
-# Pourquoi ignorer ?
-# - Fichiers générés automatiquement par l'application
-# - Changent constamment
-# - Pas utiles pour les autres développeurs
-# ═══════════════════════════════════════════════════════════════
 
 *.log
-# ↑ Fichiers de log
-# Exemple : application.log, error.log
-
 *.tmp
 *.temp
-# ↑ Fichiers temporaires
-
 *.swp
 *.swo
-# ↑ Fichiers temporaires de Vim (si tu utilises Vim)
-
 *~
-# ↑ Fichiers de backup (Linux/Mac)
 
 
 # ═══════════════════════════════════════════════════════════════
 # 4. FICHIERS DE CONFIGURATION SENSIBLES
 # ═══════════════════════════════════════════════════════════════
-# ⚠️ TRÈS IMPORTANT POUR LA SÉCURITÉ !
-# Pourquoi ignorer ?
-# - Contiennent des mots de passe, clés API, secrets
-# - Si tu push sur GitHub → TOUT LE MONDE voit tes mots de passe !
-# - Peuvent être différents selon l'environnement (dev/prod)
+# ⚠️ NE JAMAIS COMMIT : contiennent des mots de passe ou clés API
 # ═══════════════════════════════════════════════════════════════
 
 config.properties
-# ↑ Ton fichier avec les mots de passe MySQL
-# Contient : db.password=MonSuperMotDePasse123
-# ❌ NE JAMAIS commit ce fichier !
-
 application.properties
-# ↑ Fichier de config Spring Boot (si tu l'utilises)
-
 application-*.properties
-# ↑ Variantes (application-dev.properties, application-prod.properties)
-
 .env
-# ↑ Fichier .env (style Node.js)
-# Contient : DB_PASSWORD=secret123
-
 *.key
 *.pem
 *.p12
-# ↑ Fichiers de clés privées (certificats SSL, etc.)
 
 
 # ═══════════════════════════════════════════════════════════════
-# 5. ECLIPSE - FICHIERS DE CONFIGURATION IDE
-# ═══════════════════════════════════════════════════════════════
-# Pourquoi ignorer ?
-# - Spécifiques à TON installation Eclipse
-# - Peuvent causer des conflits pour les autres développeurs
-# - Contiennent des chemins absolus de TON ordinateur
+# 5. ECLIPSE - CONFIGURATION IDE
 # ═══════════════════════════════════════════════════════════════
 
 .metadata/
-# ↑ Dossier de métadonnées Eclipse (workspace)
-# Contient TOUTES les préférences Eclipse
-
 .settings/
-# ↑ Préférences du projet Eclipse
-# Exemple : formatage du code, version Java, etc.
-
 .classpath
-# ↑ Chemin des dépendances (librairies JAR)
-# Régénéré automatiquement par Maven (m2e)
-
 .project
-# ↑ Fichier de projet Eclipse
-# Contient : nom du projet, builders, natures
-
 *.launch
-# ↑ Configurations de lancement Eclipse
-# Exemple : Run Configurations, Debug Configurations
-
 .factorypath
-# ↑ Configuration des annotation processors
-
-
-# ═══════════════════════════════════════════════════════════════
-# 6. ECLIPSE - FICHIERS TEMPORAIRES
-# ═══════════════════════════════════════════════════════════════
-
 .cache-main
 .scala_dependencies
 .worksheet
-# ↑ Fichiers temporaires Eclipse (si tu utilises Scala)
-
-bin/
-# ↑ Dossier de compilation Eclipse (équivalent de target/)
-# Eclipse compile dans bin/ au lieu de target/
-
 .recommenders/
-# ↑ Recommandations Eclipse (autocomplétion, etc.)
 
 
 # ═══════════════════════════════════════════════════════════════
-# 7. AUTRES IDEs (IntelliJ IDEA, NetBeans, VS Code)
+# 6. INTELLIJ IDEA - CONFIGURATION IDE
 # ═══════════════════════════════════════════════════════════════
-# Utile si tu changes d'IDE ou travailles en équipe
+# Pourquoi ignorer ?
+# - Contient tes index de recherche et préférences locales
+# - Évite les conflits entre développeurs
 # ═══════════════════════════════════════════════════════════════
 
 .idea/
-# ↑ Configuration IntelliJ IDEA
+# ↑ Dossier de configuration IntelliJ
 
 *.iml
 *.iws
 *.ipr
-# ↑ Fichiers de projet IntelliJ
+# ↑ Fichiers de projet et modules
+
+atlassian-ide-plugin.xml
+
+
+# ═══════════════════════════════════════════════════════════════
+# 7. AUTRES IDEs (NetBeans, VS Code)
+# ═══════════════════════════════════════════════════════════════
 
 .vscode/
-# ↑ Configuration VS Code
-
 nbproject/
 nbbuild/
 dist/
 nbdist/
-# ↑ NetBeans
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -191,22 +130,15 @@ nbdist/
 
 # Windows
 Thumbs.db
-# ↑ Miniatures d'images (Windows Explorer)
-
 Desktop.ini
-# ↑ Configuration des dossiers Windows
 
 # macOS
 .DS_Store
-# ↑ Métadonnées de Finder (macOS)
-
 .AppleDouble
 .LSOverride
-# ↑ Autres fichiers macOS
 
 # Linux
 .directory
-# ↑ Fichiers KDE
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -214,43 +146,29 @@ Desktop.ini
 # ═══════════════════════════════════════════════════════════════
 
 .mvn/
-# ↑ Wrapper Maven local
-
 mvnw
 mvnw.cmd
-# ↑ Scripts Maven Wrapper (parfois on les garde)
-
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
 pom.xml.next
 release.properties
-# ↑ Fichiers générés par maven-release-plugin
 
 
 # ═══════════════════════════════════════════════════════════════
 # 10. BASES DE DONNÉES LOCALES
 # ═══════════════════════════════════════════════════════════════
-# Si tu utilises une BDD locale (SQLite, H2, etc.)
-# ═══════════════════════════════════════════════════════════════
 
 *.db
 *.sqlite
 *.h2.db
-# ↑ Fichiers de base de données locales
 
 
 # ═══════════════════════════════════════════════════════════════
 # 11. FICHIERS SPÉCIFIQUES AU PROJET MONOPOLY
 # ═══════════════════════════════════════════════════════════════
-# Ajoute ici des fichiers spécifiques à TON projet
-# ═══════════════════════════════════════════════════════════════
 
-# Exemple : Sauvegardes de parties
 parties_sauvegardees/
-# ↑ Si tu sauvegardes les parties dans des fichiers
-
-# Exemple : Images uploadées par les joueurs
 uploads/
 user_avatars/
 
@@ -258,9 +176,5 @@ user_avatars/
 # ═══════════════════════════════════════════════════════════════
 # 12. GARDER DES FICHIERS EXEMPLE
 # ═══════════════════════════════════════════════════════════════
-# Le ! inverse l'ignore (pour forcer Git à suivre un fichier)
-# ═══════════════════════════════════════════════════════════════
 
 !config.properties.example
-# ↑ GARDE le fichier exemple (sans mots de passe)
-# Permet aux autres de savoir quelle structure avoir
