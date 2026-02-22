@@ -14,8 +14,8 @@ public class Securite {
 
             // On convertit le résultat (octets) en texte lisible (Base64) pour la BDD
             return Base64.getEncoder().encodeToString(hash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Erreur de hachage", e);
+        } catch (NoSuchAlgorithmException erreur) {
+            throw new RuntimeException("Erreur de hachage", erreur);
         }
     }
 

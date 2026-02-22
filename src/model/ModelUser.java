@@ -49,7 +49,7 @@ public class ModelUser {
     }
     // CONNECTER UN UTILISATEUR
     public static ModelUser connexionUtilisateur(String usernameP, String passwordP) {
-        String reqSQL = "SELECT * FROM polysio WHERE username = ? AND password = ?";
+        String reqSQL = "SELECT * FROM polysio WHERE username = ?";
         try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
             pst.setString(1, usernameP);
             try (ResultSet rs = pst.executeQuery()) {
