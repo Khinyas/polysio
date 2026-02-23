@@ -22,15 +22,10 @@ public class ViewLancerDes extends ViewTemplate {
         contenuH.setAlignment(Pos.CENTER);
 
         // --- CENTRE : LANCER DE DES DANS LE CENTRE ---
-        VBox De = LancerDes();
+        
         System.out.println("Je lance les dés");
-
-        // On resserre un peu vers le centre pour que ça tombe dans les formes de l'image
-        contenuH.setPadding(new Insets(00, 00, 00, 00));
-
-        // On ajoute uniquement le formulaire ici car le message est maintenant dedans
-        contenuH.getChildren().addAll(form);
         return contenuH;
+
     } 
 	
 	
