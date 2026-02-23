@@ -14,6 +14,7 @@ public class Header extends HBox {
     private BoutonAcceuil boutonAcceuil;
     private BoutonInscription boutonInscription;
     private BoutonConnexion boutonConnexion;
+    private BoutonDes boutonDes;
 
     public Header(ModelUser profilUserP) {
         this.setPadding(new Insets(10));
@@ -24,6 +25,9 @@ public class Header extends HBox {
         // Bouton Accueil : Toujours présent
         this.boutonAcceuil = new BoutonAcceuil();
         this.getChildren().add(boutonAcceuil);
+        
+      //Test Bouton Lancer Des
+        this.boutonDes = new BoutonDes();
 
         if (profilUserP == null) {
             // --- CAS : UTILISATEUR NON CONNECTÉ ---
@@ -32,6 +36,8 @@ public class Header extends HBox {
             this.boutonInscription = new BoutonInscription();
             //Bouton Connexion
             this.boutonConnexion = new BoutonConnexion();
+            
+            
 
             // Remplissage Conteneur (On ajoute uniquement les boutons de navigation standard)
             this.getChildren().addAll(boutonInscription, boutonConnexion);

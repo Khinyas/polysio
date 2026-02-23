@@ -1,10 +1,14 @@
 package View;
 
+import java.lang.classfile.Label;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import model.ModelDes;
 import model.ModelUser;
 
 public class ViewAccueil extends ViewTemplate {
@@ -33,9 +37,20 @@ public class ViewAccueil extends ViewTemplate {
         contenuH.setPadding(new Insets(90, 0, 30, 20));
 
         // ... Ton code pour zoneTexte et formulaireConnexion() reste identique ...
+        Button boutontest = new Button();
+        boutontest.setText("Lancer de dés");
+        
+        boutontest.setOnAction(event -> { 
+        
+        	System.out.println("Bouton appuyé");
+        	//ModelDes test = new ModelDes();
+        	System.out.println(ModelDes.lancer());
+        	
+        	
+        });
+        
 
-
-        contenuH.getChildren().addAll();
+        contenuH.getChildren().addAll(boutontest);
         return contenuH;
     }
 
