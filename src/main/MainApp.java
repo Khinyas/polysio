@@ -15,7 +15,7 @@ public class MainApp extends Application {
         mainStage = primaryStage;
         mainStage.setTitle("POLYSIO");
         ViewConnexion connexion = new ViewConnexion();
-        Scene scene = new Scene(connexion);
+        Scene scene = new Scene(connexion, 600,600);
         mainStage.setScene(scene);
         mainStage.show();
     }
