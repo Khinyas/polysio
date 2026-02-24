@@ -18,7 +18,7 @@ public class ViewConnexion extends ViewTemplate {
     private Button btnLogin;
 
     public ViewConnexion() {
-        super("/images/connexion.png", null); // UserProfil = null , pas encore connecté.
+        super("/images/connexion.png");
 
         setContenuCentral(creerContenuCentral());
     }
@@ -104,10 +104,10 @@ public class ViewConnexion extends ViewTemplate {
     }
 
     private ImageView creerBackground(StackPane root) {
-        ImageView bg = new ImageView(new Image("/images/connexion.png"));
-        bg.fitWidthProperty().bind(root.widthProperty());
-        bg.fitHeightProperty().bind(root.heightProperty());
-        bg.setPreserveRatio(false);
-        return bg;
+        ImageView background = new ImageView(new Image("/images/connexion.png"));
+        background.fitWidthProperty().bind(root.widthProperty());
+        background.fitHeightProperty().bind(root.heightProperty());
+        background.setPreserveRatio(false);
+        return background;
     }
 }

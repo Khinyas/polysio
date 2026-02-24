@@ -1,5 +1,6 @@
 package View.composants;
 
+import controller.ControllerConnexion;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -7,7 +8,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import main.MainApp;
 import model.ModelUser;
+import model.ModelUserRole;
 
 
 public class Header extends HBox {
@@ -15,7 +18,7 @@ public class Header extends HBox {
     private BoutonInscription boutonInscription;
     private BoutonConnexion boutonConnexion;
 
-    public Header(ModelUser profilUserP) {
+    public Header() {
         this.setPadding(new Insets(10));
         this.setSpacing(20);
         this.setAlignment(Pos.CENTER_LEFT);
@@ -24,8 +27,8 @@ public class Header extends HBox {
         // Bouton Accueil : Toujours présent
         this.boutonAcceuil = new BoutonAcceuil();
         this.getChildren().add(boutonAcceuil);
-
-        if (profilUserP == null) {
+        ModelUser user = MainApp.getUtilisateurConnecte();
+        if (user == null) {
             // --- CAS : UTILISATEUR NON CONNECTÉ ---
 
             // Bouton Inscription
@@ -46,7 +49,7 @@ public class Header extends HBox {
             HBox.setHgrow(spacer, Priority.ALWAYS);
             this.getChildren().add(spacer);
 
-            HBox zoneProfil = creerZoneProfil(profilUserP);
+            HBox zoneProfil = creerZoneProfil();
             this.getChildren().add(zoneProfil);
 
             // Note : L'alignement reste CENTER_LEFT, le spacer s'occupe de l'écartement
@@ -62,24 +65,45 @@ public class Header extends HBox {
     public BoutonInscription getBoutonInscription() { return boutonInscription; }
     public BoutonConnexion getBoutonConnexion() { return boutonConnexion; }
 
-    public HBox creerZoneProfil(ModelUser profilUserP) {
+
+    public HBox creerZoneProfil() {
         HBox box = new HBox(10);
         box.setAlignment(Pos.CENTER_RIGHT);
         // box.setPadding(new Insets(0, 0, 0, 500)); // Suppression du padding fixe, le Spacer fait le travail !
+        /**
+         * Utilisateur Existant :
+         *
+         */
+        if (ControllerConnexion.profilUser != null) {
+            // AVATAR UTILISATEUR
+            // Avatar (Petit rond ou image)
+            ImageView avatar = new ImageView(new Image("/images/avatar.jpg"));
+            avatar.setFitHeight(30);
+            avatar.setFitWidth(30);
 
-        // AVATAR UTILISATEUR
-        // Avatar (Petit rond ou image)
-        //ImageView avatar = new ImageView(new Image("/images/avatar_default.png"));
-        //avatar.setFitHeight(30);
-        //avatar.setFitWidth(30);
+            // Nom de l'utilisateur
+            javafx.scene.control.Label lblName = new javafx.scene.control.Label(ControllerConnexion.profilUser.getUsername());
+            lblName.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
-        // Nom de l'utilisateur
-        javafx.scene.control.Label lblName = new javafx.scene.control.Label(profilUserP.getUsername());
-        lblName.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+            box.getChildren().addAll(lblName /*,avatar*/);
+            box.setCursor(javafx.scene.Cursor.HAND);
+            box.setOnMouseClicked(event -> System.out.println("Ouverture Profil User " + ControllerConnexion.profilUser.getUsername()));
+        } else {
+            /**
+             * Utilisateur Non Connecté
+             */
+            ImageView avatar = new ImageView(new Image("/images/avatar_logout.jpg"));
+            avatar.setFitHeight(30);
+            avatar.setFitWidth(30);
 
-        box.getChildren().addAll(lblName /*,avatar*/);
-        box.setCursor(javafx.scene.Cursor.HAND);
-        box.setOnMouseClicked(event -> System.out.println("Ouverture Profil User " + profilUserP.getUsername()));
+            // Nom de l'utilisateur
+            javafx.scene.control.Label lblName = new javafx.scene.control.Label("Déconnecté");
+            lblName.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+
+            box.getChildren().addAll(lblName /*,avatar*/);
+            box.setCursor(javafx.scene.Cursor.HAND);
+            box.setOnMouseClicked(event -> System.out.println("Ouverture Profil User " + ControllerConnexion.profilUser.getUsername()));
+        }
 
         return box; // Ajout du point-virgule manquant ici
     }

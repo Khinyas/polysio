@@ -72,7 +72,7 @@ public class BoutonAcceuil extends Button {
             ModelUser userActuel = MainApp.getUtilisateurConnecte();
 
             // 2 On crée la vue Accueil en lui passant ce profil
-            View.ViewAccueil vueAccueil = new View.ViewAccueil(userActuel);
+            View.ViewAccueil vueAccueil = new View.ViewAccueil();
 
             // 3 On utilise la méthode magique pour changer de page
             MainApp.changerDePage(vueAccueil);

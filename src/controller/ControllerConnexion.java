@@ -1,6 +1,7 @@
 package controller;
 
 import View.ViewAccueil;
+import com.sun.tools.javac.Main;
 import com.sun.webkit.Timer;
 import connexion.DAOAcces;
 import main.MainApp;
@@ -13,6 +14,7 @@ import java.sql.PreparedStatement;
 import static service.GestionAffichage.afficherAlerte;
 
 public class ControllerConnexion {
+    public static ModelUser profilUser = null;
     public ControllerConnexion(String usernameP, String passwordP) {
         System.out.println("Tentative de connexion pour : " + usernameP);
 
@@ -33,13 +35,16 @@ public class ControllerConnexion {
             return;
         }
         // ICI , on suppose que Si l'user existe mais profil est null, c'est que le mot de passe est faux
-        ModelUser profilUtilisateur = validerIdentitication(usernameP, passwordP);
-        if (profilUtilisateur != null) {
-            // 1 On enregistre la session !
-            MainApp.setUtilisateurConnecte(profilUtilisateur);
+            // Logique métier (on remplit profilUser)
+            // validerIdentification va set un vrai profil ou en nul l'attribut du controller : userProfil.
+            // Donc on enregistre la session avec cette methode
+            validerIdentitication(usernameP, passwordP);
 
-            // 2 On crée la nouvelle vue (Accueil) avec le profil
-            ViewAccueil vueAccueil = new ViewAccueil(profilUtilisateur);
+        if (MainApp.getUtilisateurConnecte() != null) {
+            // Succès : Le MainApp a déjà stocké l'user grâce à validerIdentitication
+
+            // On crée la nouvelle vue (Accueil) avec le profil
+            ViewAccueil vueAccueil = new ViewAccueil();
             MainApp.changerDePage(vueAccueil);
 
             System.out.println("Redirection vers l'accueil réussie.");
@@ -52,13 +57,17 @@ public class ControllerConnexion {
     }
 
     // LOGIQUE METIER :
-    private ModelUser validerIdentitication(String usernameP, String passowrdP) {
-        String username = usernameP;
-        String password = passowrdP;
+    // C est ici qu'on determine si la personne est authentifié ou non
+    // Ensuite on Sauvegarde l'utilisateur dans l'attribut du ControllerConnexion : userProfil qui est Static donc Accesssible partout dans le code ensuite
+    // Ensuite on sauvegarde cet Etat de Fait avec le MainApp.setUtilisateurConnecte(ControllerConnexion.profilUser);
+    private void validerIdentitication(String usernameP, String passowrdP) {
         ModelUser userProfil = ModelUser.connexionUtilisateur(usernameP, passowrdP);
         if (userProfil != null) {
             System.out.println("Succès : Utilisateur récupéré, profil Construit ! ");
-        } else { System.err.println("Échec : Aucun utilisateur trouvé avec ces identifiants."); }
-        return userProfil;
+            ControllerConnexion.profilUser = userProfil;
+            MainApp.setUtilisateurConnecte(userProfil);
+        } else {
+            ControllerConnexion.profilUser = null;
+            System.err.println("Échec : Aucun utilisateur trouvé avec ces identifiants."); }
     }
 }

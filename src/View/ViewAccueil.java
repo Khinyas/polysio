@@ -13,17 +13,8 @@ public class ViewAccueil extends ViewTemplate {
 
     public ViewAccueil() {
         // Appelle le constructeur de ViewAbstraite (Fond + Header + Footer)
-        super("/images/accueil.png", null); //fond d ecran dans le constructeur
+        super("/images/accueil.png"); //fond d ecran dans le constructeur
         // On place uniquement le formulaire au centre
-        setContenuCentral(creerContenuCentral());
-    }
-    // CONSTRUCTEUR 2 : Utilisé par le contrôleur après la connexion
-    public ViewAccueil(ModelUser profil) {
-        // C'est ICI que le dynamisme se joue :
-        // Si 'profil' est l'objet de Kévin, le Header affichera Kévin.
-        // Si 'profil' est null, le Header restera vide.
-        super("/images/accueil.png", profil);
-
         setContenuCentral(creerContenuCentral());
     }
 

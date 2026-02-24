@@ -16,7 +16,7 @@ public class ViewInscription extends ViewTemplate {
     private Button btnInscription;
 
     public ViewInscription() {
-        super("/images/inscription.jpg", null); // Inscription = userProfil NULL
+        super("/images/inscription.jpg"); // Inscription = userProfil NULL
 
         setContenuCentral(creerContenuCentral());
     }
