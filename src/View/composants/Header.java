@@ -74,35 +74,35 @@ public class Header extends HBox {
          * Utilisateur Existant :
          *
          */
-        if (ControllerConnexion.profilUser != null) {
+        if (MainApp.getUtilisateurConnecte() != null) {
             // AVATAR UTILISATEUR
             // Avatar (Petit rond ou image)
-            ImageView avatar = new ImageView(new Image("/images/avatar.jpg"));
-            avatar.setFitHeight(30);
-            avatar.setFitWidth(30);
+            ImageView avatar = new ImageView(new Image("/images/avatars/avatar.jpg"));
+            avatar.setFitHeight(120);
+            avatar.setFitWidth(90);
 
             // Nom de l'utilisateur
-            javafx.scene.control.Label lblName = new javafx.scene.control.Label(ControllerConnexion.profilUser.getUsername());
+            javafx.scene.control.Label lblName = new javafx.scene.control.Label(MainApp.getUtilisateurConnecte().getUsername());
             lblName.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
-            box.getChildren().addAll(lblName /*,avatar*/);
+            box.getChildren().addAll(lblName, avatar);
             box.setCursor(javafx.scene.Cursor.HAND);
-            box.setOnMouseClicked(event -> System.out.println("Ouverture Profil User " + ControllerConnexion.profilUser.getUsername()));
+            box.setOnMouseClicked(event -> System.out.println("Ouverture Profil User " + MainApp.getUtilisateurConnecte().getUsername()));
         } else {
             /**
              * Utilisateur Non Connecté
              */
-            ImageView avatar = new ImageView(new Image("/images/avatar_logout.jpg"));
-            avatar.setFitHeight(30);
-            avatar.setFitWidth(30);
+            ImageView avatar = new ImageView(new Image("/images/avatars/avatar_logout.jpg"));
+            avatar.setFitHeight(120);
+            avatar.setFitWidth(90);
 
             // Nom de l'utilisateur
             javafx.scene.control.Label lblName = new javafx.scene.control.Label("Déconnecté");
             lblName.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
-            box.getChildren().addAll(lblName /*,avatar*/);
+            box.getChildren().addAll(lblName, avatar);
             box.setCursor(javafx.scene.Cursor.HAND);
-            box.setOnMouseClicked(event -> System.out.println("Ouverture Profil User " + ControllerConnexion.profilUser.getUsername()));
+            box.setOnMouseClicked(event -> System.out.println("Utilisateur non connecté " ));
         }
 
         return box; // Ajout du point-virgule manquant ici

@@ -14,7 +14,6 @@ import java.sql.PreparedStatement;
 import static service.GestionAffichage.afficherAlerte;
 
 public class ControllerConnexion {
-    public static ModelUser profilUser = null;
     public ControllerConnexion(String usernameP, String passwordP) {
         System.out.println("Tentative de connexion pour : " + usernameP);
 
@@ -58,16 +57,15 @@ public class ControllerConnexion {
 
     // LOGIQUE METIER :
     // C est ici qu'on determine si la personne est authentifié ou non
-    // Ensuite on Sauvegarde l'utilisateur dans l'attribut du ControllerConnexion : userProfil qui est Static donc Accesssible partout dans le code ensuite
-    // Ensuite on sauvegarde cet Etat de Fait avec le MainApp.setUtilisateurConnecte(ControllerConnexion.profilUser);
+    // Ensuite on Sauvegarde l'utilisateur dans l'attribut du MainApp.setUtilisateurConnecte(userProfil); :
+    // userProfil qui est Static donc Accesssible partout dans le code ensuite
     private void validerIdentitication(String usernameP, String passowrdP) {
         ModelUser userProfil = ModelUser.connexionUtilisateur(usernameP, passowrdP);
         if (userProfil != null) {
             System.out.println("Succès : Utilisateur récupéré, profil Construit ! ");
-            ControllerConnexion.profilUser = userProfil;
             MainApp.setUtilisateurConnecte(userProfil);
         } else {
-            ControllerConnexion.profilUser = null;
+            MainApp.setUtilisateurConnecte(null);
             System.err.println("Échec : Aucun utilisateur trouvé avec ces identifiants."); }
     }
 }
