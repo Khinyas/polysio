@@ -84,3 +84,26 @@ public class Header extends HBox {
         return box; // Ajout du point-virgule manquant ici
     }
 }
+
+
+/**
+ * Ici la partie importante, c est les attributs de ma class HEADER :
+ *     private BoutonAcceuil boutonAcceuil;
+ *     private BoutonInscription boutonInscription;
+ *     private BoutonConnexion boutonConnexion;
+ *
+ *     Je les instancie avec le moule que j'ai fait qui EXTENDS BUTTON,
+ */
+
+/**
+ * NOTE FINALE :
+ * Ma Méthode n'est pas forcement la meilleur ni la plus adapté à un besoin mais on peut facilement Extends differement.
+ *
+ * Du coups quand je change de vue cela donne :
+ *
+ *             // 2 On crée la nouvelle vue (Accueil) avec le profil
+ *             ViewAccueil vueAccueil = new ViewAccueil(profilUtilisateur);
+ *             MainApp.changerDePage(vueAccueil);
+ *
+ *             Je crée une vue et me sert de ma méthode Static accessible partout
+ */

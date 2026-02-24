@@ -79,3 +79,9 @@ public class BoutonAcceuil extends Button {
         });
     }
 }
+/**
+ *
+ * L'important à retenir dans la façon de faire que j'ai choisis.
+ * J' EXTENDS de BOUTON donc je le DEFINI directement, je ne fait pas Button boutonAccueil = new Button();
+ * Je mets directement ses proprietés.
+ */

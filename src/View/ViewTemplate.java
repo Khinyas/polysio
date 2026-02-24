@@ -32,3 +32,9 @@ public class ViewTemplate extends StackPane {
         layoutPrincipal.setCenter(node);
     }
 }
+/**
+ * On peut Extends de Borderpane directement si on le souhaite et metre this.setTop / Bottom si on le souhaite
+ * Ici pour l'instant c est une structure ou à chaque view central on défini un background et le contenu.
+ * NOTE : model profil user est une methode parmis d'autre, cela peut etre supprimer et passer le profil autrement
+ * Ne pas en TENIR COMPTE
+ */

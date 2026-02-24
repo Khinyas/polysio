@@ -21,7 +21,7 @@ public class MainApp extends Application {
     }
     // TODO: Afficher un label rouge ou une Alert JavaFX ici
     // TODO: Afficher un label rouge ou une Alert JavaFX ici
-    // LA MÉTHODE MAGIQUE
+    // CHANGEMENT DE PAGE
     public static void changerDePage(javafx.scene.Parent nouvellePage) {
         // On demande à la scène actuelle de jeter l'ancien contenu
         // et de mettre la nouvelle vue à la place
