@@ -1,42 +1,64 @@
 package connexion;
 
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 public class ConfigLoader {
-    private static Properties props = new Properties();
+    public static final String ENV_FILE_PATH = "config.properties";
+    public static final String POLYSIO_FILE_PATH = "config.properties";
+    private Properties props = new Properties();
+    private String filename;
 
-    static {
-        try  {
-            System.out.println("📂 Chargement de config.properties...");
-            // On cherche le fichier dans le dossier resources marqué
-            InputStream input = ConfigLoader.class.getClassLoader().getResourceAsStream("config.properties");
-            if (input == null) {
-                // Sécurité : on tente avec un slash si le premier échoue
-                input = ConfigLoader.class.getResourceAsStream("/config.properties");
+    // Constructeur pour instancier des fichiers :
+        public ConfigLoader(String filenameP) {
+            this.filename = filenameP;
+            chargerFichier();
+        }
+
+        public void chargerFichier() {
+            File file = new File(filename); // Ici filename est celui hérité du constructeur
+            if (file.exists()) {
+                System.out.println("📂 Chargement de " + filename + "...");
+                try (InputStream input = new FileInputStream(file)) {
+                    props.load(input);
+                    System.out.println("✅ Configuration chargée ! fu fichier : " + filename + "...");
+                } catch (IOException erreur) {
+                    System.err.println("❌ Erreur critique : " + erreur.getMessage());
+                }
             }
-            if (input == null) {
-                throw new java.io.IOException("❌ Fichier config.properties introuvable dans le dossier resources !");
-            }
-            //SUCCESS
-            props.load(input);
-            input.close();
-            System.out.println("✅ Configuration chargée !");
-            } catch (java.io.IOException erreur) {
-            System.err.println("❌ Erreur critique : " + erreur.getMessage());
-            // On ne quitte pas forcément, mais on prévient que les variables seront nulles
-            }
-    }
-    public static String get(String key) {
+        }
+
+
+    public String get(String key) {
         return props.getProperty(key);
     }
+    public String getWithDefaultValue(String key, String defaultvalue) {
+            return props.getProperty(key, defaultvalue);
+    }
 
-    public static int getInt(String key) {
+    public void set(String key, String value) {
+            props.setProperty(key, value);
+        sauvegarderFichier();
+    }
+
+    public void setInMemory(String key, String value) {
+        props.setProperty(key, value);
+        System.out.println("📝 Modifié en mémoire (RAM) : " + key + " = " + value);
+    }
+
+    public void sauvegarderFichier() {
+            try (OutputStream output = new FileOutputStream(filename)) {
+                props.store(output, "Mise à jour automatique du fichier " + filename);
+            } catch (IOException erreur) {
+                System.err.println("Erreur sauvegarde : " + filename + " ... " + erreur.getMessage());
+            }
+    }
+    public int getInt(String key) {
         String val = get(key);
         return (val != null) ? Integer.parseInt(val.trim()) : 0;
     }
 
-    public static boolean getBoolean(String key) {
+    public boolean getBoolean(String key) {
         String value = get(key); // Ta méthode get(String key) actuelle
         return Boolean.parseBoolean(value);
     }

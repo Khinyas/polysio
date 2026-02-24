@@ -1,5 +1,8 @@
 package service;
 
+import connexion.ConfigLoader;
+import main.MainApp;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -10,6 +13,7 @@ public class Securite {
         try {
             // On utilise l'algorithme SHA-256 natif de Java
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            String passwordWithPrivateKey = passwordClairP + MainApp.cfgApp.get("db.privateKey");
             byte[] hash = digest.digest(passwordClairP.getBytes(StandardCharsets.UTF_8));
 
             // On convertit le résultat (octets) en texte lisible (Base64) pour la BDD

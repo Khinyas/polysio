@@ -2,6 +2,7 @@ package View;
 
 import View.composants.Footer;
 import View.composants.Header;
+import connexion.ConfigLoader;
 import controller.ControllerConnexion;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import main.MainApp;
 
 public class ViewConnexion extends ViewTemplate {
     private TextField txtUsername;
@@ -70,7 +72,11 @@ public class ViewConnexion extends ViewTemplate {
                 "-fx-background-radius: 15;";
 
         txtUsername = new TextField();
-        txtUsername.setPromptText("Nom d'utilisateur");
+        String lastUsername = "Nom d'utilisateur";
+        if (MainApp.cfgApp.getBoolean("db.utilisateur")) {
+            lastUsername = MainApp.cfgApp.get("db.utilisateur");
+        }
+        txtUsername.setPromptText(lastUsername);
         txtUsername.setPrefSize(220, 30); // Taille réduite (Largeur 180, Hauteur 30)
         txtUsername.setMaxWidth(220);    // On force la largeur max
         txtUsername.setStyle(styleChamp);

@@ -3,6 +3,7 @@ package controller;
 import View.ViewAccueil;
 import com.sun.tools.javac.Main;
 import com.sun.webkit.Timer;
+import connexion.ConfigLoader;
 import connexion.DAOAcces;
 import main.MainApp;
 import model.ModelUser;
@@ -64,6 +65,7 @@ public class ControllerConnexion {
         if (userProfil != null) {
             System.out.println("Succès : Utilisateur récupéré, profil Construit ! ");
             MainApp.setUtilisateurConnecte(userProfil);
+            MainApp.cfgApp.set("db.utilisateur", usernameP);
         } else {
             MainApp.setUtilisateurConnecte(null);
             System.err.println("Échec : Aucun utilisateur trouvé avec ces identifiants."); }

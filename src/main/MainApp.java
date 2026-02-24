@@ -1,6 +1,7 @@
 package main;
 
 import View.ViewConnexion;
+import connexion.ConfigLoader;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -10,6 +11,9 @@ import model.ModelUser;
 public class MainApp extends Application {
     public static Stage mainStage;
     private static ModelUser utilisateurConnecte = null;
+    public static ConfigLoader cfgApp = new ConfigLoader(ConfigLoader.ENV_FILE_PATH);
+    public static ConfigLoader cfgPolysio = new ConfigLoader(ConfigLoader.POLYSIO_FILE_PATH);
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         mainStage = primaryStage;

@@ -1,0 +1,92 @@
+C'est une excellente question. Pour bien comprendre, il faut faire la distinction entre la RAM (la mémoire vive, rapide mais temporaire) et le Disque Dur (le stockage permanent).
+
+1. Pourquoi a-t-on besoin de sauvegarderFichier() après le set() ?
+Quand tu fais props.setProperty(key, value), tu modifies uniquement l'objet props qui est stocké dans la mémoire vive (RAM) de ton ordinateur.
+
+Si tu fais uniquement set : Le changement est effectif tant que ton programme tourne. Mais dès que tu fermes ton application, la RAM est vidée. Au prochain redémarrage, ton fichier config.properties sur le disque n'aura pas bougé et contiendra les anciennes valeurs.
+
+sauvegarderFichier() (avec props.store) : C'est l'action "d'écrire" physiquement sur ton disque dur. C'est comme cliquer sur la disquette "Enregistrer" dans Word. Cela transfère les données de la RAM vers le fichier permanent.
+
+2. Utiliser plusieurs fichiers de config (Config vs Jeu)
+Pour gérer deux fichiers différents sans dupliquer tout ton code, la meilleure solution est de transformer ton ConfigLoader pour qu'il puisse gérer n'importe quel fichier.
+
+Voici comment faire évoluer ta classe pour qu'elle puisse charger config.properties ET monopoly.properties :
+
+Java
+package connexion;
+
+import java.io.*;
+import java.util.Properties;
+
+public class ConfigLoader {
+    private Properties props = new Properties();
+    private String fileName;
+
+    // Constructeur : on définit quel fichier on veut gérer
+    public ConfigLoader(String fileName) {
+        this.fileName = fileName;
+        chargerFichier();
+    }
+
+    private void chargerFichier() {
+        File file = new File(fileName);
+        if (file.exists()) {
+            try (InputStream input = new FileInputStream(file)) {
+                props.load(input);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String get(String key, String defaultValue) {
+        return props.getProperty(key, defaultValue);
+    }
+
+    public void set(String key, String value) {
+        props.setProperty(key, value);
+        sauvegarderFichier();
+    }
+
+    private void sauvegarderFichier() {
+        try (OutputStream output = new FileOutputStream(fileName)) {
+            props.store(output, "Mise à jour automatique de " + fileName);
+        } catch (IOException e) {
+            System.err.println("Erreur sauvegarde : " + e.getMessage());
+        }
+    }
+}
+3. Comment l'utiliser dans ton MainApp ou tes Controllers ?
+Maintenant, au lieu d'avoir des méthodes static, tu crées deux instances (deux objets) dans ton MainApp :
+
+Java
+public class MainApp extends Application {
+    // On crée les deux gestionnaires
+    public static ConfigLoader configApp = new ConfigLoader("config.properties");
+    public static ConfigLoader configJeu = new ConfigLoader("monopoly.properties");
+
+    // Exemple d'utilisation :
+    public static void main(String[] args) {
+        // Lire le pseudo dans config.properties
+        String user = configApp.get("db.utilisateur", "Inconnu");
+
+        // Lire le prix d'une case dans monopoly.properties
+        String prixCase = configJeu.get("case.1.prix", "60");
+
+        launch(args);
+    }
+}
+4. Faire le lien avec la Base de Données
+Pour ton Monopoly, l'idée de récupérer les infos en BDD et de les mettre dans le fichier de jeu est géniale pour les performances.
+
+Exemple de logique pour "remplir" ton fichier de jeu depuis la BDD :
+
+Tu fais ta requête SQL : SELECT nom, prix FROM cases.
+
+Pour chaque résultat, tu fais :
+MainApp.configJeu.set("case." + id + ".nom", nomBDD);
+MainApp.configJeu.set("case." + id + ".prix", String.valueOf(prixBDD));
+
+Grâce à sauvegarderFichier() qui est appelé dans le set, ton fichier monopoly.properties sera automatiquement mis à jour avec les dernières données de ta base de données !
+
+Est-ce que cette structure avec deux "objets" (configApp et configJeu) te paraît plus claire pour organiser tes fichiers ?
