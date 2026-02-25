@@ -1,3 +1,0 @@
-ublic static String get(String key, String defaultValue) {
-        return props.getProperty(key, defaultValue);
-    }

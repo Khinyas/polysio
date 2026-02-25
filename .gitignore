@@ -9,7 +9,13 @@
 # 0. FICHIERS PERSO
 # ═══════════════════════════════════════════════════════════════
 HELPER
+# Ignorer tous les fichiers commençant par HELP
+HELP*
 
+# Ou si tu veux être plus spécifique :
+HELP*.txt
+HELP*.md
+HELP*.pdfgit
 
 # ═══════════════════════════════════════════════════════════════
 # 1. FICHIERS COMPILÉS JAVA
