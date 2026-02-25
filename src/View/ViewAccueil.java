@@ -36,21 +36,9 @@ public class ViewAccueil extends ViewTemplate {
         contenuH.setAlignment(Pos.CENTER);
         contenuH.setPadding(new Insets(90, 0, 30, 20));
 
-        // ... Ton code pour zoneTexte et formulaireConnexion() reste identique ...
-        Button boutontest = new Button();
-        boutontest.setText("Lancer de dés");
-        
-        boutontest.setOnAction(event -> { 
-        
-        	System.out.println("Bouton appuyé");
-        	//ModelDes test = new ModelDes();
-        	System.out.println(ModelDes.lancer());
-        	
-        	
-        });
         
 
-        contenuH.getChildren().addAll(boutontest);
+        contenuH.getChildren().addAll();
         return contenuH;
     }
 
