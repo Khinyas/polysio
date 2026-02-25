@@ -69,7 +69,7 @@ out/
 # ⚠️ NE JAMAIS COMMIT : contiennent des mots de passe ou clés API
 # ═══════════════════════════════════════════════════════════════
 
-config.properties
+resources/config.properties
 application.properties
 application-*.properties
 .env

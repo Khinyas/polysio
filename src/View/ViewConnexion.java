@@ -72,11 +72,13 @@ public class ViewConnexion extends ViewTemplate {
                 "-fx-background-radius: 15;";
 
         txtUsername = new TextField();
-        String lastUsername = "Nom d'utilisateur";
-        if (MainApp.cfgApp.getBoolean("db.utilisateur")) {
-            lastUsername = MainApp.cfgApp.get("db.utilisateur");
+        String lastUsername = MainApp.cfgPolysio.get("db.utilisateur");
+
+        if (lastUsername != null && !lastUsername.isEmpty()) {
+            txtUsername.setPromptText(lastUsername);
+        } else {
+            txtUsername.setPromptText("Nom d'utilisateur");
         }
-        txtUsername.setPromptText(lastUsername);
         txtUsername.setPrefSize(220, 30); // Taille réduite (Largeur 180, Hauteur 30)
         txtUsername.setMaxWidth(220);    // On force la largeur max
         txtUsername.setStyle(styleChamp);

@@ -65,7 +65,7 @@ public class ControllerConnexion {
         if (userProfil != null) {
             System.out.println("Succès : Utilisateur récupéré, profil Construit ! ");
             MainApp.setUtilisateurConnecte(userProfil);
-            MainApp.cfgApp.set("db.utilisateur", usernameP);
+            MainApp.cfgPolysio.set("db.utilisateur", usernameP);
         } else {
             MainApp.setUtilisateurConnecte(null);
             System.err.println("Échec : Aucun utilisateur trouvé avec ces identifiants."); }
