@@ -73,6 +73,7 @@ public class ControllerInscription {
         System.out.println("✅ Inscription valide, envoi en base de données...");
         String passwordHache = Securite.hacherPassword(passwordP);
         ModelUser.insererUser(usernameP, passwordHache, emailP);
+        MainApp.cfgPolysio.set("db.utilisateur", "");
         ViewConnexion connexion = new ViewConnexion();
         MainApp.changerDePage(connexion);
     }

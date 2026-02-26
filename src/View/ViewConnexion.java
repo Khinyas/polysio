@@ -2,6 +2,7 @@ package View;
 
 import View.composants.Footer;
 import View.composants.Header;
+import connexion.ConfigLoader;
 import controller.ControllerConnexion;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import main.MainApp;
 
 public class ViewConnexion extends ViewTemplate {
     private TextField txtUsername;
@@ -18,7 +20,7 @@ public class ViewConnexion extends ViewTemplate {
     private Button btnLogin;
 
     public ViewConnexion() {
-        super("/images/connexion.png", null); // UserProfil = null , pas encore connecté.
+        super("/images/connexion.png");
 
         setContenuCentral(creerContenuCentral());
     }
@@ -70,7 +72,13 @@ public class ViewConnexion extends ViewTemplate {
                 "-fx-background-radius: 15;";
 
         txtUsername = new TextField();
-        txtUsername.setPromptText("Nom d'utilisateur");
+        String lastUsername = MainApp.cfgPolysio.get("db.utilisateur");
+
+        if (lastUsername != null && !lastUsername.isEmpty()) {
+            txtUsername.setPromptText(lastUsername);
+        } else {
+            txtUsername.setPromptText("Nom d'utilisateur");
+        }
         txtUsername.setPrefSize(220, 30); // Taille réduite (Largeur 180, Hauteur 30)
         txtUsername.setMaxWidth(220);    // On force la largeur max
         txtUsername.setStyle(styleChamp);
@@ -104,10 +112,10 @@ public class ViewConnexion extends ViewTemplate {
     }
 
     private ImageView creerBackground(StackPane root) {
-        ImageView bg = new ImageView(new Image("/images/connexion.png"));
-        bg.fitWidthProperty().bind(root.widthProperty());
-        bg.fitHeightProperty().bind(root.heightProperty());
-        bg.setPreserveRatio(false);
-        return bg;
+        ImageView background = new ImageView(new Image("/images/connexion.png"));
+        background.fitWidthProperty().bind(root.widthProperty());
+        background.fitHeightProperty().bind(root.heightProperty());
+        background.setPreserveRatio(false);
+        return background;
     }
 }

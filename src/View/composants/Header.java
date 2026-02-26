@@ -1,6 +1,6 @@
 package View.composants;
-
 import View.ViewLancerDes;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -11,6 +11,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import main.MainApp;
 import model.ModelUser;
+import model.ModelUserRole;
 
 
 public class Header extends HBox {
@@ -19,7 +20,7 @@ public class Header extends HBox {
     private BoutonConnexion boutonConnexion;
     private BoutonDes boutonDes;
 
-    public Header(ModelUser profilUserP) {
+    public Header() {
         this.setPadding(new Insets(10));
         this.setSpacing(20);
         this.setAlignment(Pos.CENTER_LEFT);
@@ -37,7 +38,8 @@ public class Header extends HBox {
         	
         });
 
-        if (profilUserP == null) {
+        if (MainApp.getUtilisateurConnecte().getUsername()!= null) {
+
             // --- CAS : UTILISATEUR NON CONNECTÉ ---
 
             // Bouton Inscription
@@ -60,7 +62,7 @@ public class Header extends HBox {
             HBox.setHgrow(spacer, Priority.ALWAYS);
             this.getChildren().add(spacer);
 
-            HBox zoneProfil = creerZoneProfil(profilUserP);
+            HBox zoneProfil = creerZoneProfil();
             this.getChildren().add(zoneProfil);
 
             // Note : L'alignement reste CENTER_LEFT, le spacer s'occupe de l'écartement
@@ -76,25 +78,69 @@ public class Header extends HBox {
     public BoutonInscription getBoutonInscription() { return boutonInscription; }
     public BoutonConnexion getBoutonConnexion() { return boutonConnexion; }
 
-    public HBox creerZoneProfil(ModelUser profilUserP) {
+
+    public HBox creerZoneProfil() {
         HBox box = new HBox(10);
         box.setAlignment(Pos.CENTER_RIGHT);
         // box.setPadding(new Insets(0, 0, 0, 500)); // Suppression du padding fixe, le Spacer fait le travail !
+        /**
+         * Utilisateur Existant :
+         *
+         */
+        if (MainApp.getUtilisateurConnecte() != null) {
+            // AVATAR UTILISATEUR
+            // Avatar (Petit rond ou image)
+            ImageView avatar = new ImageView(new Image("/images/avatars/avatar.jpg"));
+            avatar.setFitHeight(120);
+            avatar.setFitWidth(90);
 
-        // AVATAR UTILISATEUR
-        // Avatar (Petit rond ou image)
-        //ImageView avatar = new ImageView(new Image("/images/avatar_default.png"));
-        //avatar.setFitHeight(30);
-        //avatar.setFitWidth(30);
+            // Nom de l'utilisateur
+            javafx.scene.control.Label lblName = new javafx.scene.control.Label(MainApp.getUtilisateurConnecte().getUsername());
+            lblName.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
-        // Nom de l'utilisateur
-        javafx.scene.control.Label lblName = new javafx.scene.control.Label(profilUserP.getUsername());
-        lblName.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+            box.getChildren().addAll(lblName, avatar);
+            box.setCursor(javafx.scene.Cursor.HAND);
+            box.setOnMouseClicked(event -> System.out.println("Ouverture Profil User " + MainApp.getUtilisateurConnecte().getUsername()));
+        } else {
+            /**
+             * Utilisateur Non Connecté
+             */
+            ImageView avatar = new ImageView(new Image("/images/avatars/avatar_logout.jpg"));
+            avatar.setFitHeight(120);
+            avatar.setFitWidth(90);
 
-        box.getChildren().addAll(lblName /*,avatar*/);
-        box.setCursor(javafx.scene.Cursor.HAND);
-        box.setOnMouseClicked(event -> System.out.println("Ouverture Profil User " + profilUserP.getUsername()));
+            // Nom de l'utilisateur
+            javafx.scene.control.Label lblName = new javafx.scene.control.Label("Déconnecté");
+            lblName.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+
+            box.getChildren().addAll(lblName, avatar);
+            box.setCursor(javafx.scene.Cursor.HAND);
+            box.setOnMouseClicked(event -> System.out.println("Utilisateur non connecté " ));
+        }
 
         return box; // Ajout du point-virgule manquant ici
     }
 }
+
+
+/**
+ * Ici la partie importante, c est les attributs de ma class HEADER :
+ *     private BoutonAcceuil boutonAcceuil;
+ *     private BoutonInscription boutonInscription;
+ *     private BoutonConnexion boutonConnexion;
+ *
+ *     Je les instancie avec le moule que j'ai fait qui EXTENDS BUTTON,
+ */
+
+/**
+ * NOTE FINALE :
+ * Ma Méthode n'est pas forcement la meilleur ni la plus adapté à un besoin mais on peut facilement Extends differement.
+ *
+ * Du coups quand je change de vue cela donne :
+ *
+ *             // 2 On crée la nouvelle vue (Accueil) avec le profil
+ *             ViewAccueil vueAccueil = new ViewAccueil(profilUtilisateur);
+ *             MainApp.changerDePage(vueAccueil);
+ *
+ *             Je crée une vue et me sert de ma méthode Static accessible partout
+ */

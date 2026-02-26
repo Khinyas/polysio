@@ -17,8 +17,8 @@ public class ViewChoixPartie extends ViewTemplate {
 	public ViewChoixPartie viewChoixPartie;
 	private ControllerChoixPartie controllerChoixPartie = new ControllerChoixPartie();
 	
-	public ViewChoixPartie(String cheminImageBackground, ModelUser profilUserP) {
-		super(cheminImageBackground, profilUserP);
+	public ViewChoixPartie(String cheminImageBackground) {
+		super(cheminImageBackground);
 		setContenuCentral(creerContenuCentral()); 
 		}
 		

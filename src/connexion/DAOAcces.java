@@ -1,5 +1,7 @@
 package connexion;
 
+import main.MainApp;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,10 +12,9 @@ public class DAOAcces {
 
 
     public DAOAcces() {
-        System.out.println(" Initialisation de la connexion " + ConfigLoader.get("db.type") + "..." + ConfigLoader.get("db.name"));
+        System.out.println(" Initialisation de la connexion " + MainApp.cfgApp.get("db.type") + "..." + MainApp.cfgApp.get("db.name"));
         throw new UnsupportedOperationException("Classe utilitaire");
     }
-
 
     public static Connection getConnexion() {
         try {
@@ -30,16 +31,16 @@ public class DAOAcces {
 
     public static void initConnexion() {
         // Paramétrage :
-        String driver = ConfigLoader.get("db.driver");
-        String dbName = ConfigLoader.get("db.name");
-        String url = ConfigLoader.get("db.url");
-        String login = ConfigLoader.get("db.login");
-        String password = ConfigLoader.get("db.password");
-        int PORT = ConfigLoader.getInt("db.port");
+        String driver = MainApp.cfgApp.get("db.driver");
+        String dbName = MainApp.cfgApp.get("db.name");
+        String url = MainApp.cfgApp.get("db.url");
+        String login = MainApp.cfgApp.get("db.login");
+        String password = MainApp.cfgApp.get("db.password");
+        int PORT = MainApp.cfgApp.getInt("db.port");
         String fullUrl = url +
-                "?autoReconnect=" + ConfigLoader.get("db.autoReconnect") +
-                "&useSSL=" + ConfigLoader.get("db.useSSL") +
-                "&serverTimezone=" + ConfigLoader.get("db.serverTimezone") +
+                "?autoReconnect=" + MainApp.cfgApp.get("db.autoReconnect") +
+                "&useSSL=" + MainApp.cfgApp.get("db.useSSL") +
+                "&serverTimezone=" + MainApp.cfgApp.get("db.serverTimezone") +
                 "&allowPublicKeyRetrieval=true";
         try  {
             Class.forName(driver);
@@ -69,7 +70,7 @@ public class DAOAcces {
 
     public static void resetBaseDeDonnees() {
         // Sécurité : Si on n'est pas en mode debug, on sort direct !
-        if (!ConfigLoader.getBoolean("app.debug")) {
+        if (!MainApp.cfgApp.getBoolean("app.debug")) {
             System.out.println("⚠️ Reset annulé : Mode Debug désactivé.");
             return;
         }

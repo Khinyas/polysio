@@ -1,7 +1,6 @@
 package model;
 
 import connexion.DAOAcces;
-import connexion.DAOAccesOld;
 import service.Securite;
 
 import java.sql.Connection;

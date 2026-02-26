@@ -19,7 +19,7 @@ public class ViewLancerDes extends ViewTemplate {
 	
 
 	public ViewLancerDes() {
-        super("/images/dice.jpg", null);
+        super("/images/dice.jpg");
 
         setContenuCentral(creerContenuCentral());
     }

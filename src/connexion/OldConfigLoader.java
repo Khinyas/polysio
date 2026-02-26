@@ -3,16 +3,31 @@ package connexion;
 import java.io.*;
 import java.util.Properties;
 
-public class ConfigLoader {
-    public static final String ENV_FILE_PATH = "resources/config.properties";
-    public static final String POLYSIO_FILE_PATH = "src/polysio.properties";
+public class OldConfigLoader {
+    public static final String ENV_FILE_PATH = "config.properties";
+    public static final String POLYSIO_FILE_PATH = "polysio.properties";
     private Properties props = new Properties();
     private String filename;
+    private String cheminComplet; // Chemin absolu du fichier
 
     // Constructeur pour instancier des fichiers :
-    public ConfigLoader(String filenameP) {
+    public OldConfigLoader(String filenameP) {
         this.filename = filenameP;
-        File file = new File(filename); // Ici filename est celui hérité du constructeur
+        chargerFichier();
+    }
+
+    public void chargerFichier() {
+        System.out.println("📂 Chargement de " + filename + "...");
+
+        // Trouver le chemin du fichier
+        cheminComplet = trouverCheminFichier();
+
+        if (cheminComplet == null) {
+            System.err.println("❌ Fichier introuvable : " + filename);
+            return;
+        }
+
+        File file = new File(cheminComplet); // Ici filename est celui hérité du constructeur
         if (file.exists()) {
             try (InputStream input = new FileInputStream(file)) {
                 props.load(input);
@@ -23,6 +38,27 @@ public class ConfigLoader {
         }
     }
 
+    private String trouverCheminFichier() {
+        String userDir = System.getProperty("user.dir");
+
+        // config.properties est dans resources/ (parallèle à src/)
+        if (filename.equals(ENV_FILE_PATH)) {
+            String chemin = userDir + "/resources/" + filename;
+            if (new File(chemin).exists()) {
+                return chemin;
+            }
+        }
+
+        // polysio.properties est dans src/ (racine)
+        if (filename.equals(POLYSIO_FILE_PATH)) {
+            String chemin = userDir + "/src/" + filename;
+            if (new File(chemin).exists()) {
+                return chemin;
+            }
+        }
+
+        return null;
+    }
 
     public String get(String key) {
         return props.getProperty(key);
@@ -43,12 +79,12 @@ public class ConfigLoader {
     }
 
     public void sauvegarderFichier() {
-        if (filename == null) {
+        if (cheminComplet == null) {
             System.err.println("❌ Impossible de sauvegarder : chemin inconnu");
             return;
         }
 
-        try (OutputStream output = new FileOutputStream(filename)) {
+        try (OutputStream output = new FileOutputStream(cheminComplet)) {
             props.store(output, "Mise à jour automatique du fichier " + filename);
             System.out.println("💾 Fichier sauvegardé : " + filename);
         } catch (IOException erreur) {

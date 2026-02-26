@@ -1,6 +1,7 @@
 package main;
 
 import View.ViewConnexion;
+import connexion.ConfigLoader;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -10,6 +11,9 @@ import model.ModelUser;
 public class MainApp extends Application {
     public static Stage mainStage;
     private static ModelUser utilisateurConnecte = null;
+    public static ConfigLoader cfgApp = new ConfigLoader(ConfigLoader.ENV_FILE_PATH);
+    public static ConfigLoader cfgPolysio = new ConfigLoader(ConfigLoader.POLYSIO_FILE_PATH);
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         mainStage = primaryStage;
@@ -21,7 +25,7 @@ public class MainApp extends Application {
     }
     // TODO: Afficher un label rouge ou une Alert JavaFX ici
     // TODO: Afficher un label rouge ou une Alert JavaFX ici
-    // LA MÉTHODE MAGIQUE
+    // CHANGEMENT DE PAGE
     public static void changerDePage(javafx.scene.Parent nouvellePage) {
         // On demande à la scène actuelle de jeter l'ancien contenu
         // et de mettre la nouvelle vue à la place
