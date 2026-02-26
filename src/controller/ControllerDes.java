@@ -13,7 +13,7 @@ public int auClicLancerDes() {
 }
 
 //public int getValeurDe1() { return de1.getValeur(); } // trouver un autre moyen pour l'affichage des dés en gif
-// public int getValeurDe2() { return de2.getValeur(); }
+//public int getValeurDe2() { return de2.getValeur(); }
 
 public boolean estUnDouble() {
     return de1.getValeur() == de2.getValeur();

@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import main.MainApp;
 import model.ModelDes;
 import model.ModelUser;
 
@@ -35,10 +36,18 @@ public class ViewAccueil extends ViewTemplate {
         HBox contenuH = new HBox(40);
         contenuH.setAlignment(Pos.CENTER);
         contenuH.setPadding(new Insets(90, 0, 30, 20));
+        
+        Button btnChoixPartie = new Button();
+        btnChoixPartie.setText("Lancer une partie");
+        	btnChoixPartie.setOnAction(event -> {
+        	ViewChoixPartie viewChoixPartie = new ViewChoixPartie("/images/dice.jpg", profilUserP); 
+        	
+            MainApp.changerDePage(viewChoixPartie);});
+            
 
         
 
-        contenuH.getChildren().addAll();
+        contenuH.getChildren().addAll(btnChoixPartie);
         return contenuH;
     }
 
