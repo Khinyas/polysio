@@ -31,16 +31,33 @@ public class ViewAccueil extends ViewTemplate {
         Button btnChoixPartie = new Button();
         btnChoixPartie.setText("Lancer une partie");
         	btnChoixPartie.setOnAction(event -> {
-        	ViewChoixPartie viewChoixPartie = new ViewChoixPartie("/images/dice.jpg"); 
+        	ViewChoixPartie viewChoixPartie = new ViewChoixPartie("/images/Gemini_Generated_Image_mzk9kjmzk9kjmzk9.png"); 
         	
             MainApp.changerDePage(viewChoixPartie);});
+        	
+    
+        Button btnViewExo = new Button();
+            btnViewExo.setText("Test");
+            btnViewExo.setOnAction(event -> {
+            System.out.println("Bouton cliqué, allons vers Exo");
+            ViewExo viewExo = new ViewExo(); 
             
-
+            MainApp.changerDePage(viewExo);
+            
+            });
+            
+        ModelUser user = MainApp.getUtilisateurConnecte();
         
-
-        contenuH.getChildren().addAll(btnChoixPartie);
+        if(user != null) {
+        contenuH.getChildren().addAll(btnChoixPartie,btnViewExo);
         return contenuH;
-    }
+        } else {
+        
+        contenuH.getChildren().addAll();
+        return contenuH; 
+        }
+        
+     }
 
     // ... tes méthodes privées formulaireConnexion() etc. ...
 }

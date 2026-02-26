@@ -30,30 +30,35 @@ public class ViewChoixPartie extends ViewTemplate {
         VBox sectionJoueurs = new VBox(10);
         sectionJoueurs.getChildren().add(new javafx.scene.control.Label("NOMBRE DE JOUEURS"));
         
-        Button btn2 = new Button("2 Joueurs");
-        Button btn3 = new Button("3 Joueurs");
-        Button btn4 = new Button("4 Joueurs");
+        Button btn2joueurs = new Button("2 Joueurs");
+        Button btn3joueurs = new Button("3 Joueurs");
+        Button btn4joueurs = new Button("4 Joueurs");
 
         // Actions via le contrôleur
-        btn2.setOnAction(e -> controllerChoixPartie.choisirNombreJoueurs(2));
-        btn3.setOnAction(e -> controllerChoixPartie.choisirNombreJoueurs(3));
-        btn4.setOnAction(e -> controllerChoixPartie.choisirNombreJoueurs(4));
+        btn2joueurs.setOnAction(e -> controllerChoixPartie.choisirNombreJoueurs(2));
+        btn3joueurs.setOnAction(e -> controllerChoixPartie.choisirNombreJoueurs(3));
+        btn4joueurs.setOnAction(e -> controllerChoixPartie.choisirNombreJoueurs(4));
 
-        sectionJoueurs.getChildren().addAll(btn2, btn3, btn4);
+        sectionJoueurs.getChildren().addAll(btn2joueurs, btn3joueurs, btn4joueurs);
 
         // --- Section Chrono (Temps de partie) ---
         VBox sectionTemps = new VBox(10);
         sectionTemps.getChildren().add(new javafx.scene.control.Label("DURÉE DE LA PARTIE"));
         
+        Button temps15 = new Button("15 min");
         Button temps30 = new Button("30 min");
         Button temps60 = new Button("1 heure");
         
+        temps15.setOnAction(e -> controllerChoixPartie.choisirDuree(15));
         temps30.setOnAction(e -> controllerChoixPartie.choisirDuree(30));
         temps60.setOnAction(e -> controllerChoixPartie.choisirDuree(60));
         
-        sectionTemps.getChildren().addAll(temps30, temps60);
+        
+        Button lancerPartie = new Button("Lancer la partie !");
+        
+        sectionTemps.getChildren().addAll(temps15, temps30, temps60);
 
-        contenuH.getChildren().addAll(sectionJoueurs, sectionTemps);
+        contenuH.getChildren().addAll(sectionJoueurs, sectionTemps,lancerPartie);
         return contenuH;
     }
 }

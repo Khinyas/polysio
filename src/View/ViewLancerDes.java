@@ -28,14 +28,14 @@ public class ViewLancerDes extends ViewTemplate {
         HBox contenuH = new HBox(40); // Espace entre les deux zones
         contenuH.setAlignment(Pos.CENTER);
         
-        Button boutontest = new Button();
-        boutontest.setText("Lancer de dés");
+        Button boutonDe = new Button();
+        boutonDe.setText("Lancer de dés");
         
      // Dans ta classe ViewLancerDes
         Label afficheScore = new Label("0"); 
 
        
-        boutontest.setOnAction(event -> { 
+        boutonDe.setOnAction(event -> { 
             // On récupère le int renvoyé par le contrôleur
             int resultat = ControllerDes.auClicLancerDes(); 
             
@@ -59,7 +59,7 @@ public class ViewLancerDes extends ViewTemplate {
         zoneDes.setAlignment(Pos.CENTER);
                
 
-        contenuH.getChildren().addAll(boutontest,labelResultat, zoneDes);
+        contenuH.getChildren().addAll(boutonDe,labelResultat, zoneDes);
         return contenuH;
     }
         

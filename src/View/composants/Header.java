@@ -37,8 +37,9 @@ public class Header extends HBox {
         MainApp.changerDePage(lancerDés);
         	
         });
+        ModelUser user = MainApp.getUtilisateurConnecte();
+        if (user == null) {
 
-        if (MainApp.getUtilisateurConnecte().getUsername()!= null) {
 
             // --- CAS : UTILISATEUR NON CONNECTÉ ---
 
