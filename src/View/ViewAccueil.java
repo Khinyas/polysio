@@ -31,7 +31,7 @@ public class ViewAccueil extends ViewTemplate {
         Button btnChoixPartie = new Button();
         btnChoixPartie.setText("Lancer une partie");
         	btnChoixPartie.setOnAction(event -> {
-        	ViewChoixPartie viewChoixPartie = new ViewChoixPartie("/images/Gemini_Generated_Image_mzk9kjmzk9kjmzk9.png"); 
+        	ViewChoixPartie viewChoixPartie = new ViewChoixPartie(); 
         	
             MainApp.changerDePage(viewChoixPartie);});
         	
