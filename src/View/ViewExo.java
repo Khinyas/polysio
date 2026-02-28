@@ -1,7 +1,7 @@
 package View;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 import controller.ControllerDes;
 import javafx.geometry.Pos;
@@ -46,7 +46,7 @@ public class ViewExo extends ViewTemplate{
                 caseGraphique.setStyle("-fx-background-color: white; -fx-border-color: grey; -fx-padding: 5;");
                 caseGraphique.setPrefSize(60, 80); // Taille d'une case de Monopoly
                 
-                Label lblid = new Label(caseGraphique.getId());
+                Label lblid = new Label();
                 
                 
                 caseGraphique.getChildren().addAll(lblid);
@@ -74,14 +74,14 @@ public class ViewExo extends ViewTemplate{
                
                System.out.println("Score calculé : " + resultat); // Pour vérifier dans la console
            });
-        
+        // Bouton création de joueur 
         Button createJoueur = new Button("Création de joueur");
         createJoueur.setOnAction(event -> {
         ModelJoueur j1 = new ModelJoueur(0,1,0); 
         		}
         ); 
         
-        contenuH.getChildren().addAll(lancerDe,plateauBuilder,labelResultat,createJoueur);
+        contenuH.getChildren().addAll(lancerDe,plateauBuilder,labelResultat,createJoueur,visuelPlateau);
         return contenuH;
         }
 	
