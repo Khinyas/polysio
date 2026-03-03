@@ -58,8 +58,6 @@ public class ViewAccueil extends ViewTemplate {
         }
         
      }
-
-    // ... tes méthodes privées formulaireConnexion() etc. ...
 }
 
 /**

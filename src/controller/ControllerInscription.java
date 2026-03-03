@@ -3,6 +3,7 @@ package controller;
 import View.ViewAccueil;
 import View.ViewConnexion;
 import com.sun.tools.javac.Main;
+import connexion.DAOUser;
 import javafx.scene.control.Alert;
 import main.MainApp;
 import model.ModelUser;
@@ -72,7 +73,7 @@ public class ControllerInscription {
         // Si on arrive ici, tout est OK
         System.out.println("✅ Inscription valide, envoi en base de données...");
         String passwordHache = Securite.hacherPassword(passwordP);
-        ModelUser.insererUser(usernameP, passwordHache, emailP);
+        DAOUser.insererUser(usernameP, passwordHache, emailP);
         MainApp.cfgPolysio.set("db.utilisateur", "");
         ViewConnexion connexion = new ViewConnexion();
         MainApp.changerDePage(connexion);
@@ -99,6 +100,6 @@ public class ControllerInscription {
     }
 
     private boolean usernameExiste(String usernameP) {
-        return ModelUser.reqVerifierUserExiste(usernameP);
+        return DAOUser.reqVerifierUserExiste(usernameP);
     }
 }

@@ -5,6 +5,7 @@ import com.sun.tools.javac.Main;
 import com.sun.webkit.Timer;
 import connexion.ConfigLoader;
 import connexion.DAOAcces;
+import connexion.DAOUser;
 import main.MainApp;
 import model.ModelUser;
 import model.ModelUserRole;
@@ -30,7 +31,7 @@ public class ControllerConnexion {
             return;
         }
         // On verifie que l'user EXISTE
-        if (!ModelUser.reqVerifierUserExiste(usernameP)) {
+        if (!DAOUser.reqVerifierUserExiste(usernameP)) {
             afficherAlerte("Compte inconnu", "Cet utilisateur n'existe pas.");
             return;
         }
@@ -61,7 +62,7 @@ public class ControllerConnexion {
     // Ensuite on Sauvegarde l'utilisateur dans l'attribut du MainApp.setUtilisateurConnecte(userProfil); :
     // userProfil qui est Static donc Accesssible partout dans le code ensuite
     private void validerIdentitication(String usernameP, String passowrdP) {
-        ModelUser userProfil = ModelUser.connexionUtilisateur(usernameP, passowrdP);
+        ModelUser userProfil = DAOUser.connexionUtilisateur(usernameP, passowrdP);
         if (userProfil != null) {
             System.out.println("Succès : Utilisateur récupéré, profil Construit ! ");
             MainApp.setUtilisateurConnecte(userProfil);
