@@ -1,7 +1,6 @@
 package controller;
 
 import View.ViewAccueil;
-import com.sun.tools.javac.Main;
 import com.sun.webkit.Timer;
 import connexion.ConfigLoader;
 import connexion.DAOAcces;
@@ -36,16 +35,13 @@ public class ControllerConnexion {
             return;
         }
         // ICI , on suppose que Si l'user existe mais profil est null, c'est que le mot de passe est faux
-            // Logique métier (on remplit profilUser)
-            // validerIdentification va set un vrai profil ou en nul l'attribut du controller : userProfil.
-            // Donc on enregistre la session avec cette methode
-            validerIdentitication(usernameP, passwordP);
+        ModelUser profilUtilisateur = validerIdentitication(usernameP, passwordP);
+        if (profilUtilisateur != null) {
+            // 1 On enregistre la session !
+            MainApp.setUtilisateurConnecte(profilUtilisateur);
 
-        if (MainApp.getUtilisateurConnecte() != null) {
-            // Succès : Le MainApp a déjà stocké l'user grâce à validerIdentitication
-
-            // On crée la nouvelle vue (Accueil) avec le profil
-            ViewAccueil vueAccueil = new ViewAccueil();
+            // 2 On crée la nouvelle vue (Accueil) avec le profil
+            ViewAccueil vueAccueil = new ViewAccueil(profilUtilisateur);
             MainApp.changerDePage(vueAccueil);
 
             System.out.println("Redirection vers l'accueil réussie.");
@@ -58,15 +54,14 @@ public class ControllerConnexion {
     }
 
     // LOGIQUE METIER :
-    // C est ici qu'on determine si la personne est authentifié ou non
-    // Ensuite on Sauvegarde l'utilisateur dans l'attribut du MainApp.setUtilisateurConnecte(userProfil); :
-    // userProfil qui est Static donc Accesssible partout dans le code ensuite
-    private void validerIdentitication(String usernameP, String passowrdP) {
+    private ModelUser validerIdentitication(String usernameP, String passowrdP) {
+        String username = usernameP;
+        String password = passowrdP;
         ModelUser userProfil = DAOUser.connexionUtilisateur(usernameP, passowrdP);
         if (userProfil != null) {
             System.out.println("Succès : Utilisateur récupéré, profil Construit ! ");
             MainApp.setUtilisateurConnecte(userProfil);
-            MainApp.cfgPolysio.set("db.utilisateur", usernameP);
+            MainApp.cfgApp.set("db.utilisateur", usernameP);
         } else {
             MainApp.setUtilisateurConnecte(null);
             System.err.println("Échec : Aucun utilisateur trouvé avec ces identifiants."); }
