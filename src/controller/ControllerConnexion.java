@@ -35,13 +35,11 @@ public class ControllerConnexion {
             return;
         }
         // ICI , on suppose que Si l'user existe mais profil est null, c'est que le mot de passe est faux
-        ModelUser profilUtilisateur = validerIdentitication(usernameP, passwordP);
-        if (profilUtilisateur != null) {
-            // 1 On enregistre la session !
-            MainApp.setUtilisateurConnecte(profilUtilisateur);
+        validerIdentitication(usernameP, passwordP);
+        if (MainApp.getUtilisateurConnecte() != null) {
 
             // 2 On crée la nouvelle vue (Accueil) avec le profil
-            ViewAccueil vueAccueil = new ViewAccueil(profilUtilisateur);
+            ViewAccueil vueAccueil = new ViewAccueil();
             MainApp.changerDePage(vueAccueil);
 
             System.out.println("Redirection vers l'accueil réussie.");
@@ -54,9 +52,7 @@ public class ControllerConnexion {
     }
 
     // LOGIQUE METIER :
-    private ModelUser validerIdentitication(String usernameP, String passowrdP) {
-        String username = usernameP;
-        String password = passowrdP;
+    private void validerIdentitication(String usernameP, String passowrdP) {
         ModelUser userProfil = DAOUser.connexionUtilisateur(usernameP, passowrdP);
         if (userProfil != null) {
             System.out.println("Succès : Utilisateur récupéré, profil Construit ! ");
