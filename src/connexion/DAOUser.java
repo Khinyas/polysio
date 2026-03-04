@@ -12,7 +12,7 @@ public class DAOUser {
     // REQUETES SQL
     // VERIFIER EXISTENCE UTILISATEUR
     public static boolean reqVerifierUserExiste(String usernameP) {
-        String reqSQL = "SELECT id, username FROM polysio WHERE username = ?";
+        String reqSQL = "SELECT id_utilisateur, pseudo FROM polysio.utilisateur WHERE pseudo = ?";
         try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
             pst.setString(1, usernameP);
             try (ResultSet rs = pst.executeQuery()) {
@@ -27,19 +27,19 @@ public class DAOUser {
 
     // CONNECTER UN UTILISATEUR
     public static ModelUser connexionUtilisateur(String usernameP, String passwordP) {
-        String reqSQL = "SELECT * FROM polysio WHERE username = ?";
+        String reqSQL = "SELECT * FROM polysio.utilisateur WHERE pseudo = ?";
         try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
             pst.setString(1, usernameP);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     // Utilisateur Existe en base de données
                     //On verifie ensuite le password en BDD et celui donné par l utilisateur
-                    String hashedPasswordBDD = rs.getString("password");
+                    String hashedPasswordBDD = rs.getString("mot_de_passe");
                     if (Securite.verifyPassword(passwordP, hashedPasswordBDD)) {
                         //On utilise le constructeur de PROFIL pour ne pas renvoyer mot de pass pour l'instant
                         return new ModelUser(
-                                rs.getInt("id"),
-                                rs.getString("username"),
+                                rs.getInt("id_utilisateur"),
+                                rs.getString("pseudo"),
                                 rs.getString("email"),
                                 ModelUserRole.valueOf(rs.getString("role").toUpperCase())
                         );
@@ -55,14 +55,14 @@ public class DAOUser {
     }
     // RECUPERER UTILISATEUR EN BDD : RETURN UN OBJET DE TYPE MODELUSER :
     public static ModelUser reqRecupererUser(int idP) {
-        String reqSQL = "SELECT * FROM polysio WHERE id = ?";
+        String reqSQL = "SELECT * FROM polysio.utilisateur WHERE id_utilisateur = ?";
 
         try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
             pst.setInt(1, idP);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
-                    int id = rs.getInt("id");
-                    String username = rs.getString("username");
+                    int id = rs.getInt("id_utilisateur");
+                    String username = rs.getString("pseudo");
                     String email = rs.getString("email");
                     ModelUserRole roleBDD; // On la déclare et on affecte la valeur suivant le resultat du try catch
                     try {
@@ -84,7 +84,7 @@ public class DAOUser {
 
     // INSERTION UTILISATEUR EN BASE DE DONNEES
     public static Boolean insererUser(String usernameP, String passwordP, String emailP)  {
-        String reqSQL = "INSERT INTO polysio (username, password, email) VALUES (?,?,?)";
+        String reqSQL = "INSERT INTO polysio.utilisateur (pseudo, mot_de_passe, email) VALUES (?,?,?)";
         try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
             pst.setString(1, usernameP); // Ici 1 = (1er "?") et pas l index de colonne BDD 1 ( id )
             pst.setString(2, passwordP);
@@ -100,7 +100,7 @@ public class DAOUser {
 
     // DELETE UTILISATEUR
     public static Boolean deleteUSer(int idP) {
-        String reqSQL = "DELETE FROM polysio WHERE id = ?";
+        String reqSQL = "DELETE FROM polysio.utilisateur WHERE id_utilisateur = ?";
         try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
             pst.setInt(1, idP);
             int lignesAffectees = pst.executeUpdate();
