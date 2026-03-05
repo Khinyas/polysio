@@ -4,10 +4,13 @@ import java.util.ArrayList;
 
 public class ModelPlateau {
     private ArrayList<ModelCase> listeCases = new ArrayList<>();
-
-    public ModelPlateau() {
+    // private ModelCase couleur_case;
+    public ModelPlateau(/*ModelCase couleur_caseP*/) {
+    	// this.couleur_case = couleur_caseP;
+    	
+    	
         for (int i = 0; i < 40; i++) {
-            listeCases.add(new ModelCase(i, "Rue " + i, "Bleu", i * 10));
+            listeCases.add(new ModelCase(i, "Rue " + i, "Bleu", i * 10, 200));
         }
     }
 

@@ -88,7 +88,7 @@ public class ViewAccueil extends ViewTemplate {
             btnViewExo.setText("Test menu");
             btnViewExo.setOnAction(event -> {
             System.out.println("Bouton cliqué, allons vers Exo");
-            ViewExo viewExo = new ViewExo(); 
+            ViewPlateau viewExo = new ViewPlateau(); 
             
             MainApp.changerDePage(viewExo);
             
