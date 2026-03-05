@@ -1,7 +1,5 @@
 package View;
 
-import java.lang.classfile.Label;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -98,12 +96,12 @@ public class ViewAccueil extends ViewTemplate {
             
         ModelUser user = MainApp.getUtilisateurConnecte();
         
-        if(user != null) {
+        if(user != null) {	// Si l'utilisateur est connecté
         	contenuH1.getChildren().addAll(btnRegles,btnScores,btnSalleC119);
             contenuH2.getChildren().addAll(btnOptions,btnProfil,btnQuitterJeu);
             contenuV.getChildren().addAll(btnChoixPartie,btnChargePartie,contenuH1,contenuH2,btnViewExo);
         return contenuV;
-        } else {
+        } else {	// Si il n'y a pas d'utilisateur connecté
         
         	contenuH1.getChildren().addAll(btnRegles,btnScores,btnSalleC119);
             contenuH2.getChildren().addAll(btnOptions,btnQuitterJeu);

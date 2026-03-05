@@ -19,6 +19,7 @@ public class Header extends HBox {
     private BoutonInscription boutonInscription;
     private BoutonConnexion boutonConnexion;
     private BoutonDes boutonDes;
+	private BoutonDeconnexion boutonDeconnexion;
 
     public Header() {
         this.setPadding(new Insets(10));
@@ -55,6 +56,10 @@ public class Header extends HBox {
 
         } else {
             // --- CAS : UTILISATEUR CONNECTÉ ---
+        	
+        	// Bouton Deconnexion
+            this.boutonDeconnexion = new BoutonDeconnexion();
+            this.getChildren().add(boutonDeconnexion);
 
             // --- CORRECTION ICI ---
             // Au lieu de setHgrow sur le bouton (qui ne marcherait pas bien),
@@ -62,7 +67,6 @@ public class Header extends HBox {
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
             this.getChildren().add(spacer);
-
             HBox zoneProfil = creerZoneProfil();
             this.getChildren().add(zoneProfil);
 
@@ -73,6 +77,9 @@ public class Header extends HBox {
     // Le Getter pour pouvoir rajouter un EVENT depuis un controller (afficher page Accueil)
     public BoutonAcceuil getBoutonAcceuil() {
         return boutonAcceuil;
+    }
+    public BoutonDeconnexion BoutonDeconnexion() {
+        return boutonDeconnexion;
     }
 
     // Getters pour les autres boutons (Retourneront null si l'utilisateur est connecté)
