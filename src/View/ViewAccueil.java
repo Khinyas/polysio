@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import main.MainApp;
 import model.ModelDes;
 import model.ModelUser;
@@ -23,10 +24,18 @@ public class ViewAccueil extends ViewTemplate {
         setContenuCentral(creerContenuCentral());
     }
 
-    private HBox creerContenuCentral() {
-        HBox contenuH = new HBox(40);
-        contenuH.setAlignment(Pos.CENTER);
-        contenuH.setPadding(new Insets(90, 0, 30, 20));
+    private VBox creerContenuCentral() {
+        HBox contenuH1 = new HBox(40);
+        contenuH1.setAlignment(Pos.CENTER);
+        contenuH1.setPadding(new Insets(20, 0, 30, 20));
+        
+        HBox contenuH2 = new HBox(40);
+        contenuH2.setAlignment(Pos.CENTER);
+        contenuH2.setPadding(new Insets(20, 0, 30, 20));
+        
+        VBox contenuV = new VBox(40);
+        contenuV.setAlignment(Pos.CENTER);
+        contenuV.setPadding(new Insets(20, 0, 30, 20));
         
         Button btnChoixPartie = new Button();
         btnChoixPartie.setText("Lancer une partie");
@@ -35,9 +44,50 @@ public class ViewAccueil extends ViewTemplate {
         	
             MainApp.changerDePage(viewChoixPartie);});
         	
-    
+        Button btnChargePartie = new Button();
+        btnChargePartie.setText("Charger une partie");
+        btnChargePartie.setOnAction(event -> {
+        	System.out.println("Bouton charger partie");
+        });
+        
+        Button btnRegles = new Button();
+        btnRegles.setText("Règles");
+        btnRegles.setOnAction(event -> {
+        	System.out.println("Regles du jeu");
+        });
+        
+        Button btnScores = new Button();
+        btnScores.setText("Scores");
+        btnScores.setOnAction(event -> {
+        	System.out.println("Affiche le score");
+        });
+        
+        Button btnSalleC119 = new Button();
+        btnSalleC119.setText("Salle C119");
+        btnSalleC119.setOnAction(event -> {
+        	System.out.println("Crédits du jeu");
+        });
+        
+        Button btnOptions = new Button();
+        btnOptions.setText("Options");
+        btnOptions.setOnAction(event -> {
+        	System.out.println("Options du jeu");
+        });
+        
+        Button btnQuitterJeu = new Button("Quitter le jeu");
+        btnQuitterJeu.setOnAction(event -> {
+		    System.out.println("Fermeture du programme...");
+		    System.exit(0); // Ferme la fenêtre
+		});
+        
+        Button btnProfil = new Button();
+        btnProfil.setText("Profil");
+        btnProfil.setOnAction(event -> {
+        	System.out.println("Profil du joueur");
+        });
+        
         Button btnViewExo = new Button();
-            btnViewExo.setText("Test");
+            btnViewExo.setText("Test menu");
             btnViewExo.setOnAction(event -> {
             System.out.println("Bouton cliqué, allons vers Exo");
             ViewExo viewExo = new ViewExo(); 
@@ -49,13 +99,18 @@ public class ViewAccueil extends ViewTemplate {
         ModelUser user = MainApp.getUtilisateurConnecte();
         
         if(user != null) {
-        contenuH.getChildren().addAll(btnChoixPartie,btnViewExo);
-        return contenuH;
+        	contenuH1.getChildren().addAll(btnRegles,btnScores,btnSalleC119);
+            contenuH2.getChildren().addAll(btnOptions,btnProfil,btnQuitterJeu);
+            contenuV.getChildren().addAll(btnChoixPartie,btnChargePartie,contenuH1,contenuH2,btnViewExo);
+        return contenuV;
         } else {
         
-        contenuH.getChildren().addAll();
-        return contenuH; 
+        	contenuH1.getChildren().addAll(btnRegles,btnScores,btnSalleC119);
+            contenuH2.getChildren().addAll(btnOptions,btnQuitterJeu);
+            contenuV.getChildren().addAll(btnChoixPartie,btnChargePartie,contenuH1,contenuH2,btnViewExo);
+        return contenuV; 
         }
+        
         
      }
 }
