@@ -1,5 +1,10 @@
 package model.cases;
 
-public class ModelCaseCarte {
+import model.ModelCase;
 
+public class ModelCaseCarte extends ModelCase{
+
+	public void modelCase() {
+		
+	}
 }
