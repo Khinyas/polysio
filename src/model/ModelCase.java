@@ -6,12 +6,15 @@ public class ModelCase {
 	private String nom;
 	private int position;
 	private String group;
+	private int prix;
 	
-	public ModelCase(int idP, String nomP, String groupP, int positionP) {
+	public ModelCase(int idP, String nomP, String groupP, int positionP, int prixP) {
 		this.id = idP;
 		this.nom = nomP;
 		this.group = groupP;
 		this.position = positionP;
+		this.prix = prixP;
+		
 	}
 	
 	public int getPosition() {
@@ -28,6 +31,11 @@ public class ModelCase {
 
 	public int getId() {
 		return id;
+	}
+
+	public int getPrix() {
+		// TODO Auto-generated method stub
+		return prix;
 	}
 
 }

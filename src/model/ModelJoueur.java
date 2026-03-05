@@ -4,11 +4,13 @@ public class ModelJoueur {
 	private int idJoueur;
 	private int pos;
 	private int pointsCompetences;
+	private String couleur;
 
-	public ModelJoueur(int idJoueurP, int posP, int pcP){
+	public ModelJoueur(int idJoueurP, int posP, int pcP, String couleurP){
 		this.idJoueur = idJoueurP;
 		this.pos = posP;
-		this.pointsCompetences= pcP;		
+		this.pointsCompetences= pcP;
+		this.couleur = couleurP;
 	}
 	
 	public int getIdJoueur() {
@@ -33,5 +35,8 @@ public class ModelJoueur {
 
 	public int getPos() {
 		return pos;
+	}
+	public String getCouleur() {
+		return couleur;
 	}
 }

@@ -1,89 +1,96 @@
 package View;
 
-import java.util.ArrayList;
-
-
+import controller.ControllerPlateau;
 import controller.ControllerDes;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.ModelCase;
-import model.ModelDes;
-import model.ModelJoueur;
 
-public class ViewExo extends ViewTemplate{
-	
-	private ControllerDes ControllerDes = new ControllerDes();
-	 private Label labelResultat = new Label("Prêt ?");
-	
-	public ViewExo viewExo;
-	
-	public ViewExo() {
-		super("/images/plateaujeu.png");
-		
-		setContenuCentral(creerContenuCentral());
-	}
-	
-	private HBox creerContenuCentral() {
+public class ViewPlateau extends ViewTemplate {
+
+    // Attributs : Le contrôleur et les éléments graphiques principaux
+    private ControllerPlateau controllerPlateau;
+    private ControllerDes controllerDes = new ControllerDes(); // Pour tes dés
+    
+    private GridPane plateauGrid = new GridPane();
+    private Label labelResultat = new Label("Prêt ?");
+
+    public ViewPlateau() {
+        super("/images/plateaujeu.png");
+        
+        
+        this.controllerPlateau = new ControllerPlateau(this);
+        
+        
+        setContenuCentral(creerContenuCentral());
+    }
+
+    private HBox creerContenuCentral() {
         HBox contenuH = new HBox(40);
-        contenuH.setAlignment(Pos.CENTER); 
-        
-        HBox visuelPlateau = new HBox(5); 
-        visuelPlateau.setStyle("-fx-border-color: black; -fx-padding: 10;");
-        
-        ArrayList<ModelCase> plateau = new ArrayList<ModelCase>();
-        Button plateauBuilder = new Button("Création de plateau");
-        plateauBuilder.setOnAction(event -> {
-        	
-        	visuelPlateau.getChildren().clear();
-        	for(int i= 0; i < 11 ; i++) {
-        		plateau.add(new ModelCase(i,"Rue n"+i,"Rouge", i));
-        		System.out.println("Création de case " + i);
-        		
-        		VBox caseGraphique = new VBox(5);
-                caseGraphique.setStyle("-fx-background-color: white; -fx-border-color: grey; -fx-padding: 5;");
-                caseGraphique.setPrefSize(60, 80); // Taille d'une case de Monopoly
-                
-                Label lblid = new Label();
-                
-                
-                caseGraphique.getChildren().addAll(lblid);
-        		}
+        contenuH.setAlignment(Pos.CENTER);
+
+        // 1. Panneau de contrôle (Boutons à gauche)
+        VBox panneauControle = new VBox(15);
+        panneauControle.setAlignment(Pos.CENTER);
+
+        Button btnGenerer = new Button("Initialiser le Plateau");
+        Button btnLancerDe = new Button("Lancer les dés");
+
+        // Action : On délègue au contrôleur
+        btnGenerer.setOnAction(e -> {
+            plateauGrid.getChildren().clear();
+            controllerPlateau.commanderGenerationPlateau();
         });
-        
-        Button lancerDe = new Button("Lancer votre dés");
-        
-        // Dans ta classe ViewLancerDes
-           Label afficheScore = new Label("0"); 
 
-          
-           lancerDe.setOnAction(event -> { 
-      
-               int resultat = ControllerDes.auClicLancerDes(); 
-              
-               afficheScore.setText("Score : " + resultat);
-               
-               if (ControllerDes.estUnDouble()) { 
-                   labelResultat.setText("Score : " + resultat + " - DOUBLE !");
-              } else {
-                  labelResultat.setText("Score : " + resultat);
-              }
-          
-               
-               System.out.println("Score calculé : " + resultat); // Pour vérifier dans la console
-           });
-        // Bouton création de joueur 
-        Button createJoueur = new Button("Création de joueur");
-        createJoueur.setOnAction(event -> {
-        ModelJoueur j1 = new ModelJoueur(0,1,0); 
-        		}
-        ); 
-        
-        contenuH.getChildren().addAll(lancerDe,plateauBuilder,labelResultat,createJoueur,visuelPlateau);
+        btnLancerDe.setOnAction(e -> {
+            int score = controllerDes.auClicLancerDes();
+            labelResultat.setText("Résultat : " + score + (controllerDes.estUnDouble() ? " (DOUBLE !)" : ""));
+        });
+
+        panneauControle.getChildren().addAll(btnGenerer, btnLancerDe, labelResultat);
+
+        // 2. Le visuel du plateau (GridPane à droite)
+        plateauGrid.setStyle("-fx-background-color: #BFDBAE; -fx-padding: 10; -fx-border-color: black;");
+        plateauGrid.setHgap(2);
+        plateauGrid.setVgap(2);
+
+        contenuH.getChildren().addAll(panneauControle, plateauGrid);
         return contenuH;
-        }
-	
+    }
 
+    /**
+     * Cette méthode est appelée par le Controller pour chaque case du Model
+     */
+    public void dessinerUneCase(ModelCase mCase) {
+        VBox cellule = new VBox();
+        cellule.setPrefSize(55, 55);
+        cellule.setAlignment(Pos.CENTER);
+        cellule.setStyle("-fx-background-color: white; -fx-border-color: grey;");
+
+        // On affiche les infos venant du ModelCase
+        Label nom = new Label(mCase.getNom());
+        nom.setStyle("-fx-font-size: 9px; -fx-font-weight: bold;");
+        
+        Label prix = new Label(mCase.getPrix() + "€");
+        prix.setStyle("-fx-font-size: 8px;");
+
+        cellule.getChildren().addAll(nom, prix);
+
+        // Placement automatique sur le carré du Monopoly
+        placerDansGrille(cellule, mCase.getId());
+    }
+
+    private void placerDansGrille(VBox cellule, int id) {
+        int col, row;
+        if (id < 10) { col = 10 - id; row = 10; }      // Bas
+        else if (id < 20) { col = 0; row = 10 - (id - 10); } // Gauche
+        else if (id < 30) { col = id - 20; row = 0; }      // Haut
+        else { col = 10; row = id - 30; }             // Droite
+
+        plateauGrid.add(cellule, col, row);
+    }
 }
