@@ -16,12 +16,13 @@ public class ControllerPlateau {
     }
 
     
-    public void commanderGenerationPlateau() {
+    public ArrayList<ModelCase> commanderGenerationPlateau() {
         ArrayList<ModelCase> cases = modelPlateau.getListeCases();
         
         // On demande à la vue d'afficher chaque case
         for (ModelCase c : cases) {
             viewPlateau.dessinerUneCase(c);
         }
+        return cases;
     }
 }

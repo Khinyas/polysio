@@ -1,25 +1,95 @@
 package model;
 
+
+
+
 public class ModelCase {
 	
 	private int id;
 	private String nom;
-	private int position;
-	private String group;
+	private int positionY;
+	private String typeCase;
 	private int prix;
+	private int positionId;
+	private int positionX;
+	private int loyerNu;
+	private int idCouleur;
 	
-	public ModelCase(int idP, String nomP, String groupP, int positionP, int prixP) {
+	
+	public int getPositionId() {
+		return positionId;
+	}
+
+
+
+	public void setPositionId(int positionId) {
+		this.positionId = positionId;
+	}
+
+
+
+	public int getPositionX() {
+		return positionX;
+	}
+
+
+
+	public void setPositionX(int positionX) {
+		this.positionX = positionX;
+	}
+
+
+
+	public int getPositionY() {
+		return positionY;
+	}
+
+
+
+	public void setPositionY(int positionY) {
+		this.positionY = positionY;
+	}
+
+
+	
+	
+	public ModelCase(int idP, String nomP, String typeCaseP, int positionXP,int positionYP, int prixP, int idCouleurP) {
 		this.id = idP;
 		this.nom = nomP;
-		this.group = groupP;
-		this.position = positionP;
+		this.typeCase = typeCaseP;
+		this.positionX = positionXP;
+		this.positionY = positionYP;
+		
 		this.prix = prixP;
+		this.idCouleur = idCouleurP;
 		
 	}
 	
-	public int getPosition() {
-		return position;
+	
+
+	public String getTypeCase() {
+		return typeCase;
 	}
+
+
+
+	public void setTypeCase(String typeCase) {
+		this.typeCase = typeCase;
+	}
+
+
+
+	public int getIdCouleur() {
+		return idCouleur;
+	}
+
+
+
+	public void setIdCouleur(int idCouleur) {
+		this.idCouleur = idCouleur;
+	}
+
+
 
 	public String getNom() {
 		return nom;

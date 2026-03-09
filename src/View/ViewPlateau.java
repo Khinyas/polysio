@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import main.MainApp;
 import model.ModelCase;
 
 public class ViewPlateau extends ViewTemplate {
@@ -40,10 +41,15 @@ public class ViewPlateau extends ViewTemplate {
 
         // 1. D'abord on génère les cases (le tour du plateau)
         controllerPlateau.commanderGenerationPlateau();
+        Button boutonListe = new Button("BOUTON LISTE");
+        boutonListe.setOnAction(event -> {
+        	ViewTemplateJeu viewTemplateJeu = new ViewTemplateJeu();
+        	MainApp.changerDePage(viewTemplateJeu);
+        });
 
         // 2. Ensuite on ajoute le panneau de commande AU CENTRE
 
-        contenuH.getChildren().add(plateauGrid);
+        contenuH.getChildren().addAll(plateauGrid,boutonListe);
         return contenuH;
     }
 
@@ -68,6 +74,7 @@ public class ViewPlateau extends ViewTemplate {
         // Placement automatique sur le carré du Monopoly
         placerDansGrille(cellule, mCase.getId());
     }
+    
     
     
 

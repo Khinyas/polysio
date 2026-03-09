@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 
 public class ModelPlateau {
-    private ArrayList<ModelCase> listeCases = new ArrayList<>();
+    private static ArrayList<ModelCase> listeCases = new ArrayList<>();
     // private ModelCase couleur_case;
     public ModelPlateau(/*ModelCase couleur_caseP*/) {
     	// this.couleur_case = couleur_caseP;
@@ -14,7 +14,7 @@ public class ModelPlateau {
         }
     }
 
-    public ArrayList<ModelCase> getListeCases() {
+    public static ArrayList<ModelCase> getListeCases() {
         return listeCases;
     }
 }
