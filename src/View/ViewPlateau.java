@@ -1,10 +1,15 @@
 package View;
 
 import controller.ControllerPlateau;
+
+import java.util.ArrayList;
+
 import controller.ControllerDes;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -15,7 +20,7 @@ public class ViewPlateau extends ViewTemplate {
     // Attributs : Le contrôleur et les éléments graphiques principaux
     private ControllerPlateau controllerPlateau;
     private ControllerDes controllerDes = new ControllerDes(); // Pour tes dés
-    
+    boolean affiche = false;
     private GridPane plateauGrid = new GridPane();
     private Label labelResultat = new Label("Prêt ?");
 
@@ -45,10 +50,50 @@ public class ViewPlateau extends ViewTemplate {
             plateauGrid.getChildren().clear();
             controllerPlateau.commanderGenerationPlateau();
         });
-
+        
+        
         btnLancerDe.setOnAction(e -> {
-            int score = controllerDes.auClicLancerDes();
-            labelResultat.setText("Résultat : " + score + (controllerDes.estUnDouble() ? " (DOUBLE !)" : ""));
+            ArrayList<Integer> resultat = ControllerDes.auClicLancerDes();
+            int score = resultat.get(0) + resultat.get(1);
+            labelResultat.setText("Résultat : " + score + (ControllerDes.estUnDouble() ? " (DOUBLE !)" : ""));
+  
+            Image image1 = new Image(getClass().getResourceAsStream("/images/dice/d"+resultat.get(0).toString()+".png"));
+    		Image image2 = new Image(getClass().getResourceAsStream("/images/dice/d"+resultat.get(1).toString()+".png"));
+    		ImageView imageDe1 = new ImageView(image1);
+    		ImageView imageDe2 = new ImageView(image2);
+    		
+    		imageDe1.setFitHeight(200); 
+    		imageDe1.setFitWidth(200);
+            //Setting the position of the image 
+    		imageDe1.setX(50); 
+    		imageDe1.setY(25); 
+    		
+    		imageDe2.setFitHeight(200); 
+    		imageDe2.setFitWidth(200);
+            //Setting the position of the image 
+    		imageDe2.setX(50); 
+    		imageDe2.setY(25); 
+    		
+    		HBox zoneDes = new HBox(10, imageDe1, imageDe2); // Zone pour les deux dés côte à côte
+            zoneDes.setAlignment(Pos.CENTER);
+            
+            
+            
+            if (ControllerDes.estUnDouble()) { 
+                labelResultat.setText("Score : " + score + " - DOUBLE !");
+           } else {
+               labelResultat.setText("Score : " + score);
+           }
+            if(affiche == false) {
+	            affiche = true;
+	            contenuH.getChildren().addAll(labelResultat, zoneDes);
+            }
+            if(affiche==true) {
+            	contenuH.getChildren().setAll(btnGenerer, btnLancerDe, labelResultat, zoneDes);
+            }
+            System.out.println("Score calculé : " + resultat); // Pour vérifier dans la console
+        
+        
         });
 
         panneauControle.getChildren().addAll(btnGenerer, btnLancerDe, labelResultat);
