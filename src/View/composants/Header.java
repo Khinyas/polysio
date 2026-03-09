@@ -1,6 +1,6 @@
 package View.composants;
 import View.ViewLancerDes;
-
+import controller.ControllerProfil;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -108,7 +108,10 @@ public class Header extends HBox {
 
             box.getChildren().addAll(lblName, avatar);
             box.setCursor(javafx.scene.Cursor.HAND);
-            box.setOnMouseClicked(event -> System.out.println("Ouverture Profil User " + MainApp.getUtilisateurConnecte().getUsername()));
+            box.setOnMouseClicked(event -> // C'est ICI qu'on appelle le contrôleur au moment du clic !
+            new ControllerProfil());
+            System.out.println("Ouverture Profil User " + MainApp.getUtilisateurConnecte().getUsername());
+         
         } else {
             /**
              * Utilisateur Non Connecté
