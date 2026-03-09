@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import main.MainApp;
 import model.ModelUser;
 
 public class ViewChoixPartie extends ViewTemplate {
@@ -16,6 +17,7 @@ public class ViewChoixPartie extends ViewTemplate {
 	
 	public ViewChoixPartie viewChoixPartie;
 	private ControllerChoixPartie controllerChoixPartie = new ControllerChoixPartie();
+	public ViewPlateau viewPlateau;
 	
 	public ViewChoixPartie() {
 		super("/images/G1.png");
@@ -55,6 +57,10 @@ public class ViewChoixPartie extends ViewTemplate {
         
         
         Button lancerPartie = new Button("Lancer la partie !");
+        	lancerPartie.setOnAction(event -> {
+        	ViewPlateau viewPlateau = new ViewPlateau();
+        	MainApp.changerDePage(viewPlateau);});
+    
         
         sectionTemps.getChildren().addAll(temps15, temps30, temps60);
 

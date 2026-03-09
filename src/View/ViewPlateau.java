@@ -30,35 +30,20 @@ public class ViewPlateau extends ViewTemplate {
     }
 
     private HBox creerContenuCentral() {
-        HBox contenuH = new HBox(40);
+        HBox contenuH = new HBox();
         contenuH.setAlignment(Pos.CENTER);
 
-        // 1. Panneau de contrôle (Boutons à gauche)
-        VBox panneauControle = new VBox(15);
-        panneauControle.setAlignment(Pos.CENTER);
-
-        Button btnGenerer = new Button("Initialiser le Plateau");
-        Button btnLancerDe = new Button("Lancer les dés");
-
-        // Action : On délègue au contrôleur
-        btnGenerer.setOnAction(e -> {
-            plateauGrid.getChildren().clear();
-            controllerPlateau.commanderGenerationPlateau();
-        });
-
-        btnLancerDe.setOnAction(e -> {
-            int score = controllerDes.auClicLancerDes();
-            labelResultat.setText("Résultat : " + score + (controllerDes.estUnDouble() ? " (DOUBLE !)" : ""));
-        });
-
-        panneauControle.getChildren().addAll(btnGenerer, btnLancerDe, labelResultat);
-
-        // 2. Le visuel du plateau (GridPane à droite)
-        plateauGrid.setStyle("-fx-background-color: #BFDBAE; -fx-padding: 10; -fx-border-color: black;");
+        // Style du plateau
+        plateauGrid.setStyle("-fx-background-color: #BFDBAE; -fx-padding: 10; -fx-border-color: #2e4d23; -fx-border-width: 3;");
         plateauGrid.setHgap(2);
         plateauGrid.setVgap(2);
 
-        contenuH.getChildren().addAll(panneauControle, plateauGrid);
+        // 1. D'abord on génère les cases (le tour du plateau)
+        controllerPlateau.commanderGenerationPlateau();
+
+        // 2. Ensuite on ajoute le panneau de commande AU CENTRE
+
+        contenuH.getChildren().add(plateauGrid);
         return contenuH;
     }
 
@@ -83,6 +68,8 @@ public class ViewPlateau extends ViewTemplate {
         // Placement automatique sur le carré du Monopoly
         placerDansGrille(cellule, mCase.getId());
     }
+    
+    
 
     private void placerDansGrille(VBox cellule, int id) {
         int col, row;
@@ -93,4 +80,7 @@ public class ViewPlateau extends ViewTemplate {
 
         plateauGrid.add(cellule, col, row);
     }
-}
+    
+    
+    }
+    
