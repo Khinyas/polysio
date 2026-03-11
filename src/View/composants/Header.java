@@ -97,8 +97,8 @@ public class Header extends HBox {
          */
         if (MainApp.getUtilisateurConnecte() != null) {
             // AVATAR UTILISATEUR
-            // Avatar (Petit rond ou image)
-            ImageView avatar = new ImageView(new Image("/images/avatars/avatar.jpg"));
+            // Avatar (Petit rond ou image qui s'affiche quand l'utilisateur est connecté)
+            ImageView avatar = new ImageView(new Image(MainApp.getUtilisateurConnecte().getProfilepicture())); 
             avatar.setFitHeight(120);
             avatar.setFitWidth(90);
 
