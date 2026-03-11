@@ -14,8 +14,21 @@ public class ModelCase {
 	private int positionX;
 	private int loyerNu;
 	private int idCouleur;
+	private String cheminSvg;
 	
 	
+	public String getCheminSvg() {
+		return cheminSvg;
+	}
+
+
+
+	public void setCheminSvg(String cheminSvg) {
+		this.cheminSvg = cheminSvg;
+	}
+
+
+
 	public int getPositionId() {
 		return positionId;
 	}
@@ -53,7 +66,7 @@ public class ModelCase {
 
 	
 	
-	public ModelCase(int idP, String nomP, String typeCaseP, int positionXP,int positionYP, int prixP, int idCouleurP) {
+	public ModelCase(int idP, String nomP, String typeCaseP, int positionXP,int positionYP, int prixP, int idCouleurP, String cheminSvgP) {
 		this.id = idP;
 		this.nom = nomP;
 		this.typeCase = typeCaseP;
@@ -62,6 +75,7 @@ public class ModelCase {
 		
 		this.prix = prixP;
 		this.idCouleur = idCouleurP;
+		this.cheminSvg = cheminSvgP;
 		
 	}
 	
