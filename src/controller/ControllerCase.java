@@ -13,11 +13,11 @@ import service.Securite;
 
 public class ControllerCase {
 	   public static ArrayList<ModelCase> casePlateau() {
-	        String reqSQL = "SELECT * FROM polysio.case_plateau";
+	        String reqSQL = "SELECT * FROM polysio.case_plateau ORDER BY id_case_plateau ASC";
 	        ArrayList<ModelCase> listeCaseBdd = new ArrayList<>();
-	        try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
+	        try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL);
 	          
-	            try (ResultSet rs = pst.executeQuery()) {
+	            ResultSet rs = pst.executeQuery()) {
 	                while (rs.next()) { 
 	                      {
 	                         ModelCase casePlateau =  new ModelCase(
@@ -33,13 +33,14 @@ public class ControllerCase {
 	                         listeCaseBdd.add(casePlateau);
 	                    } 
 	                     return listeCaseBdd;
-	                }
-	        } catch (SQLException erreur) {
+	                }}
+	         catch (SQLException erreur) {
 	            // Un seul CATCH : erreurs SQL
 	            System.err.println("Erreur SQL : Liste Cases non récupérée " + erreur.getMessage());
 	            erreur.printStackTrace();
 	        }
-	        return null; 
-	    }
+			return listeCaseBdd;}}
+	     
+	    
 
-	   }}
+	   

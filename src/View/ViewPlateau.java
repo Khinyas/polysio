@@ -46,6 +46,12 @@ public class ViewPlateau extends ViewTemplate {
         	ViewTemplateJeu viewTemplateJeu = new ViewTemplateJeu();
         	MainApp.changerDePage(viewTemplateJeu);
         });
+        
+        Button fonctionCaseRue = new Button();
+        fonctionCaseRue.setOnAction(event -> {
+        	
+        });
+        
 
         // 2. Ensuite on ajoute le panneau de commande AU CENTRE
 
