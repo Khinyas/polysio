@@ -16,16 +16,21 @@ public class ModelCase {
 	private int idCouleur;
 	private String cheminSvg;
 	
+	public ModelCase(int idP, String nomP, String typeCaseP, int positionXP,int positionYP, int prixP, int idCouleurP, String cheminSvgP) {
+		this.id = idP;
+		this.nom = nomP;
+		this.typeCase = typeCaseP;
+		this.positionX = positionXP;
+		this.positionY = positionYP;
+		
+		this.prix = prixP;
+		this.idCouleur = idCouleurP;
+		this.cheminSvg = cheminSvgP;
+		
+	}
 	
-	public String getCheminSvg() {
-		return cheminSvg;
-	}
+	
 
-
-
-	public void setCheminSvg(String cheminSvg) {
-		this.cheminSvg = cheminSvg;
-	}
 
 
 
@@ -66,18 +71,7 @@ public class ModelCase {
 
 	
 	
-	public ModelCase(int idP, String nomP, String typeCaseP, int positionXP,int positionYP, int prixP, int idCouleurP, String cheminSvgP) {
-		this.id = idP;
-		this.nom = nomP;
-		this.typeCase = typeCaseP;
-		this.positionX = positionXP;
-		this.positionY = positionYP;
-		
-		this.prix = prixP;
-		this.idCouleur = idCouleurP;
-		this.cheminSvg = cheminSvgP;
-		
-	}
+
 	
 	
 
@@ -120,6 +114,16 @@ public class ModelCase {
 	public int getPrix() {
 		// TODO Auto-generated method stub
 		return prix;
+	}
+	
+	public String getCheminSvg() {
+		return cheminSvg;
+	}
+
+
+
+	public void setCheminSvg(String cheminSvg) {
+		this.cheminSvg = cheminSvg;
 	}
 
 }
