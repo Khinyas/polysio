@@ -12,34 +12,36 @@ import model.ModelUserRole;
 import service.Securite;
 
 public class ControllerCase {
-	   public static ArrayList<ModelCase> casePlateau() {
-	        String reqSQL = "SELECT * FROM polysio.case_plateau ORDER BY id_case_plateau ASC";
-	        ArrayList<ModelCase> listeCaseBdd = new ArrayList<>();
-	        try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL);
-	          
-	            ResultSet rs = pst.executeQuery()) {
-	                while (rs.next()) { 
-	                      {
-	                         ModelCase casePlateau =  new ModelCase(
-	                                rs.getInt("id_case_plateau"),
-	                                rs.getString("nom_case"),
-	                                rs.getString("type_case"),
-	                                rs.getInt("positionX"),
-	                                rs.getInt("positionY"),
-	                                rs.getInt("prix"),
-	                                rs.getInt("id_couleur")
-	                    
-	                        );
-	                         listeCaseBdd.add(casePlateau);
-	                    } 
-	                     return listeCaseBdd;
-	                }}
-	         catch (SQLException erreur) {
-	            // Un seul CATCH : erreurs SQL
-	            System.err.println("Erreur SQL : Liste Cases non récupérée " + erreur.getMessage());
-	            erreur.printStackTrace();
-	        }
-			return listeCaseBdd;}}
+	public static ArrayList<ModelCase> casePlateau() {
+		String reqSQL = "SELECT * FROM polysio.case_plateau ORDER BY id_case_plateau ASC";
+		ArrayList<ModelCase> listeCaseBdd = new ArrayList<>();
+		try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL);
+
+			 ResultSet rs = pst.executeQuery()) {
+			while (rs.next()) {
+				{
+					ModelCase casePlateau =  new ModelCase(
+							rs.getInt("id_case_plateau"),
+							rs.getString("nom_case"),
+							rs.getString("type_case"),
+							rs.getInt("positionX"),
+							rs.getInt("positionY"),
+							rs.getInt("prix"),
+							rs.getInt("loyer_nue"),
+							rs.getInt("loyer_batiment"),
+							rs.getInt("id_couleur"),
+							rs.getString("chemin_svg")
+					);
+					listeCaseBdd.add(casePlateau);
+				}
+				return listeCaseBdd;
+			}}
+		catch (SQLException erreur) {
+			// Un seul CATCH : erreurs SQL
+			System.err.println("Erreur SQL : Liste Cases non récupérée " + erreur.getMessage());
+			erreur.printStackTrace();
+		}
+		return listeCaseBdd;}}
 	     
 	    
 
