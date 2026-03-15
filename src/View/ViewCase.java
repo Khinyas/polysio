@@ -10,8 +10,14 @@ import javafx.geometry.Pos;
 import java.net.URL;
 
 public class ViewCase extends VBox {
-
+private int viewCasePositionX;
+private int viewCasePositionY;
+private String viewCaseName;
     public ViewCase(ModelCase modelCaseP) {
+        // Remplissage attribut :
+        this.viewCasePositionX = modelCaseP.getPositionX();
+        this.viewCasePositionY = modelCaseP.getPositionY();
+        this.viewCaseName = modelCaseP.getNom();
         //  Configuration de la VBox
         this.setAlignment(Pos.CENTER);
         this.setMinSize(50, 50);
@@ -51,5 +57,17 @@ public class ViewCase extends VBox {
             System.out.println("ERREUR Exception sur la case : " + modelCaseP.getNom());
             this.getChildren().add(new Label("Erreur Image"));
         }
+    }
+
+    public int getViewCasePositionX() {
+        return viewCasePositionX;
+    }
+
+    public int getViewCasePositionY() {
+        return viewCasePositionY;
+    }
+
+    public String getViewCaseName() {
+        return viewCaseName;
     }
 }

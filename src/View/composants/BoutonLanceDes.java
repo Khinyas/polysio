@@ -2,23 +2,19 @@ package View.composants;
 
 import controller.ControllerDes;
 import javafx.animation.ScaleTransition;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
-import main.MainApp;
 
 import java.util.ArrayList;
 
 public class BoutonLanceDes extends Button {
     private Label labelResultat = new Label("Prêt ?");
     private ControllerDes controllerDes = new ControllerDes();
-    HBox zoneDes = new HBox(10);
     Label afficheScore = new Label("0");
+    private ArrayList<Integer> scoreLanceDes;
+    private Button boutonSuivant;
 
     private static final String STYLE_BASE =
             "-fx-background-color: #34495e; " +
@@ -34,10 +30,13 @@ public class BoutonLanceDes extends Button {
     private AudioClip soundClick;
 
 
-    public BoutonLanceDes() {
+    public BoutonLanceDes(Button boutonSuivantP, ControllerDes controllerDesP) {
         super("LanceDeDés");
         this.setStyle(STYLE_BASE);
         this.setCursor(javafx.scene.Cursor.HAND);
+        this.controllerDes = controllerDesP;
+        this.boutonSuivant = boutonSuivantP;
+        this.boutonSuivant.setVisible(false);
         try {
             String path = getClass().getResource("/audio/lanceDes.mp3").toExternalForm();
             soundClick = new AudioClip(path);
@@ -75,30 +74,18 @@ public class BoutonLanceDes extends Button {
         });
 
         this.setOnAction(event -> {
-            System.out.println(/*MainApp.getUtilisateurConnecte().getUsername() +*/ " lance les Dés");
-            ArrayList<Integer> resultat = controllerDes.auClicLancerDes();
-            int score = resultat.get(0) + resultat.get(1);
-            Image image1 = new Image(getClass().getResourceAsStream("/ressources/images/dice/"+resultat.get(0)+".png"));
-            Image image2 = new Image(getClass().getResourceAsStream("/ressources/images/dice/"+resultat.get(1)+".png"));
-            ImageView imageDe1 = new ImageView(image1);
-            ImageView imageDe2 = new ImageView(image2);
-
-            zoneDes.getChildren().add(imageDe1);
-            zoneDes.getChildren().add(imageDe2);
-
-            zoneDes.setAlignment(Pos.CENTER);
-
-            // On transforme le int en texte pour le Label
-            afficheScore.setText("Score : " + score);
-
-            if (controllerDes.estUnDouble()) {
-                labelResultat.setText("Score : " + resultat + " - DOUBLE !");
-            } else {
-                labelResultat.setText("Score : " + resultat);
-            }
-            this.getChildren().addAll(labelResultat, zoneDes);
-
-            System.out.println("Score calculé : " + resultat); // Pour vérifier dans la console
+            System.out.println("Lancer de dés en cours...");
+            // On met à jour l'attribut de classe pour que getScoreLanceDes() renvoie les bonnes valeurs
+            this.scoreLanceDes = this.controllerDes.auClicLancerDes();
+            this.setDisable(true);
+            this.setOpacity(0.5); // On le grise visuellement
+            this.setText("Dés lancés !");
+            this.boutonSuivant.setVisible(true);
+            System.out.println("Dés lancés : " + scoreLanceDes.get(0) + " et " + scoreLanceDes.get(1));
         });
+    }
+
+    public ArrayList<Integer> getScoreLanceDes() {
+        return scoreLanceDes;
     }
 }

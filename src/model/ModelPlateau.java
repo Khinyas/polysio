@@ -5,12 +5,14 @@ import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 // On utilise StackPane pour pouvoir empiler le background ET le plateau par dessus
 public class ModelPlateau extends GridPane {
     private static List<ModelCase> listeCases;
-
+    private static List<ViewCase> listeViewCases = new ArrayList<>();;
 
     public ModelPlateau(List<ModelCase> listeCasesP) {
         this.listeCases = listeCasesP;
@@ -81,6 +83,8 @@ public class ModelPlateau extends GridPane {
 
             // Utilisation directe de add() pour plus de clarté
             this.add(casePlateau, colonne, ligne);
+            // ToDo : Création d'une liste de ViewCase pour utiliser pour les popup etc (est ce indispensable ?? )
+            listeViewCases.add(casePlateau);
         }
 
         // ToDo : CaseCentrale est la derniere pour l'instant mais peut etre prendre getName ou Id à la place ?
@@ -89,4 +93,11 @@ public class ModelPlateau extends GridPane {
         ViewCase vueCentrale = new ViewCase(mCentrale);
         this.add(vueCentrale, 1, 1, 9, 9);
     }
+
+    public List<ViewCase> getListeViewCases() {
+        return listeViewCases;
+    }
+    /*public ViewCase getViewCase(int idP) {
+        return listeViewCases.get(idP);
+    }*/
 }
