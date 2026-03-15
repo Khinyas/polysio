@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class BoutonLanceDes extends Button {
     private ImageView iconBuouton;
     private Label labelResultat = new Label("Prêt ?");
-    private ControllerDes
+    private ControllerDes controllerDes = new ControllerDes();
     private static final String STYLE_BASE =
             "-fx-background-color: #34495e; " +
                     "-fx-text-fill: white; " +
@@ -72,7 +72,7 @@ public class BoutonLanceDes extends Button {
         });
         this.setOnAction(event -> {
             System.out.println(MainApp.getUtilisateurConnecte().getUsername() + " lance les Dés");
-            ArrayList<Integer> resultat = ControllerDes.auClicLancerDes();
+            ArrayList<Integer> resultat = controllerDes.auClicLancerDes();
             int score = resultat.get(0) + resultat.get(1);
             Image image1 = new Image(getClass().getResourceAsStream("/ressources/images/dice/"+resultat.get(0)+".png"));
             Image image2 = new Image(getClass().getResourceAsStream("/ressources/images/dice/"+resultat.get(1)+".png"));
@@ -87,12 +87,12 @@ public class BoutonLanceDes extends Button {
             // On transforme le int en texte pour le Label
             afficheScore.setText("Score : " + score);
 
-            if (ControllerDes.estUnDouble()) {
+            if (controllerDes.estUnDouble()) {
                 labelResultat.setText("Score : " + resultat + " - DOUBLE !");
             } else {
                 labelResultat.setText("Score : " + resultat);
             }
-            contenuH.getChildren().addAll(boutonDe, labelResultat, zoneDes);
+            this.getChildren().addAll(labelResultat, zoneDes);
 
             System.out.println("Score calculé : " + resultat); // Pour vérifier dans la console
         });
