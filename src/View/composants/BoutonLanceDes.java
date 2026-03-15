@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 import main.MainApp;
@@ -17,6 +18,8 @@ public class BoutonLanceDes extends Button {
     private ImageView iconBuouton;
     private Label labelResultat = new Label("Prêt ?");
     private ControllerDes controllerDes = new ControllerDes();
+    HBox zoneDes = new HBox(10);
+    Label afficheScore = new Label("0");
 
     private static final String STYLE_BASE =
             "-fx-background-color: #34495e; " +
@@ -71,6 +74,7 @@ public class BoutonLanceDes extends Button {
         this.setOnMouseReleased(event -> {
             this.setTranslateY(0); // Relâchement
         });
+
         this.setOnAction(event -> {
             System.out.println(MainApp.getUtilisateurConnecte().getUsername() + " lance les Dés");
             ArrayList<Integer> resultat = controllerDes.auClicLancerDes();
