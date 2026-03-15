@@ -17,6 +17,7 @@ public class BoutonLanceDes extends Button {
     private ImageView iconBuouton;
     private Label labelResultat = new Label("Prêt ?");
     private ControllerDes controllerDes = new ControllerDes();
+
     private static final String STYLE_BASE =
             "-fx-background-color: #34495e; " +
                     "-fx-text-fill: white; " +
