@@ -67,28 +67,5 @@ public class DAOAcces {
             erreur.printStackTrace();
         }
     }
-
-    public static void resetBaseDeDonnees() {
-        // Sécurité : Si on n'est pas en mode debug, on sort direct !
-        if (!MainApp.cfgApp.getBoolean("app.debug")) {
-            System.out.println("⚠️ Reset annulé : Mode Debug désactivé.");
-            return;
-        }
-        String[] queries = {
-                "SET FOREIGN_KEY_CHECKS = 0", // Désactive les contraintes pour pouvoir vider
-                "TRUNCATE TABLE proprietes",
-                "TRUNCATE TABLE polysio",
-                "SET FOREIGN_KEY_CHECKS = 1"  // Réactive les contraintes
-        };
-        Connection conn = getConnexion();
-        try (Statement statement = conn.createStatement()) {
-            for (String sql : queries) {
-                statement.executeUpdate(sql);
-            }
-            System.out.println("♻️ Base de données réinitialisée.");
-        } catch (SQLException erreur) {
-            erreur.printStackTrace();
-        }
-    }
 }
 

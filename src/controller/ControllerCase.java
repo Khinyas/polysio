@@ -5,7 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import connexion.ConfigLoader;
 import connexion.DAOAcces;
+import main.MainApp;
 import model.ModelCase;
 import model.ModelUser;
 import model.ModelUserRole;
@@ -30,12 +32,14 @@ public class ControllerCase {
 							rs.getInt("loyer_nue"),
 							rs.getInt("loyer_batiment"),
 							rs.getInt("id_couleur"),
-							rs.getString("chemin_svg")
+							MainApp.cfgPolysio.get("pf.case"+rs.getInt("id_case_plateau"))
 					);
 					listeCaseBdd.add(casePlateau);
 				}
-				return listeCaseBdd;
-			}}
+			}
+			System.out.println("DEBUG SQL : Nombre de cases récupérées = " + listeCaseBdd.size());
+			return listeCaseBdd;
+		}
 		catch (SQLException erreur) {
 			// Un seul CATCH : erreurs SQL
 			System.err.println("Erreur SQL : Liste Cases non récupérée " + erreur.getMessage());

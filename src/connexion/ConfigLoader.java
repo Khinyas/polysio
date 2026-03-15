@@ -25,6 +25,8 @@ public class ConfigLoader {
 
 
     public String get(String key) {
+        // ToDo : Attention à supprimer
+        System.out.println("Valeur trouvée : " + props.getProperty(key));
         return props.getProperty(key);
     }
 
@@ -58,6 +60,8 @@ public class ConfigLoader {
 
     public int getInt(String key) {
         String val = get(key);
+        // ToDo : Attention à supprimer
+        System.out.println("Valeur trouvée : " + val);
         return (val != null) ? Integer.parseInt(val.trim()) : 0;
     }
 

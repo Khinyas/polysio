@@ -2,27 +2,24 @@ package controller;
 
 import java.util.ArrayList;
 
-import View.ViewPlateau;
+import View.ViewTemplateJeu;
+import com.sun.tools.javac.Main;
+import com.sun.webkit.Timer;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import main.MainApp;
 import model.ModelCase;
 import model.ModelPlateau;
 
 public class ControllerPlateau {
+    private ViewTemplateJeu vueJeu;
     private ModelPlateau modelPlateau;
-    private ViewPlateau viewPlateau;
+    private ArrayList<ModelCase> listeCases;
 
-    public ControllerPlateau(ViewPlateau viewPlateau) {
-        this.viewPlateau = viewPlateau;
-        this.modelPlateau = new ModelPlateau();
-    }
-
-    
-    public ArrayList<ModelCase> commanderGenerationPlateau() {
-        ArrayList<ModelCase> cases = modelPlateau.getListeCases();
-        
-        // On demande à la vue d'afficher chaque case
-        for (ModelCase c : cases) {
-            viewPlateau.dessinerUneCase(c);
-        }
-        return cases;
+    public ControllerPlateau() {
+        this.listeCases = ControllerCase.casePlateau();
+        this.modelPlateau = new ModelPlateau(this.listeCases);
+        this.vueJeu = new ViewTemplateJeu(modelPlateau);
+        MainApp.basculerEnModeJeu(vueJeu);
     }
 }

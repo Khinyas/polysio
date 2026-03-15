@@ -30,16 +30,10 @@ public class ModelCase {
 		this.cheminSvg = cheminSvgP;
 		
 	}
-	
-	
-
-
-
 
 	public int getPositionId() {
 		return positionId;
 	}
-
 
 
 	public void setPositionId(int positionId) {
@@ -47,11 +41,9 @@ public class ModelCase {
 	}
 
 
-
 	public int getPositionX() {
 		return positionX;
 	}
-
 
 
 	public void setPositionX(int positionX) {
@@ -59,11 +51,9 @@ public class ModelCase {
 	}
 
 
-
 	public int getPositionY() {
 		return positionY;
 	}
-
 
 
 	public void setPositionY(int positionY) {
@@ -71,16 +61,9 @@ public class ModelCase {
 	}
 
 
-	
-	
-
-	
-	
-
 	public String getTypeCase() {
 		return typeCase;
 	}
-
 
 
 	public void setTypeCase(String typeCase) {
@@ -88,17 +71,14 @@ public class ModelCase {
 	}
 
 
-
 	public int getIdCouleur() {
 		return idCouleur;
 	}
 
 
-
 	public void setIdCouleur(int idCouleur) {
 		this.idCouleur = idCouleur;
 	}
-
 
 
 	public String getNom() {
@@ -121,7 +101,6 @@ public class ModelCase {
 	public String getCheminSvg() {
 		return cheminSvg;
 	}
-
 
 
 	public void setCheminSvg(String cheminSvg) {

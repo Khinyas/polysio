@@ -39,6 +39,14 @@ public class MainApp extends Application {
         return utilisateurConnecte;
     }
 
+    public static void basculerEnModeJeu(javafx.scene.Parent vueJeu) {
+        Scene sceneJeu = new Scene(vueJeu);
+        mainStage.setScene(sceneJeu);
+        mainStage.setFullScreen(true);
+        // Optionnel : Message vide pour ne pas avoir le texte "Appuyez sur ESC"
+        mainStage.setFullScreenExitHint("");
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

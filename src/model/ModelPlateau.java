@@ -1,20 +1,92 @@
 package model;
 
-import java.util.ArrayList;
+import View.ViewCase;
+import javafx.geometry.Pos;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import java.util.List;
 
-public class ModelPlateau {
-    private static ArrayList<ModelCase> listeCases = new ArrayList<>();
-    // private ModelCase couleur_case;
-    public ModelPlateau(/*ModelCase couleur_caseP*/) {
-    	// this.couleur_case = couleur_caseP;
-    	
-    	
-        for (int i = 0; i < 40; i++) {
-            listeCases.add(new ModelCase(i, "Rue " + i, "Bleu", i * 10, 200));
-        }
+// On utilise StackPane pour pouvoir empiler le background ET le plateau par dessus
+public class ModelPlateau extends GridPane {
+    private static List<ModelCase> listeCases;
+
+
+    public ModelPlateau(List<ModelCase> listeCasesP) {
+        this.listeCases = listeCasesP;
+        /*
+        this.prefHeightProperty().bind(this.heightProperty().multiply(0.8));
+        this.prefWidthProperty().bind(this.heightProperty().multiply(0.8));
+         */
+
+        this.setAlignment(Pos.CENTER);
+        this.setGridLinesVisible(false); // Mets à true pour débugger et voir la grille !
+
+        // On force une taille minimale pour le test si le bind échoue
+        //this.setMinSize(400, 400);
+        //this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+
+        // 0, 0, 0 = Noir | 1.0 = Opacité
+        this.setStyle("-fx-background-color: rgba(0, 0, 0, 1.0);");
+
+        // Espacement entre cellule grille (optionnel) :
+        /*
+        this.plateau.setHgap(2);
+        this.plateau.setVgap(2);
+        */
+        this.initialiserPlateau();
     }
 
-    public static ArrayList<ModelCase> getListeCases() {
+    public static List<ModelCase> getListeCases() {
         return listeCases;
+    }
+
+    public void initialiserPlateau() {
+        // On clear toujours la gridPane pour s'assurer qu'elle est vide
+        this.getChildren().clear();
+        this.getColumnConstraints().clear();
+        this.getRowConstraints().clear();
+
+        // Je crée une boucle pour assigner des positions à chaque case de la liste
+        // Important, les cases doivent être Ordonnées dans la liste
+        for (int i = 0; i < 11; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            RowConstraints row = new RowConstraints();
+            if (i == 0 || i == 10) {
+                col.setPercentWidth(12.5);
+                row.setPercentHeight(12.5);
+            } else {
+                col.setPercentWidth(8.3);
+                row.setPercentHeight(8.3);
+            }
+            this.getColumnConstraints().add(col);
+            this.getRowConstraints().add(row);
+        }
+
+        // Inserer controller plateau pour créer le plateau graphique à partir des model cases
+        for (ModelCase caseModelCase : this.listeCases) {
+            // On ignore la case centrale ici pour ne pas l'ajouter en 1x1 dans la boucle
+            if (caseModelCase.getId() == 99 || caseModelCase.getNom().equalsIgnoreCase("centre")) {
+                continue;
+            }
+
+            ViewCase casePlateau = new ViewCase(caseModelCase);
+
+// FORCE LA CASE À PRENDRE TOUTE LA PLACE DE LA CELLULE
+            GridPane.setHgrow(casePlateau, Priority.ALWAYS);
+            GridPane.setVgrow(casePlateau, Priority.ALWAYS);
+
+            int colonne = caseModelCase.getPositionX();
+            int ligne = caseModelCase.getPositionY();
+
+            // Utilisation directe de add() pour plus de clarté
+            this.add(casePlateau, colonne, ligne);
+        }
+
+        // ToDo : CaseCentrale est la derniere pour l'instant mais peut etre prendre getName ou Id à la place ?
+        // On récupère la case centrale et on lui donne un Span de 9x9 pour remplir le milieu
+        ModelCase mCentrale = this.listeCases.getLast();
+        ViewCase vueCentrale = new ViewCase(mCentrale);
+        this.add(vueCentrale, 1, 1, 9, 9);
     }
 }

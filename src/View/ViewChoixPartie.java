@@ -3,6 +3,7 @@ package View;
 import java.util.Timer;
 
 import controller.ControllerChoixPartie;
+import controller.ControllerPlateau;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -17,7 +18,6 @@ public class ViewChoixPartie extends ViewTemplate {
 	
 	public ViewChoixPartie viewChoixPartie;
 	private ControllerChoixPartie controllerChoixPartie = new ControllerChoixPartie();
-	public ViewPlateau viewPlateau;
 	
 	public ViewChoixPartie() {
 		super("/images/G1.png");
@@ -58,12 +58,10 @@ public class ViewChoixPartie extends ViewTemplate {
         
         Button lancerPartie = new Button("Lancer la partie !");
         	lancerPartie.setOnAction(event -> {
-        	ViewPlateau viewPlateau = new ViewPlateau();
-        	MainApp.changerDePage(viewPlateau);});
-    
-        
-        sectionTemps.getChildren().addAll(temps15, temps30, temps60);
+                new ControllerPlateau();
+            });
 
+            sectionTemps.getChildren().addAll(temps15, temps30, temps60);
         contenuH.getChildren().addAll(sectionJoueurs, sectionTemps,lancerPartie);
         return contenuH;
     }
