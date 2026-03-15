@@ -1,11 +1,16 @@
 package View.composants;
 
+import controller.ControllerDes;
 import javafx.animation.ScaleTransition;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 import main.MainApp;
+
+import java.util.ArrayList;
 
 public class BoutonLanceDes extends Button {
     private ImageView iconBuouton;
@@ -64,7 +69,29 @@ public class BoutonLanceDes extends Button {
         });
         this.setOnAction(event -> {
             System.out.println(MainApp.getUtilisateurConnecte().getUsername() + " lance les Dés");
+            ArrayList<Integer> resultat = ControllerDes.auClicLancerDes();
+            int score = resultat.get(0) + resultat.get(1);
+            Image image1 = new Image(getClass().getResourceAsStream("/ressources/images/dice/"+resultat.get(0)+".png"));
+            Image image2 = new Image(getClass().getResourceAsStream("/ressources/images/dice/"+resultat.get(1)+".png"));
+            ImageView imageDe1 = new ImageView(image1);
+            ImageView imageDe2 = new ImageView(image2);
 
+            zoneDes.getChildren().add(imageDe1);
+            zoneDes.getChildren().add(imageDe2);
+
+            zoneDes.setAlignment(Pos.CENTER);
+
+            // On transforme le int en texte pour le Label
+            afficheScore.setText("Score : " + score);
+
+            if (ControllerDes.estUnDouble()) {
+                labelResultat.setText("Score : " + resultat + " - DOUBLE !");
+            } else {
+                labelResultat.setText("Score : " + resultat);
+            }
+            contenuH.getChildren().addAll(boutonDe, labelResultat, zoneDes);
+
+            System.out.println("Score calculé : " + resultat); // Pour vérifier dans la console
         });
     }
 }
