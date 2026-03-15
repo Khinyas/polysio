@@ -14,6 +14,7 @@ import model.ModelDes;
 public class ViewLancerDes extends ViewTemplate {
 	public Button BoutonDes;
 	private ControllerDes ControllerDes = new ControllerDes();
+
     private Label labelResultat = new Label("Prêt ?");
    // private ImageView vueGif = new ImageView(new Image(getClass().getResourceAsStream("/images/dice-roll.gif")));
 	

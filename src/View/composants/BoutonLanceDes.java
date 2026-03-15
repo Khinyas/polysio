@@ -4,6 +4,7 @@ import controller.ControllerDes;
 import javafx.animation.ScaleTransition;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 
 public class BoutonLanceDes extends Button {
     private ImageView iconBuouton;
+    private Label labelResultat = new Label("Prêt ?");
+    private ControllerDes
     private static final String STYLE_BASE =
             "-fx-background-color: #34495e; " +
                     "-fx-text-fill: white; " +
