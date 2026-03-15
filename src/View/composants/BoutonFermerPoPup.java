@@ -14,11 +14,8 @@ import main.MainApp;
 
 import java.util.ArrayList;
 
-public class BoutonLanceDes extends Button {
+public class BoutonFermerPoPup extends Button {
     private Label labelResultat = new Label("Prêt ?");
-    private ControllerDes controllerDes = new ControllerDes();
-    HBox zoneDes = new HBox(10);
-    Label afficheScore = new Label("0");
 
     private static final String STYLE_BASE =
             "-fx-background-color: #34495e; " +
@@ -34,8 +31,8 @@ public class BoutonLanceDes extends Button {
     private AudioClip soundClick;
 
 
-    public BoutonLanceDes() {
-        super("LanceDeDés");
+    public BoutonFermerPoPup() {
+        super("Valider Choix Fermer Popup");
         this.setStyle(STYLE_BASE);
         this.setCursor(javafx.scene.Cursor.HAND);
         try {
@@ -75,30 +72,8 @@ public class BoutonLanceDes extends Button {
         });
 
         this.setOnAction(event -> {
-            System.out.println(/*MainApp.getUtilisateurConnecte().getUsername() +*/ " lance les Dés");
-            ArrayList<Integer> resultat = controllerDes.auClicLancerDes();
-            int score = resultat.get(0) + resultat.get(1);
-            Image image1 = new Image(getClass().getResourceAsStream("/ressources/images/dice/"+resultat.get(0)+".png"));
-            Image image2 = new Image(getClass().getResourceAsStream("/ressources/images/dice/"+resultat.get(1)+".png"));
-            ImageView imageDe1 = new ImageView(image1);
-            ImageView imageDe2 = new ImageView(image2);
-
-            zoneDes.getChildren().add(imageDe1);
-            zoneDes.getChildren().add(imageDe2);
-
-            zoneDes.setAlignment(Pos.CENTER);
-
-            // On transforme le int en texte pour le Label
-            afficheScore.setText("Score : " + score);
-
-            if (controllerDes.estUnDouble()) {
-                labelResultat.setText("Score : " + resultat + " - DOUBLE !");
-            } else {
-                labelResultat.setText("Score : " + resultat);
-            }
-            this.getChildren().addAll(labelResultat, zoneDes);
-
-            System.out.println("Score calculé : " + resultat); // Pour vérifier dans la console
+            System.out.println(MainApp.getUtilisateurConnecte().getUsername() + " Ferme Popup");
+            this.getChildren().addAll(labelResultat);
         });
     }
 }

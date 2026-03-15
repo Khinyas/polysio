@@ -10,6 +10,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.ModelDes;
 
+import java.util.ArrayList;
+
 
 public class ViewLancerDes extends ViewTemplate {
 	public Button BoutonDes;
@@ -38,7 +40,7 @@ public class ViewLancerDes extends ViewTemplate {
        
         boutonDe.setOnAction(event -> { 
             // On récupère le int renvoyé par le contrôleur
-            int resultat = ControllerDes.auClicLancerDes(); 
+            ArrayList<Integer> resultat = ControllerDes.auClicLancerDes();
             
             // On transforme le int en texte pour le Label
             afficheScore.setText("Score : " + resultat);

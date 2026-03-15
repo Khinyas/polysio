@@ -1,6 +1,8 @@
 package View;
 
 import View.composants.BoutonAcceuil;
+import View.composants.BoutonFermerPoPup;
+import View.composants.BoutonLanceDes;
 import controller.ControllerDes;
 import controller.ControllerPlateau;
 import javafx.event.ActionEvent;
@@ -53,7 +55,7 @@ public class ViewTemplateJeu extends StackPane {
         });
     }
 
-    protected void afficherPopup(Node contenuPopupP, BoutonAcceuil choixP) {
+    protected void afficherPopup(Node contenuPopupP, BoutonFermerPoPup choixP) {
 
         Region voile = new Region();
         voile.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);");
@@ -74,13 +76,17 @@ public class ViewTemplateJeu extends StackPane {
 
         javafx.scene.control.Label titre = new javafx.scene.control.Label("Choisissez votre mode de jeu");
         titre.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        BoutonLanceDes btnLanceDes = new BoutonLanceDes();
+
+
+        // Ajout d'options (ex: des RadioButtons ou d'autres boutons)
+        contenu.getChildren().addAll(titre, btnLanceDes);
+
 
         // On crée le bouton de validation (BoutonAcceuil) Pour l'instant
         // Note : le bouton sert aussi à fermer la popup
-        BoutonAcceuil btnValider = new BoutonAcceuil();
+        BoutonFermerPoPup btnValider = new BoutonFermerPoPup();
 
-        // Ajout d'options (ex: des RadioButtons ou d'autres boutons)
-        contenu.getChildren().addAll(titre);
 
         // Appel de ta méthode existante
         this.afficherPopup(contenu, btnValider);
