@@ -161,33 +161,37 @@ public class ViewTemplateJeu extends StackPane {
     }
 
 
-    protected void afficherPopup(Node contenuPopupP, BoutonFermerPoPup choixP) {
-        // 1. Création du voile
+    protected void afficherPopup(Node contenuPopupP, Button boutonFermeture) {
+        // 1. On nettoie les restes des popups précédentes
+        nettoyerOverlays();
+
         Region voile = new Region();
-        voile.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);"); // Un peu plus clair
-        
-        // On s'assure que le voile prend toute la taille du StackPane
+        voile.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);"); // Noir transparent
         voile.prefWidthProperty().bind(this.widthProperty());
         voile.prefHeightProperty().bind(this.heightProperty());
 
-        // 2. Création du conteneur de la popup
         VBox popupContainer = new VBox(20);
         popupContainer.setAlignment(Pos.CENTER);
         popupContainer.setMaxSize(500, 400);
-        popupContainer.setStyle("-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 0);");
-        
-        popupContainer.getChildren().addAll(contenuPopupP, choixP);
+        popupContainer.setStyle("-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 30;");
+        popupContainer.getChildren().addAll(contenuPopupP, boutonFermeture);
 
-        // 3. Action de fermeture propre
-        choixP.setOnAction(event -> {
-            // IMPORTANT : On retire spécifiquement CE voile et CETTE popup
-            this.getChildren().removeAll(voile, popupContainer);
+        // Capture de l'action pour ne pas la perdre
+        var actionOriginale = boutonFermeture.getOnAction();
+
+        boutonFermeture.setOnAction(event -> {
+            // Au clic, on nettoie TOUT (le voile et la box)
+            nettoyerOverlays();
+            
+            // Puis on exécute la logique de jeu (passer au joueur suivant, etc.)
+            if (actionOriginale != null) {
+                actionOriginale.handle(event);
+            }
         });
 
-        // 4. Ajout à la vue
         this.getChildren().addAll(voile, popupContainer);
     }
-
+    
     private void choixInitial() {
         VBox contenu = new VBox(20);
         contenu.setAlignment(Pos.CENTER);
@@ -285,7 +289,10 @@ public class ViewTemplateJeu extends StackPane {
             // Tous les pas sont terminés — mise à jour du modèle et popup
             boolean passageDepart = joueur.avancer(nbCasesTotal);
             if (passageDepart) System.out.println(joueur.getIdJoueur() + " passe par Depart !");
+            joueur.setPosition((positionDeDepart + nbCasesTotal) % 40);
             placerPionsSansAnimation();
+            
+            
             PauseTransition pause = new PauseTransition(Duration.millis(300));
             pause.setOnFinished(ev -> afficherPopupEvenement(joueur));
             pause.play();
@@ -302,26 +309,35 @@ public class ViewTemplateJeu extends StackPane {
     }
 
     private void afficherPopupEvenement(ModelJoueur joueur) {
-        VBox contenu = new VBox(20);
+        VBox contenu = new VBox(15);
         contenu.setAlignment(Pos.CENTER);
 
-        Label titre = new Label("CASE X !");
-        titre.setStyle("-fx-font-size: 22px; -fx-text-fill: #16a085; -fx-font-weight: bold;");
-
-        Label message = new Label("Vous êtes sur la case : " + controllerPlateau.getCaseParPosition(joueur.getPosition()).getNom());
-        contenu.getChildren().addAll(titre, message);
+        Label titre = new Label("FIN DU TOUR - JOUEUR " + joueur.getIdJoueur());
+        Label msg = new Label("Case : " + controllerPlateau.getCaseParPosition(joueur.getPosition()).getNom());
+        contenu.getChildren().addAll(titre, msg);
 
         BoutonFermerPoPup btnFin = new BoutonFermerPoPup();
-        btnFin.setText("CONTINUER");
-        // CORRECTION : relance le tour suivant
+        btnFin.setText("AU SUIVANT !");
+
         btnFin.setOnAction(event -> {
-        	controllerPlateau.passerAuJoueurSuivant();
-        	choixInitial();
-        	});
+            // 1. On passe au joueur suivant dans le moteur
+            controllerPlateau.passerAuJoueurSuivant();
+            
+            // 2. On relance le tour suivant avec un léger décalage technique
+            javafx.application.Platform.runLater(() -> {
+                choixInitial();
+            });
+        });
 
         this.afficherPopup(contenu, btnFin);
     }
-
+    
+    private void nettoyerOverlays() {
+        // On retire tous les éléments qui ne sont ni le background, ni le plateau
+        // On suppose que background est à l'index 0 et plateauGraphique à l'index 1
+        this.getChildren().removeIf(node -> node != background && node != plateauGraphique);
+    }
+    
     public ModelPlateau getPlateauGraphique() {
         return plateauGraphique;
     }
