@@ -57,8 +57,8 @@ public class ViewChoixPartie extends ViewTemplate {
         
         
         Button lancerPartie = new Button("Lancer la partie !");
-        	lancerPartie.setOnAction(event -> {
-                new ControllerPlateau();
+        	lancerPartie.setOnAction(event -> { 
+        		controllerChoixPartie.lancerLeJeu();
             });
 
             sectionTemps.getChildren().addAll(temps15, temps30, temps60);

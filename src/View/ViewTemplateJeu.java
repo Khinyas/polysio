@@ -31,12 +31,14 @@ public class ViewTemplateJeu extends StackPane {
     private ControllerPlateau controllerPlateau;
     private ControllerDes controllerDes = new ControllerDes(); // Pour tes dés
     ViewPion pionJoueur1 = new ViewPion(Color.CYAN);
-    private ModelJoueur joueur1;
 
+    // Ajout pour liste de joueurs / pions
+    private List<ViewPion> listePionsGraphiques = new ArrayList<>();
+    private List<ModelJoueur> modelJoueurs;
 
     // CORRECTION : le constructeur reçoit maintenant controllerPlateau et joueur1
     // car la vue en a besoin pour fonctionner — on ne peut plus les laisser null
-    public ViewTemplateJeu(ModelPlateau plateauGraphiqueP, ControllerPlateau controllerPlateauP, ModelJoueur joueur1P) {
+    public ViewTemplateJeu(ModelPlateau plateauGraphiqueP, ControllerPlateau controllerPlateauP, List<ModelJoueur> joueursP) {
 
         // Utilisation de getResource pour charger l'image depuis le dossier resources
         // ToDo : Background sera notre fond, il faut penser à le créer ou le choisir si juste couleur
@@ -47,13 +49,22 @@ public class ViewTemplateJeu extends StackPane {
 
         this.plateauGraphique = plateauGraphiqueP;
         this.controllerPlateau = controllerPlateauP;
-        this.joueur1 = joueur1P;
+        this.modelJoueurs = joueursP;
 
         this.getChildren().addAll(background, plateauGraphique);
+        
+     // --- Création des pions pour chaque joueur ---
+        for (ModelJoueur mj : modelJoueurs) {
+            ViewPion pion = new ViewPion(Color.web(mj.getCouleur())); // Assume que ModelJoueur a getCouleur()
+            listePionsGraphiques.add(pion);
+            placerPionInitial(mj, pion);
+        }
+        
+        
 
         // CORRECTION : on délègue à placerPionSansAnimation() plutôt que
         // de hardcoder col=10/ligne=10 — il lit la position logique du joueur
-        placerPionSansAnimation();
+        placerPionsSansAnimation();
 
         // Pour le centrer parfaitement dans la case du GridPane
         GridPane.setHalignment(pionJoueur1, javafx.geometry.HPos.CENTER);
@@ -64,19 +75,37 @@ public class ViewTemplateJeu extends StackPane {
             choixInitial();
         });
     }
+    
+    // TEST PIONS JOUEURS METHODE
+    
+    private void placerPionInitial(ModelJoueur mj, ViewPion vp) {
+        ModelCase caseDepart = controllerPlateau.getCaseParPosition(mj.getPosition());
+        plateauGraphique.add(vp, caseDepart.getPositionX(), caseDepart.getPositionY());
+        
+        // Décalage léger si plusieurs pions sur la même case (optionnel)
+        vp.setTranslateX((mj.getIdJoueur() - 1) * 5); 
+    }
+    
+ // On récupère le pion du joueur qui doit bouger
+    private ViewPion getPionActuel() {
+        int id = controllerPlateau.getJoueurActuel().getIdJoueur();
+        return listePionsGraphiques.get(id - 1);
+    }
 
 
     // Anime UN seul pas posDepart → posArrivee,
     // puis appelle onTermine quand le pion est arrivé.
     // La chaîne récursive dans deplacerPionGraphique garantit
     // que chaque pas attend la fin du précédent → animation fluide.
-    private void animerUnPas(int posDepartP, int posArriveeP, Runnable onTermine) {
+    private void animerUnPas(ModelJoueur joueur, int posDepartP, int posArriveeP, Runnable onTermine) {
         ViewCase vcDepart  = controllerPlateau.getViewCaseParPisition(posDepartP);
         ViewCase vcArrivee = controllerPlateau.getViewCaseParPisition(posArriveeP);
+        
+        ViewPion pionQuiBouge = listePionsGraphiques.get(joueur.getIdJoueur() - 1);
 
         // Sécurité : si une case est introuvable on saute directement
         if (vcDepart == null || vcArrivee == null) {
-            placerPionSansAnimation();
+            placerPionsSansAnimation();
             onTermine.run();
             return;
         }
@@ -93,7 +122,7 @@ public class ViewTemplateJeu extends StackPane {
         double dy = cA.getY() - cD.getY();
 
         // Saut supprimé : son setByY s'additionnait au setByY du move → décalage vertical
-        TranslateTransition move = new TranslateTransition(Duration.millis(160), pionJoueur1);
+        TranslateTransition move = new TranslateTransition(Duration.millis(160), pionQuiBouge);
         move.setByX(dx);
         move.setByY(dy);
         move.setInterpolator(Interpolator.EASE_BOTH);
@@ -103,34 +132,60 @@ public class ViewTemplateJeu extends StackPane {
     }
 
 
-    private void placerPionSansAnimation() {
-        // CORRECTION : getCaseParPosition prend un int (la position logique du joueur)
-        // et non un ModelPlateau comme c'était appelé avant
-        ModelCase caseActuelle = controllerPlateau.getCaseParPosition(joueur1.getPosition());
-        plateauGraphique.getChildren().remove(pionJoueur1);
-        plateauGraphique.add(pionJoueur1, caseActuelle.getPositionX(), caseActuelle.getPositionY());
-        GridPane.setHalignment(pionJoueur1, javafx.geometry.HPos.CENTER);
-        GridPane.setValignment(pionJoueur1, javafx.geometry.VPos.CENTER);
-        pionJoueur1.setTranslateX(0);
-        pionJoueur1.setTranslateY(0);
+    private void placerPionsSansAnimation() {
+        // 1. On parcourt la liste de tous les joueurs du contrôleur
+        for (int i = 0; i < modelJoueurs.size(); i++) {
+            ModelJoueur joueur = modelJoueurs.get(i);
+            ViewPion pionGraphique = listePionsGraphiques.get(i);
+
+            // 2. On récupère la case où doit être le joueur
+            ModelCase caseActuelle = controllerPlateau.getCaseParPosition(joueur.getPosition());
+
+            // 3. On retire le pion de son ancienne position pour éviter les doublons
+            plateauGraphique.getChildren().remove(pionGraphique);
+
+            // 4. On l'ajoute à la nouvelle case (X, Y)
+            plateauGraphique.add(pionGraphique, caseActuelle.getPositionX(), caseActuelle.getPositionY());
+
+            // 5. Centrage et Reset des translations (très important après une animation)
+            GridPane.setHalignment(pionGraphique, javafx.geometry.HPos.CENTER);
+            GridPane.setValignment(pionGraphique, javafx.geometry.VPos.CENTER);
+            
+            pionGraphique.setTranslateX(0); 
+            pionGraphique.setTranslateY(0);
+
+            // OPTIONNEL : Petit décalage pour voir les pions s'ils sont sur la même case
+            pionGraphique.setTranslateX(i * 4); // Décale chaque pion de 4px
+            pionGraphique.setTranslateY(i * 4);
+        }
     }
 
 
     protected void afficherPopup(Node contenuPopupP, BoutonFermerPoPup choixP) {
-
+        // 1. Création du voile
         Region voile = new Region();
-        voile.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);");
-        VBox popup = new VBox();
-        popup.setAlignment(Pos.CENTER);
-        popup.setMaxSize(500, 400);
-        popup.setStyle("-fx-background-color: white; -fx-background-radius: 20;");
-        popup.getChildren().addAll(contenuPopupP, choixP);
-        choixP.setAlignment(Pos.BOTTOM_RIGHT);
-        choixP.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
-            this.getChildren().removeAll(voile, popup);
+        voile.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);"); // Un peu plus clair
+        
+        // On s'assure que le voile prend toute la taille du StackPane
+        voile.prefWidthProperty().bind(this.widthProperty());
+        voile.prefHeightProperty().bind(this.heightProperty());
+
+        // 2. Création du conteneur de la popup
+        VBox popupContainer = new VBox(20);
+        popupContainer.setAlignment(Pos.CENTER);
+        popupContainer.setMaxSize(500, 400);
+        popupContainer.setStyle("-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 0);");
+        
+        popupContainer.getChildren().addAll(contenuPopupP, choixP);
+
+        // 3. Action de fermeture propre
+        choixP.setOnAction(event -> {
+            // IMPORTANT : On retire spécifiquement CE voile et CETTE popup
+            this.getChildren().removeAll(voile, popupContainer);
         });
 
-        this.getChildren().addAll(voile, popup);
+        // 4. Ajout à la vue
+        this.getChildren().addAll(voile, popupContainer);
     }
 
     private void choixInitial() {
@@ -190,6 +245,7 @@ public class ViewTemplateJeu extends StackPane {
 
         btnGo.setOnAction(event -> {
             this.deplacerPionGraphique(scoretotal);
+            this.lancerAnimationJoueurActuel(scoretotal);
         });
 
         this.afficherPopup(contenu, btnGo);
@@ -211,18 +267,27 @@ public class ViewTemplateJeu extends StackPane {
         // Chaîne récursive : chaque pas attend la fin du précédent via onTermine
         // C'est le seul moyen de garantir la fluidité — une SequentialTransition
         // ne peut pas contenir des animations lancées dynamiquement à l'intérieur.
-        animerPasRecursif(joueur1.getPosition(), 0, nbCases);
+        
+        ModelJoueur joueurActuel = controllerPlateau.getJoueurActuel();
+        animerPasRecursif(joueurActuel, joueurActuel.getPosition(), 0, nbCases);
+    }
+   
+    
+    public void lancerAnimationJoueurActuel(int scoreDe) {
+        ModelJoueur j = controllerPlateau.getJoueurActuel();
+        // On lance la récursion pour ce joueur précis
+        animerPasRecursif(j, j.getPosition(), 0, scoreDe);
     }
 
     // Lance le pas numéro pasActuel, puis s'appelle elle-même pour le suivant
-    private void animerPasRecursif(int positionDeDepart, int pasActuel, int nbCasesTotal) {
+    private void animerPasRecursif(ModelJoueur joueur,int positionDeDepart, int pasActuel, int nbCasesTotal) {
         if (pasActuel >= nbCasesTotal) {
             // Tous les pas sont terminés — mise à jour du modèle et popup
-            boolean passageDepart = joueur1.avancer(nbCasesTotal);
-            if (passageDepart) System.out.println(joueur1.getIdJoueur() + " passe par Depart !");
-            placerPionSansAnimation();
+            boolean passageDepart = joueur.avancer(nbCasesTotal);
+            if (passageDepart) System.out.println(joueur.getIdJoueur() + " passe par Depart !");
+            placerPionsSansAnimation();
             PauseTransition pause = new PauseTransition(Duration.millis(300));
-            pause.setOnFinished(ev -> afficherPopupEvenement());
+            pause.setOnFinished(ev -> afficherPopupEvenement(joueur));
             pause.play();
             return;
         }
@@ -231,25 +296,28 @@ public class ViewTemplateJeu extends StackPane {
         int posArrivee = (positionDeDepart + pasActuel + 1) % 40;
 
         // Lance ce pas, et quand il est fini lance le suivant
-        animerUnPas(posDepart, posArrivee, () ->
-                animerPasRecursif(positionDeDepart, pasActuel + 1, nbCasesTotal)
+        animerUnPas(joueur ,posDepart, posArrivee, () ->
+                animerPasRecursif(joueur, positionDeDepart, pasActuel + 1, nbCasesTotal)
         );
     }
 
-    private void afficherPopupEvenement() {
+    private void afficherPopupEvenement(ModelJoueur joueur) {
         VBox contenu = new VBox(20);
         contenu.setAlignment(Pos.CENTER);
 
         Label titre = new Label("CASE X !");
         titre.setStyle("-fx-font-size: 22px; -fx-text-fill: #16a085; -fx-font-weight: bold;");
 
-        Label message = new Label("Vous avez atterri sur une case chance !");
+        Label message = new Label("Vous êtes sur la case : " + controllerPlateau.getCaseParPosition(joueur.getPosition()).getNom());
         contenu.getChildren().addAll(titre, message);
 
         BoutonFermerPoPup btnFin = new BoutonFermerPoPup();
         btnFin.setText("CONTINUER");
         // CORRECTION : relance le tour suivant
-        btnFin.setOnAction(event -> choixInitial());
+        btnFin.setOnAction(event -> {
+        	controllerPlateau.passerAuJoueurSuivant();
+        	choixInitial();
+        	});
 
         this.afficherPopup(contenu, btnFin);
     }

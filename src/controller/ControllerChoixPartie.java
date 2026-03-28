@@ -15,5 +15,10 @@ public class ControllerChoixPartie {
         modelPartie.setDureeMinutes(minutes);
         System.out.println("Durée de la partie : " + minutes + " min.");
     }
+    
+    public void lancerLeJeu() {
+        // On passe la configuration au constructeur du plateau
+        new ControllerPlateau(this.modelPartie);
+    }
 }
 
