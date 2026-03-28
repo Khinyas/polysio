@@ -1,8 +1,9 @@
 package View.composants;
+import View.ViewLancerDes;
 
-import controller.ControllerConnexion;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -17,6 +18,7 @@ public class Header extends HBox {
     private BoutonAcceuil boutonAcceuil;
     private BoutonInscription boutonInscription;
     private BoutonConnexion boutonConnexion;
+    private BoutonDes boutonDes;
 
     public Header() {
         this.setPadding(new Insets(10));
@@ -27,17 +29,29 @@ public class Header extends HBox {
         // Bouton Accueil : Toujours présent
         this.boutonAcceuil = new BoutonAcceuil();
         this.getChildren().add(boutonAcceuil);
+        
+      //Test Bouton Lancer Des
+        Button boutonDes = new Button();
+        boutonDes.setOnAction(event ->{
+        ViewLancerDes lancerDés = new ViewLancerDes();
+        MainApp.changerDePage(lancerDés);
+        	
+        });
         ModelUser user = MainApp.getUtilisateurConnecte();
         if (user == null) {
+
+
             // --- CAS : UTILISATEUR NON CONNECTÉ ---
 
             // Bouton Inscription
             this.boutonInscription = new BoutonInscription();
             //Bouton Connexion
             this.boutonConnexion = new BoutonConnexion();
+            
+            
 
             // Remplissage Conteneur (On ajoute uniquement les boutons de navigation standard)
-            this.getChildren().addAll(boutonInscription, boutonConnexion);
+            this.getChildren().addAll(boutonInscription, boutonConnexion,boutonDes);
 
         } else {
             // --- CAS : UTILISATEUR CONNECTÉ ---

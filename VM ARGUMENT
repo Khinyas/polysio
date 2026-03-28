@@ -1,0 +1,1 @@
+--module-path "C:\Localapps\lib" --add-modules javafx.controls,javafx.fxml --enable-native-access=javafx.graphics   --enable-native-access=javafx.media --module-path C:\Localapps\lib --add-modules javafx.controls,javafx.fxml,javafx.media --add-exports javafx.base/com.sun.javafx=ALL-UNNAMED

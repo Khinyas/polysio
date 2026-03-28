@@ -19,7 +19,7 @@ public class MainApp extends Application {
         mainStage = primaryStage;
         mainStage.setTitle("POLYSIO");
         ViewConnexion connexion = new ViewConnexion();
-        Scene scene = new Scene(connexion, 600,600);
+        Scene scene = new Scene(connexion, 900,500);
         mainStage.setScene(scene);
         mainStage.show();
     }
@@ -37,6 +37,14 @@ public class MainApp extends Application {
 
     public static ModelUser getUtilisateurConnecte() {
         return utilisateurConnecte;
+    }
+
+    public static void basculerEnModeJeu(javafx.scene.Parent vueJeu) {
+        Scene sceneJeu = new Scene(vueJeu);
+        mainStage.setScene(sceneJeu);
+        mainStage.setFullScreen(true);
+        // Optionnel : Message vide pour ne pas avoir le texte "Appuyez sur ESC"
+        mainStage.setFullScreenExitHint("");
     }
 
     public static void main(String[] args) {

@@ -68,13 +68,9 @@ public class BoutonAcceuil extends Button {
         // LIEN DU BOUTON VERS ACCUEIL : ON LE MET DANS LE CONSTRUCTOR CAR CE BOUTON AURA TOUJOURS LE MEME LIEN
         this.setOnAction(event -> {
             System.out.println("Direction le Menu !");
-            // 1 On récupère le profil stocké dans MainApp
-            ModelUser userActuel = MainApp.getUtilisateurConnecte();
 
-            // 2 On crée la vue Accueil en lui passant ce profil
             View.ViewAccueil vueAccueil = new View.ViewAccueil();
 
-            // 3 On utilise la méthode magique pour changer de page
             MainApp.changerDePage(vueAccueil);
         });
     }
