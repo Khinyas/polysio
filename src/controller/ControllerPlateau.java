@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import View.ViewCase;
+import View.ViewTemplateGame;
 import View.ViewTemplateJeu;
 import main.MainApp;
 import model.ModelCase;
@@ -12,7 +13,7 @@ import model.ModelPartie;
 import model.ModelPlateau;
 
 public class ControllerPlateau {
-    private ViewTemplateJeu vueJeu;
+    private ViewTemplateGame vueJeu;
     private ModelPartie configuration;
     private ModelPlateau modelPlateau;
     private ArrayList<ModelCase> listeCases;
@@ -36,7 +37,7 @@ public class ControllerPlateau {
             listeJoueurs.add(j);
         }
         
-        this.vueJeu = new ViewTemplateJeu(modelPlateau, this, listeJoueurs);
+        this.vueJeu = new ViewTemplateGame(modelPlateau, this, listeJoueurs);
         MainApp.basculerEnModeJeu(vueJeu);
     }
     public ModelCase getCaseParPosition(int positionP){
