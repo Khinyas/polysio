@@ -3,6 +3,7 @@ package connexion;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import model.ModelUser;
 import model.ModelUserRole;
@@ -113,11 +114,11 @@ public class DAOUser {
         
        // ADMIN : LISTE UTILISATEUR 
         
-        public static java.util.ArrayList<ModelUser> reqListeTousLesUtilisateurs() {
-            java.util.ArrayList<ModelUser> liste = new java.util.ArrayList<>();
+        public static ArrayList<ModelUser> reqListeTousLesUtilisateurs() {
+            ArrayList<ModelUser> liste = new ArrayList<>();
             String reqSQL = "SELECT * FROM polysio.utilisateur";
-            try (java.sql.PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL);
-                 java.sql.ResultSet rs = pst.executeQuery()) {
+            try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL);
+                 ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     liste.add(new ModelUser(
                         rs.getInt("id_utilisateur"),
