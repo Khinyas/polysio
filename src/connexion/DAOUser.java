@@ -109,6 +109,27 @@ public class DAOUser {
             System.err.println("Erreur SQL Impossible de Créer l'Utilisateur en BDD : " + erreur.getMessage());
             erreur.printStackTrace();
             return false;
+        }}
+        
+       // ADMIN : LISTE UTILISATEUR 
+        
+        public static java.util.ArrayList<ModelUser> reqListeTousLesUtilisateurs() {
+            java.util.ArrayList<ModelUser> liste = new java.util.ArrayList<>();
+            String reqSQL = "SELECT * FROM polysio.utilisateur";
+            try (java.sql.PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL);
+                 java.sql.ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    liste.add(new ModelUser(
+                        rs.getInt("id_utilisateur"),
+                        rs.getString("pseudo"),
+                        rs.getString("email"),
+                        ModelUserRole.valueOf(rs.getString("role").toUpperCase())
+                    ));
+                }
+            } catch (java.sql.SQLException erreur) {
+                erreur.printStackTrace();
+            }
+            return liste;
         }
     }
-}
+
