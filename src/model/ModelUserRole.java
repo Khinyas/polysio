@@ -1,26 +1,20 @@
 package model;
 
 public enum ModelUserRole {
-    ADMIN("Administrateur", 1),
-    JOUEUR("Joueur Standard", 2),
-    SPECTATEUR("Observateur", 3);
+    ADMIN("Administrateur"),
+    USER("Utilisateur");
 
-    private final String libelle;
-    private final int niveauPriorite;
+    private final String role;
 
     // Le constructeur d'une Enum est TOUJOURS privé par défaut
-    ModelUserRole(String libelle, int niveauPriorite) {
-        this.libelle = libelle;
-        this.niveauPriorite = niveauPriorite;
+    ModelUserRole(String role) {
+        this.role = role;
     }
 
-    public String getLibelle() {
-        return libelle;
+    public String getRole() {
+        return role;
     }
 
-    public int getNiveauPriorite() {
-        return niveauPriorite;
-    }
 }
 
 /**
