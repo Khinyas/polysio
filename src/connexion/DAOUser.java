@@ -68,7 +68,7 @@ public class DAOUser {
                     try {
                         roleBDD = ModelUserRole.valueOf(rs.getString("role").toUpperCase());
                     } catch (Exception e) {
-                        roleBDD = ModelUserRole.USER; // Valeur par défaut si erreur
+                        roleBDD = ModelUserRole.UTILISATEUR; // Valeur par défaut si erreur
                     }
                     return new ModelUser(id, username, email, roleBDD);
                 }

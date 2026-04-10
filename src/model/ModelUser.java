@@ -13,7 +13,7 @@ public class ModelUser {
     private String password;
     private String username;
     private String email;
-    private ModelUserRole role = ModelUserRole.USER; // Je définis la valeur par défaut du role ICI
+    private ModelUserRole role = ModelUserRole.UTILISATEUR; // Je définis la valeur par défaut du role ICI
 
     //CONSTRUCTEUR INSCRIPTION
     public ModelUser(String usernameP,String passwordP, String emailP) {
