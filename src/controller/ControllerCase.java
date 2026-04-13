@@ -28,11 +28,8 @@ public class ControllerCase {
 							rs.getString("type_case"),
 							rs.getInt("positionX"),
 							rs.getInt("positionY"),
-							rs.getInt("prix"),
-							rs.getInt("loyer_nue"),
-							rs.getInt("loyer_batiment"),
-							rs.getInt("id_couleur"),
-							MainApp.cfgPolysio.get("pf.case"+rs.getInt("id_case_plateau"))
+							//MainApp.cfgPolysio.get("pf.case"+rs.getInt("id_case_plateau"))
+							rs.getString("chemin_svg")
 					);
 					listeCaseBdd.add(casePlateau);
 				}
