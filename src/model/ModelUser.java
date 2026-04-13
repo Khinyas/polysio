@@ -14,6 +14,8 @@ public class ModelUser {
     private String username;
     private String email;
     private ModelUserRole role = ModelUserRole.UTILISATEUR; // Je définis la valeur par défaut du role ICI
+    private String profilepicture;
+    public Object setProfilepicture;
 
     //CONSTRUCTEUR INSCRIPTION
     public ModelUser(String usernameP,String passwordP, String emailP) {
@@ -28,6 +30,7 @@ public class ModelUser {
         this.username = username;
         this.email = email;
         this.role = roleP;
+        this.profilepicture = "/images/avatars/avatar.jpg";
     }
 
 
@@ -73,5 +76,12 @@ public class ModelUser {
     public ModelUser setModelUserRole(ModelUserRole roleP) {
         this.role = roleP;
         return this;
+    }
+
+    public String getProfilepicture() {
+        return profilepicture;
+    }
+    public void setProfilepicture(String profilepicture) {
+        this.profilepicture = profilepicture;
     }
 }
