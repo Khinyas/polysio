@@ -57,7 +57,7 @@ public class ViewProfil extends ViewTemplate { // Ajout de l'héritage
     avatarCS.setCursor(javafx.scene.Cursor.HAND);
     avatarCS.setOnMouseClicked(event -> {
     	System.out.println("Image de profil Counter Strike cliquée");
-    	MainApp.getUtilisateurConnecte().setProfilepicture("/images/avatars/avatar_logout.jpg");
+    	//MainApp.getUtilisateurConnecte().setProfilepicture("/images/avatars/avatar_logout.jpg");
     	new ControllerProfil(); // Rafraichit la page
     });
     
