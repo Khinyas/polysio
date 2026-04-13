@@ -62,4 +62,14 @@ public class ControllerConnexion {
             MainApp.setUtilisateurConnecte(null);
             System.err.println("Échec : Aucun utilisateur trouvé avec ces identifiants."); }
     }
+
+    public static void validerDeconnexion() {
+        ModelUser userProfil = MainApp.getUtilisateurConnecte();
+        if (userProfil != null) {
+            MainApp.setUtilisateurConnecte(null);
+        } else {
+            System.out.println("Mais... Vous êtes déjà déconnecté!... O_o");
+        }
+    }
+
 }

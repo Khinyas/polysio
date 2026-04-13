@@ -1,7 +1,6 @@
 package View.composants;
-import View.ViewAdmin;
 import View.ViewLancerDes;
-
+import controller.ControllerProfil;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -20,6 +19,7 @@ public class Header extends HBox {
     private BoutonInscription boutonInscription;
     private BoutonConnexion boutonConnexion;
     private BoutonDes boutonDes;
+    private BoutonDeconnexion boutonDeconnexion;
 
     public Header() {
         this.setPadding(new Insets(10));
@@ -30,13 +30,13 @@ public class Header extends HBox {
         // Bouton Accueil : Toujours présent
         this.boutonAcceuil = new BoutonAcceuil();
         this.getChildren().add(boutonAcceuil);
-        
-      //Test Bouton Lancer Des
+
+        //Test Bouton Lancer Des
         Button boutonDes = new Button();
         boutonDes.setOnAction(event ->{
-        ViewLancerDes lancerDés = new ViewLancerDes();
-        MainApp.changerDePage(lancerDés);
-        	
+            ViewLancerDes lancerDés = new ViewLancerDes();
+            MainApp.changerDePage(lancerDés);
+
         });
         ModelUser user = MainApp.getUtilisateurConnecte();
         if (user == null) {
@@ -48,8 +48,8 @@ public class Header extends HBox {
             this.boutonInscription = new BoutonInscription();
             //Bouton Connexion
             this.boutonConnexion = new BoutonConnexion();
-            
-            
+
+
 
             // Remplissage Conteneur (On ajoute uniquement les boutons de navigation standard)
             this.getChildren().addAll(boutonInscription, boutonConnexion,boutonDes);
@@ -57,13 +57,16 @@ public class Header extends HBox {
         } else {
             // --- CAS : UTILISATEUR CONNECTÉ ---
 
+            // Bouton Deconnexion
+            this.boutonDeconnexion = new BoutonDeconnexion();
+            this.getChildren().add(boutonDeconnexion);
+
             // --- CORRECTION ICI ---
             // Au lieu de setHgrow sur le bouton (qui ne marcherait pas bien),
             // on utilise un Spacer (Region) qui va pousser tout le reste à droite.
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
             this.getChildren().add(spacer);
-
             HBox zoneProfil = creerZoneProfil();
             this.getChildren().add(zoneProfil);
 
@@ -74,6 +77,9 @@ public class Header extends HBox {
     // Le Getter pour pouvoir rajouter un EVENT depuis un controller (afficher page Accueil)
     public BoutonAcceuil getBoutonAcceuil() {
         return boutonAcceuil;
+    }
+    public BoutonDeconnexion BoutonDeconnexion() {
+        return boutonDeconnexion;
     }
 
     // Getters pour les autres boutons (Retourneront null si l'utilisateur est connecté)
@@ -91,8 +97,8 @@ public class Header extends HBox {
          */
         if (MainApp.getUtilisateurConnecte() != null) {
             // AVATAR UTILISATEUR
-            // Avatar (Petit rond ou image)
-            ImageView avatar = new ImageView(new Image("/images/avatars/avatar.jpg"));
+            // Avatar (Petit rond ou image qui s'affiche quand l'utilisateur est connecté)
+            ImageView avatar = new ImageView(new Image(MainApp.getUtilisateurConnecte().getProfilepicture()));
             avatar.setFitHeight(120);
             avatar.setFitWidth(90);
 
@@ -102,21 +108,11 @@ public class Header extends HBox {
 
             box.getChildren().addAll(lblName, avatar);
             box.setCursor(javafx.scene.Cursor.HAND);
-            box.setOnMouseClicked(event -> System.out.println("Ouverture Profil User " + MainApp.getUtilisateurConnecte().getUsername()));
-        }
-        if (MainApp.getUtilisateurConnecte() != null && MainApp.getUtilisateurConnecte().getRole() == ModelUserRole.ADMIN) {
-            Button btnAdmin = new Button("Administration");
-            btnAdmin.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-            
-            btnAdmin.setOnAction(event -> {
-                // Redirection vers ta nouvelle vue admin
-                MainApp.changerDePage(new ViewAdmin()); 
-            });
-            this.getChildren().add(1, btnAdmin); 
-        
-            ;}
-        
-        else {
+            box.setOnMouseClicked(event -> // C'est ICI qu'on appelle le contrôleur au moment du clic !
+                    new ControllerProfil());
+            System.out.println("Ouverture Profil User " + MainApp.getUtilisateurConnecte().getUsername());
+
+        } else {
             /**
              * Utilisateur Non Connecté
              */
