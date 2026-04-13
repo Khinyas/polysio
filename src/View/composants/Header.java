@@ -1,6 +1,5 @@
 package View.composants;
 import View.ViewAdmin;
-import View.ViewLancerDes;
 import controller.ControllerProfil;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,7 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import main.MainApp;
 import model.ModelUser;
 import model.ModelUserRole;
@@ -23,7 +21,7 @@ public class Header extends HBox {
     private BoutonConnexion boutonConnexion;
     private BoutonDes boutonDes;
     private BoutonDeconnexion boutonDeconnexion;
-    private StackPane zoneCentrale;
+    
 
     public Header() {
         this.setPadding(new Insets(10));
@@ -55,6 +53,13 @@ public class Header extends HBox {
             // Remplissage Conteneur (On ajoute uniquement les boutons de navigation standard)
             this.getChildren().addAll(boutonInscription, boutonConnexion);
             
+        }
+          
+        
+        else {
+            // --- CAS : UTILISATEUR CONNECTÉ ---
+        	
+        	 
             if (MainApp.getUtilisateurConnecte() != null && MainApp.getUtilisateurConnecte().getRole() == ModelUserRole.ADMIN) {
                 Button btnAdmin = new Button("Administration");
                 btnAdmin.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
@@ -67,9 +72,6 @@ public class Header extends HBox {
             
                 ;}
 
-        } else {
-            // --- CAS : UTILISATEUR CONNECTÉ ---
-
             // Bouton Deconnexion
             this.boutonDeconnexion = new BoutonDeconnexion();
             this.getChildren().add(boutonDeconnexion);
@@ -81,11 +83,11 @@ public class Header extends HBox {
             HBox.setHgrow(spacer, Priority.ALWAYS);
             this.getChildren().add(spacer);
             HBox zoneProfil = creerZoneProfil();
-            this.getChildren().add(zoneProfil);
+            this.getChildren().add(zoneProfil); }}
 
             // Note : L'alignement reste CENTER_LEFT, le spacer s'occupe de l'écartement
-        }
-    }
+        
+    
 
     // Le Getter pour pouvoir rajouter un EVENT depuis un controller (afficher page Accueil)
     public BoutonAcceuil getBoutonAcceuil() {
@@ -128,7 +130,6 @@ public class Header extends HBox {
             System.out.println("Ouverture Profil User " + MainApp.getUtilisateurConnecte().getUsername());
 
         }
-    
         
         else {
             /**
