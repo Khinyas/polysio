@@ -55,8 +55,24 @@ public class Header extends HBox {
             // Remplissage Conteneur (On ajoute uniquement les boutons de navigation standard)
             this.getChildren().addAll(boutonInscription, boutonConnexion);
 
-        } 
-        
+        } else {
+            // ---------------------   UTILISATEUR CONNECTE  :
+
+            // Bouton Deconnexion
+            this.boutonDeconnexion = new BoutonDeconnexion();
+            this.getChildren().add(boutonDeconnexion);
+            // --- CORRECTION ICI ---
+            // Au lieu de setHgrow sur le bouton (qui ne marcherait pas bien),
+            // on utilise un Spacer (Region) qui va pousser tout le reste à droite.
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+            this.getChildren().add(spacer);
+            HBox zoneProfil = creerZoneProfil();
+            this.getChildren().add(zoneProfil);
+            // Note : L'alignement reste CENTER_LEFT, le spacer s'occupe de l'écartement
+        }
+
+        // -----------------     ZONE ADMIN --------------------------------
         if (MainApp.getUtilisateurConnecte() != null && MainApp.getUtilisateurConnecte().getRole() == ModelUserRole.ADMIN) {
             Button btnAdmin = new Button("Administration");
             btnAdmin.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
@@ -67,26 +83,11 @@ public class Header extends HBox {
             });
             this.getChildren().add(1, btnAdmin); 
         
-            ;}
-        
-        else {
-            // --- CAS : UTILISATEUR CONNECTÉ ---
+            ;
+        } else {
 
-            // Bouton Deconnexion
-            this.boutonDeconnexion = new BoutonDeconnexion();
-            this.getChildren().add(boutonDeconnexion);
-
-            // --- CORRECTION ICI ---
-            // Au lieu de setHgrow sur le bouton (qui ne marcherait pas bien),
-            // on utilise un Spacer (Region) qui va pousser tout le reste à droite.
-            Region spacer = new Region();
-            HBox.setHgrow(spacer, Priority.ALWAYS);
-            this.getChildren().add(spacer);
-            HBox zoneProfil = creerZoneProfil();
-            this.getChildren().add(zoneProfil);
-
-            // Note : L'alignement reste CENTER_LEFT, le spacer s'occupe de l'écartement
         }
+        // ---------------------- FIN ZONE ADMIN -------------------------------
     }
 
     // Le Getter pour pouvoir rajouter un EVENT depuis un controller (afficher page Accueil)
