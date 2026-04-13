@@ -54,6 +54,18 @@ public class Header extends HBox {
 
             // Remplissage Conteneur (On ajoute uniquement les boutons de navigation standard)
             this.getChildren().addAll(boutonInscription, boutonConnexion);
+            
+            if (MainApp.getUtilisateurConnecte() != null && MainApp.getUtilisateurConnecte().getRole() == ModelUserRole.ADMIN) {
+                Button btnAdmin = new Button("Administration");
+                btnAdmin.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+                
+                btnAdmin.setOnAction(event -> {
+                    // Redirection vers ta nouvelle vue admin
+                    MainApp.changerDePage(new ViewAdmin()); 
+                });
+                this.getChildren().add(1, btnAdmin); 
+            
+                ;}
 
         } else {
             // --- CAS : UTILISATEUR CONNECTÉ ---
@@ -116,17 +128,7 @@ public class Header extends HBox {
             System.out.println("Ouverture Profil User " + MainApp.getUtilisateurConnecte().getUsername());
 
         }
-        if (MainApp.getUtilisateurConnecte() != null && MainApp.getUtilisateurConnecte().getRole() == ModelUserRole.ADMIN) {
-            Button btnAdmin = new Button("Administration");
-            btnAdmin.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-            
-            btnAdmin.setOnAction(event -> {
-                // Redirection vers ta nouvelle vue admin
-                MainApp.changerDePage(new ViewAdmin()); 
-            });
-            this.getChildren().add(1, btnAdmin); 
-        
-            ;}
+    
         
         else {
             /**
