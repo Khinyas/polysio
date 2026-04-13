@@ -30,12 +30,8 @@ public class ControllerAdmin {
         // Mise à jour de l'objet
         user.setUsername(nouveauPseudo);
         user.setEmail(nouvelEmail);
-        user.setRole(nouveauRole);
+       // user.setRole(nouveauRole);
         
-        // Persistance en BDD
-        if (DAOUser.reqUpdateUser(user)) {
-            table.refresh(); // Force le tableau à se remettre à jour visuellement
-            System.out.println("Utilisateur mis à jour.");
+ 
         }
     }
-}

@@ -38,17 +38,17 @@ public class ViewAdmin extends ViewTemplate {
         zoneActions.setAlignment(Pos.CENTER);
 
         // Bouton Accueil
-        Button btnRetour = new Button("🏠 Accueil");
+        Button btnRetour = new Button("Accueil");
         btnRetour.setStyle("-fx-background-color: #34495e; -fx-text-fill: white; -fx-font-weight: bold;");
         btnRetour.setOnAction(e -> MainApp.changerDePage(new View.ViewConnexion()));
 
         // Bouton Modifier
-        Button btnEdit = new Button("📝 Modifier");
+        Button btnEdit = new Button("Modifier");
         btnEdit.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold;");
         btnEdit.setOnAction(e -> ouvrirPopupModification());
 
         // Bouton Supprimer
-        Button btnDelete = new Button("❌ Supprimer");
+        Button btnDelete = new Button("Supprimer");
         btnDelete.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
         btnDelete.setOnAction(e -> {
             ModelUser selection = tableUsers.getSelectionModel().getSelectedItem();
