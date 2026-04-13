@@ -1,5 +1,6 @@
 package connexion;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -131,6 +132,22 @@ public class DAOUser {
                 erreur.printStackTrace();
             }
             return liste;
+        }
+     // Dans DAOUser.java
+        public void updateUsername(int id, String nouveauNom) {
+            String query = "UPDATE utilisateur SET pseudo = ? WHERE id_utilisateur = ?"; // Vérifie les noms de tes colonnes !
+            
+            try (Connection conn = DAOAcces.getConnexion(); // Utilise ta méthode habituelle pour la connexion
+                 PreparedStatement pstmt = conn.prepareStatement(query)) {
+                
+                pstmt.setString(1, nouveauNom);
+                pstmt.setInt(2, id);
+                pstmt.executeUpdate();
+                System.out.println("Base de données mise à jour avec succès !");
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

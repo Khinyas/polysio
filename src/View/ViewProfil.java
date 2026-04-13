@@ -42,10 +42,18 @@ public class ViewProfil extends ViewTemplate { // Ajout de l'héritage
     
     TextField inputNom = new TextField(); // On ne récupère pas le texte ici !
     Button changerNom = new Button("Changer le pseudo");
-    changerNom.setOnAction(event -> { // C'est ici, lors du clic, qu'on va chercher la valeur actuelle
-    	String nouveauNom = inputNom.getText(); // On récupère le texte "en direct"
-    	System.out.println("Nouveau nom: " + nouveauNom + ".");
-    	new ControllerProfil();
+    changerNom.setOnAction(event -> {
+        String nouveauNom = inputNom.getText();
+        if (!nouveauNom.isEmpty()) {
+            // On met à jour l'objet utilisateur actuel en mémoire
+            MainApp.getUtilisateurConnecte().setUsername(nouveauNom);
+            
+            // On demande au contrôleur de sauvegarder ce changement en BDD
+            ControllerProfil.modifierPseudo(MainApp.getUtilisateurConnecte().getId(), nouveauNom);
+            
+            // On rafraîchit la page
+            new ControllerProfil(); 
+        }
     });
     
     Label label = new Label ("Changer d'image de profil");
