@@ -3,6 +3,8 @@ package controller;
 import java.util.ArrayList;
 
 import java.util.List;
+
+import View.ViewPropriete;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -19,6 +21,7 @@ public class ControllerPlateau {
     private ModelPartie configuration;
     private ModelPlateau modelPlateau;
     private ArrayList<ModelCase> listeCases;
+    private ArrayList<ModelPropriete> listeProprietes;
     private int secondesRestantes;
     private Timeline chrono;
 //ToDo : Liste de joueurs pour acceder à leur attributs ?
@@ -29,7 +32,8 @@ public class ControllerPlateau {
     public ControllerPlateau(ModelPartie configP) {
     	this.configuration = configP;
         this.listeCases = ControllerCase.casePlateau();
-        this.modelPlateau = new ModelPlateau(this.listeCases);
+        this.listeProprietes = ControllerPropriete.proprietePlateau();
+        this.modelPlateau = new ModelPlateau(this.listeCases, this.listeProprietes);
         //ModelJoueur joueur1 = new ModelJoueur(1, 0, 0, "#00FFFF");
     
         
@@ -105,6 +109,17 @@ public class ControllerPlateau {
         ViewCase viewCase = modelPlateau.getListeViewCases().get(positionP);
         return viewCase;
     }
+
+    public ModelPropriete getProprieteParPosition(int positionP){
+        return listeProprietes.get(positionP);
+    }
+
+    public ViewPropriete getViewProprieteParPosition(int positionP) {
+        ViewPropriete viewPropriete = modelPlateau.getListeViewPropriete().get(positionP);
+        return viewPropriete;
+    }
+
+
     public void passerAuJoueurSuivant() {
         indexJoueurActuel = (indexJoueurActuel + 1) % listeJoueurs.size();
     }

@@ -1,6 +1,7 @@
 package model;
 
 import View.ViewCase;
+import View.ViewPropriete;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,10 +13,13 @@ import java.util.List;
 // On utilise StackPane pour pouvoir empiler le background ET le plateau par dessus
 public class ModelPlateau extends GridPane {
     private static List<ModelCase> listeCases;
-    private static List<ViewCase> listeViewCases = new ArrayList<>();;
+    private static List<ViewCase> listeViewCases = new ArrayList<>();
+    private static List<ModelPropriete> listePropriete;
+    private static List<ViewPropriete> listeViewPropriete = new ArrayList<>();;
 
-    public ModelPlateau(List<ModelCase> listeCasesP) {
+    public ModelPlateau(List<ModelCase> listeCasesP, List<ModelPropriete> listeProprieteP) {
         this.listeCases = listeCasesP;
+        this.listePropriete = listeProprieteP;
         /*
         this.prefHeightProperty().bind(this.heightProperty().multiply(0.8));
         this.prefWidthProperty().bind(this.heightProperty().multiply(0.8));
@@ -41,6 +45,10 @@ public class ModelPlateau extends GridPane {
 
     public static List<ModelCase> getListeCases() {
         return listeCases;
+    }
+
+    public static List<ModelPropriete> getListePropriete() {
+        return listePropriete;
     }
 
     public void initialiserPlateau() {
@@ -92,6 +100,13 @@ public class ModelPlateau extends GridPane {
         ModelCase mCentrale = this.listeCases.getLast();
         ViewCase vueCentrale = new ViewCase(mCentrale);
         this.add(vueCentrale, 1, 1, 9, 9);
+
+        // Constuire les Cartes de proprietees :
+
+        for (ModelPropriete propriete : this.listePropriete) {
+            ViewPropriete viewPropriete = new ViewPropriete(propriete);
+            listeViewPropriete.add(viewPropriete);
+        }
     }
 
     public List<ViewCase> getListeViewCases() {
@@ -100,4 +115,8 @@ public class ModelPlateau extends GridPane {
     /*public ViewCase getViewCase(int idP) {
         return listeViewCases.get(idP);
     }*/
+
+    public List<ViewPropriete> getListeViewPropriete() {
+        return listeViewPropriete;
+    }
 }
