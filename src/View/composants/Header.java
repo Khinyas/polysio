@@ -1,4 +1,5 @@
 package View.composants;
+import View.ViewAdmin;
 import View.ViewLancerDes;
 import controller.ControllerProfil;
 import javafx.geometry.Insets;
@@ -112,7 +113,20 @@ public class Header extends HBox {
                     new ControllerProfil());
             System.out.println("Ouverture Profil User " + MainApp.getUtilisateurConnecte().getUsername());
 
-        } else {
+        }
+        if (MainApp.getUtilisateurConnecte() != null && MainApp.getUtilisateurConnecte().getRole() == ModelUserRole.ADMIN) {
+            Button btnAdmin = new Button("Administration");
+            btnAdmin.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+            
+            btnAdmin.setOnAction(event -> {
+                // Redirection vers ta nouvelle vue admin
+                MainApp.changerDePage(new ViewAdmin()); 
+            });
+            this.getChildren().add(1, btnAdmin); 
+        
+            ;}
+        
+        else {
             /**
              * Utilisateur Non Connecté
              */

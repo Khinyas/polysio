@@ -43,19 +43,19 @@ public class ViewAdmin extends ViewTemplate {
         btnRetour.setOnAction(e -> MainApp.changerDePage(new View.ViewConnexion()));
 
         // Bouton Modifier
-        Button btnEdit = new Button("Modifier");
-        btnEdit.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold;");
-        btnEdit.setOnAction(e -> ouvrirPopupModification());
+        Button btnModifier = new Button("Modifier");
+        btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnModifier.setOnAction(e -> ouvrirPopupModification());
 
         // Bouton Supprimer
-        Button btnDelete = new Button("Supprimer");
-        btnDelete.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
-        btnDelete.setOnAction(e -> {
+        Button btnSupprimer = new Button("Supprimer");
+        btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnSupprimer.setOnAction(e -> {
             ModelUser selection = tableUsers.getSelectionModel().getSelectedItem();
             ControllerAdmin.supprimerUtilisateur(selection, tableUsers);
         });
 
-        zoneActions.getChildren().addAll(btnRetour, btnEdit, btnDelete);
+        zoneActions.getChildren().addAll(btnRetour, btnModifier, btnSupprimer);
 
         // Assemblage
         contenuCentral.getChildren().addAll(titre, tableUsers, zoneActions);
