@@ -6,11 +6,9 @@ import java.util.List;
 import View.ViewCase;
 import View.ViewTemplateGame;
 import View.ViewTemplateJeu;
+import com.sun.webkit.Timer;
 import main.MainApp;
-import model.ModelCase;
-import model.ModelJoueur;
-import model.ModelPartie;
-import model.ModelPlateau;
+import model.*;
 
 public class ControllerPlateau {
     private ViewTemplateGame vueJeu;
@@ -29,11 +27,14 @@ public class ControllerPlateau {
         //ModelJoueur joueur1 = new ModelJoueur(1, 0, 0, "#00FFFF");
         
         
-        String[] couleurs = {"#FF0000", "#00FF00", "#0000FF", "#FFFF00"}; // Rouge, Vert, Bleu, Jaune
+        // On crée la palette de couleur à partir de l'enum ModelJoueurCouleur
+        ModelJoueurCouleur[] couleursDisponible = ModelJoueurCouleur.values();
         
         for (int i = 0; i < configuration.getNbJoueurs(); i++) {
+            // On pioche une couleur dans l'enum et on l'attribue ensuite au joueur
+            ModelJoueurCouleur couleurAttribue = couleursDisponible[i];
             // On crée chaque joueur avec une ID et une couleur unique
-            ModelJoueur j = new ModelJoueur(i + 1, 0, 0, couleurs[i % couleurs.length]);
+            ModelJoueur j = new ModelJoueur(i + 1, 0, 0, couleurAttribue);
             listeJoueurs.add(j);
         }
         

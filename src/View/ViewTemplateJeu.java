@@ -55,7 +55,7 @@ public class ViewTemplateJeu extends StackPane {
         
      // --- Création des pions pour chaque joueur ---
         for (ModelJoueur mj : modelJoueurs) {
-            ViewPion pion = new ViewPion(Color.web(mj.getCouleur())); // Assume que ModelJoueur a getCouleur()
+            ViewPion pion = new ViewPion(Color.web(mj.getCouleur().name().toLowerCase())); // Assume que ModelJoueur a getCouleur()
             listePionsGraphiques.add(pion);
             placerPionInitial(mj, pion);
         }

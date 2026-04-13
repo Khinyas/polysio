@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import model.ModelCase;
 import model.ModelJoueur;
+import model.ModelJoueurCouleur;
 import model.ModelPlateau;
 
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class ViewTemplateGame extends StackPane {
     protected void setContenuCentral() {
         // --- Création des pions pour chaque joueur ---
         for (ModelJoueur mj : modelJoueurs) {
-            ViewPion pion = new ViewPion(Color.web(mj.getCouleur())); // Assume que ModelJoueur a getCouleur()
+            ViewPion pion = new ViewPion(Color.web(mj.getCouleur().getCouleurJoueur())); // Assume que ModelJoueur a getCouleur()
             listePionsGraphiques.add(pion);
             placerPionInitial(mj, pion);
         }

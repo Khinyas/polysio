@@ -4,13 +4,13 @@ public class ModelJoueur {
 	private int idJoueur;
 	private int position;
 	private String pseudonyme;
-	private String couleur;
+	private ModelJoueurCouleur couleur;
 	private int pointsCompetences;
 	private boolean enPrison;
 	private int toursEnPrison;
 	private ModelJoueurRole roleJoueur = ModelJoueurRole.JOUEUR; // Je définis la valeur par défaut du role ICI
 // ToDo : Remplir CFG avec les paramètre de début de game : argent, position etc ??
-	public ModelJoueur(int idJoueurP, int posP, int pcP, String couleurP){
+	public ModelJoueur(int idJoueurP, int posP, int pcP, ModelJoueurCouleur couleurP){
 		this.idJoueur = idJoueurP;
 		this.position = posP;
 		this.pointsCompetences= pcP;
@@ -52,7 +52,7 @@ public class ModelJoueur {
 	public int getPosition() {
 		return position;
 	}
-	public String getCouleur() {
+	public ModelJoueurCouleur getCouleur() {
 		return couleur;
 	}
 

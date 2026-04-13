@@ -1,8 +1,5 @@
 package model;
 
-
-
-
 public class ModelCase {
 	
 	private int id;
