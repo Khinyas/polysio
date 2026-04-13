@@ -107,7 +107,7 @@ public class DAOUser {
             int lignesAffectees = pst.executeUpdate();
             return lignesAffectees > 0;
         } catch (SQLException erreur) {
-            System.err.println("Erreur SQL Impossible de Créer l'Utilisateur en BDD : " + erreur.getMessage());
+            System.err.println("Erreur SQL Impossible de Supprimer l'Utilisateur en BDD : " + erreur.getMessage());
             erreur.printStackTrace();
             return false;
         }}
