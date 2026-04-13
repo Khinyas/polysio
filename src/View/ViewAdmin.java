@@ -1,7 +1,6 @@
 package View;
 
-import View.composants.BoutonFermerPoPup;
-import View.composants.Header;
+import controller.ControllerAdmin;
 import connexion.DAOUser;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -12,70 +11,71 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import main.MainApp;
 import model.ModelUser;
+import model.ModelUserRole;
 import java.util.ArrayList;
 
 public class ViewAdmin extends ViewTemplate {
     private TableView<ModelUser> tableUsers = new TableView<>();
 
     public ViewAdmin() {
-        // 1. On appelle le constructeur parent avec le chemin de ton image de fond
-        super("/images/accueil.png"); // Remplace par ton chemin réel
+        super("/images/accueil.png"); 
 
-        // 2. Création du contenu central spécifique à l'admin
+        // --- CONTENEUR CENTRAL ---
         VBox contenuCentral = new VBox(20);
         contenuCentral.setPadding(new Insets(30));
         contenuCentral.setAlignment(Pos.TOP_CENTER);
-        // On rend le fond de la VBox légèrement blanc transparent pour lire le tableau sur le background
-        contenuCentral.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8); -fx-background-radius: 15;");
-        contenuCentral.setMaxWidth(900); // Pour ne pas que le tableau soit trop large
+        contenuCentral.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9); -fx-background-radius: 15;");
+        contenuCentral.setMaxWidth(900);
         contenuCentral.setMaxHeight(600);
 
         Label titre = new Label("PANNEAU D'ADMINISTRATION");
         titre.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
-        // Configuration du TableView
         configurerTableau();
 
-        // Zone des boutons
-        HBox zoneActions = new HBox(20);
+        // --- ZONE DE BOUTONS ---
+        HBox zoneActions = new HBox(15);
         zoneActions.setAlignment(Pos.CENTER);
 
+        // Bouton Accueil
         Button btnRetour = new Button("🏠 Accueil");
-        btnRetour.setStyle("-fx-background-color: #34495e; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;");
-        btnRetour.setOnAction(e -> MainApp.changerDePage(new View.ViewConnexion())); // Ou ViewAccueil
+        btnRetour.setStyle("-fx-background-color: #34495e; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnRetour.setOnAction(e -> MainApp.changerDePage(new View.ViewConnexion()));
 
-        Button btnDelete = new Button("❌ Supprimer l'utilisateur");
-        btnDelete.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;");
-        btnDelete.setOnAction(e -> supprimerSelection());
+        // Bouton Modifier
+        Button btnEdit = new Button("📝 Modifier");
+        btnEdit.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnEdit.setOnAction(e -> ouvrirPopupModification());
 
-        zoneActions.getChildren().addAll(btnRetour, btnDelete);
+        // Bouton Supprimer
+        Button btnDelete = new Button("❌ Supprimer");
+        btnDelete.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnDelete.setOnAction(e -> {
+            ModelUser selection = tableUsers.getSelectionModel().getSelectedItem();
+            ControllerAdmin.supprimerUtilisateur(selection, tableUsers);
+        });
 
-        // Assemblage du contenu
+        zoneActions.getChildren().addAll(btnRetour, btnEdit, btnDelete);
+
+        // Assemblage
         contenuCentral.getChildren().addAll(titre, tableUsers, zoneActions);
-
-        // 3. On injecte ce contenu dans le BorderPane du Template
         this.setContenuCentral(contenuCentral);
 
-        // Chargement initial des données
         actualiserDonnees();
     }
 
     private void configurerTableau() {
         TableColumn<ModelUser, Integer> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colId.setPrefWidth(50);
-
+        
         TableColumn<ModelUser, String> colPseudo = new TableColumn<>("Pseudo");
         colPseudo.setCellValueFactory(new PropertyValueFactory<>("username"));
-        colPseudo.setPrefWidth(200);
 
         TableColumn<ModelUser, String> colRole = new TableColumn<>("Rôle");
         colRole.setCellValueFactory(new PropertyValueFactory<>("role"));
-        colRole.setPrefWidth(150);
 
         tableUsers.getColumns().setAll(colId, colPseudo, colRole);
         tableUsers.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        tableUsers.setPlaceholder(new Label("Aucun utilisateur trouvé."));
     }
 
     private void actualiserDonnees() {
@@ -83,18 +83,30 @@ public class ViewAdmin extends ViewTemplate {
         tableUsers.setItems(FXCollections.observableArrayList(liste));
     }
 
-    private void supprimerSelection() {
+    private void ouvrirPopupModification() {
         ModelUser selection = tableUsers.getSelectionModel().getSelectedItem();
-        if (selection != null) {
-            // Empêcher l'admin de se supprimer lui-même par erreur
-            if (selection.getId() == MainApp.getUtilisateurConnecte().getId()) {
-                System.out.println("Action impossible : Vous ne pouvez pas supprimer votre propre compte.");
-                return;
-            }
+        if (selection == null) return;
 
-            if (DAOUser.deleteUSer(selection.getId())) {
-                tableUsers.getItems().remove(selection);
+        // Création d'une petite fenêtre de dialogue (Alert ou Stage)
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Modification Utilisateur");
+        dialog.setHeaderText("Modifier les informations de : " + selection.getUsername());
+
+        // Champs du formulaire
+        VBox vb = new VBox(10);
+        TextField fieldPseudo = new TextField(selection.getUsername());
+        TextField fieldEmail = new TextField(selection.getEmail());
+        ComboBox<ModelUserRole> comboRole = new ComboBox<>(FXCollections.observableArrayList(ModelUserRole.values()));
+        comboRole.setValue(selection.getRole());
+
+        vb.getChildren().addAll(new Label("Pseudo :"), fieldPseudo, new Label("Email :"), fieldEmail, new Label("Rôle :"), comboRole);
+        dialog.getDialogPane().setContent(vb);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                ControllerAdmin.modifierUtilisateur(selection, fieldPseudo.getText(), fieldEmail.getText(), comboRole.getValue(), tableUsers);
             }
-        }
+        });
     }
 }
