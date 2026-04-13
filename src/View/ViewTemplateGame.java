@@ -43,6 +43,7 @@ public class ViewTemplateGame extends StackPane {
     // Ajout pour liste de joueurs / pions
     private List<ViewPion> listePionsGraphiques = new ArrayList<>();
     private List<ModelJoueur> modelJoueurs;
+    private Label lblChrono = new Label();
     public ViewTemplateGame(ModelPlateau plateauGraphiqueP, ControllerPlateau controllerPlateauP, List<ModelJoueur> joueursP) {
         // Utilisation de getResource pour charger l'image depuis le dossier resources
         // ToDo : Background sera notre fond, il faut penser à le créer ou le choisir si juste couleur
@@ -54,6 +55,11 @@ public class ViewTemplateGame extends StackPane {
         this.plateauGraphique = plateauGraphiqueP;
         this.controllerPlateau = controllerPlateauP;
         this.modelJoueurs = joueursP;
+        this.lblChrono = new Label("00:00");
+        this.lblChrono.setStyle("-fx-font-size: 32px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
+        
+        // chrono
+        
 
         // Structure
         // Conteneur Principal : BorderPane
@@ -86,7 +92,8 @@ public class ViewTemplateGame extends StackPane {
             ViewPion pion = new ViewPion(Color.web(mj.getCouleur().getCouleurJoueur())); // Assume que ModelJoueur a getCouleur()
             listePionsGraphiques.add(pion);
             placerPionInitial(mj, pion);
-        }
+            
+
 
         // CORRECTION : on délègue à placerPionSansAnimation() plutôt que
         // de hardcoder col=10/ligne=10 — il lit la position logique du joueur
@@ -116,6 +123,7 @@ public class ViewTemplateGame extends StackPane {
 
         // On place le conteneur de ratio au centre du layout principal
         layoutPrincipal.setCenter(conteneurRatio);
+        }
     }
 
     // Méthode pour changer le contenu de droite
@@ -124,7 +132,16 @@ public class ViewTemplateGame extends StackPane {
         contenuDroite.setStyle("-fx-background-color: white;");
         contenuDroite.getChildren().add(new Label("Scores des joueurs :"));
         contenuDroite.prefWidthProperty().bind(layoutPrincipal.widthProperty().multiply(0.25));
-        layoutPrincipal.setRight(contenuDroite);
+        
+        
+        
+     // --- SECTION CHRONO ---
+
+        Label titreChrono = new Label("TEMPS RESTANT");
+        titreChrono.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
+        contenuDroite.getChildren().addAll(titreChrono, this.lblChrono);
+        
+        this.layoutPrincipal.setRight(contenuDroite);
     }
 
     private void placerPionInitial(ModelJoueur mj, ViewPion vp) {
@@ -390,4 +407,20 @@ public class ViewTemplateGame extends StackPane {
     public ModelPlateau getPlateauGraphique() {
         return plateauGraphique;
     }
+    
+    
+    // partie chrono 
+
+    // La méthode que le Controller appellera
+ 
+    
+    public void actualiserAffichageChrono(String temps) {
+        if (this.lblChrono != null) {
+            this.lblChrono.setText(temps);
+            System.out.println("Chrono mis à jour : " + temps);
+            this.lblChrono.setVisible(true);
+            this.lblChrono.setOpacity(1.0);
+        }
+    }
 }
+

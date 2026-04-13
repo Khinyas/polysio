@@ -5,11 +5,13 @@ import controller.ControllerProfil;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import main.MainApp;
 import model.ModelUser;
 import model.ModelUserRole;
@@ -21,6 +23,7 @@ public class Header extends HBox {
     private BoutonConnexion boutonConnexion;
     private BoutonDes boutonDes;
     private BoutonDeconnexion boutonDeconnexion;
+    private StackPane zoneCentrale;
 
     public Header() {
         this.setPadding(new Insets(10));
@@ -31,14 +34,11 @@ public class Header extends HBox {
         // Bouton Accueil : Toujours présent
         this.boutonAcceuil = new BoutonAcceuil();
         this.getChildren().add(boutonAcceuil);
+        
+     
+        
 
-        //Test Bouton Lancer Des
-        Button boutonDes = new Button();
-        boutonDes.setOnAction(event ->{
-            ViewLancerDes lancerDés = new ViewLancerDes();
-            MainApp.changerDePage(lancerDés);
-
-        });
+       
         ModelUser user = MainApp.getUtilisateurConnecte();
         if (user == null) {
 
@@ -53,7 +53,7 @@ public class Header extends HBox {
 
 
             // Remplissage Conteneur (On ajoute uniquement les boutons de navigation standard)
-            this.getChildren().addAll(boutonInscription, boutonConnexion,boutonDes);
+            this.getChildren().addAll(boutonInscription, boutonConnexion);
 
         } else {
             // --- CAS : UTILISATEUR CONNECTÉ ---
@@ -86,6 +86,8 @@ public class Header extends HBox {
     // Getters pour les autres boutons (Retourneront null si l'utilisateur est connecté)
     public BoutonInscription getBoutonInscription() { return boutonInscription; }
     public BoutonConnexion getBoutonConnexion() { return boutonConnexion; }
+    
+    
 
 
     public HBox creerZoneProfil() {
