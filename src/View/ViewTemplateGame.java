@@ -379,8 +379,9 @@ public class ViewTemplateGame extends StackPane {
 
         Label titre = new Label("FIN DU TOUR - JOUEUR " + joueur.getIdJoueur());
         ViewCase carte = new ViewCase(controllerPlateau.getCaseParPosition(joueur.getPosition()));
+        ViewPropriete locationJoueur = new ViewPropriete(controllerPlateau.getProprieteParPosition(joueur.getPosition()));
         Label msg = new Label("Case : " + carte.getViewCaseName());
-        contenu.getChildren().addAll(titre, msg, carte);
+        contenu.getChildren().addAll(titre, msg, carte, locationJoueur);
 
         BoutonFermerPoPup btnFin = new BoutonFermerPoPup();
         btnFin.setText("AU SUIVANT !");

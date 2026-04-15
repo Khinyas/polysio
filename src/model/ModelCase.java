@@ -6,24 +6,16 @@ public class ModelCase {
 	private String nom;
 	private int positionY;
 	private String typeCase;
-	private int prix;
 	private int positionId;
 	private int positionX;
-	private int loyerNu;
-	private int loyerBatiment;
-	private int idCouleur;
 	private String cheminSvg;
 
-	public ModelCase(int idP, String nomP, String typeCaseP, int positionXP,int positionYP, int prixP, int loyerNuP, int loyerBatimentP, int idCouleurP, String cheminSvgP) {
+	public ModelCase(int idP, String nomP, String typeCaseP, int positionXP,int positionYP, String cheminSvgP) {
 		this.id = idP;
 		this.nom = nomP;
 		this.typeCase = typeCaseP;
 		this.positionX = positionXP;
 		this.positionY = positionYP;
-		this.prix = prixP;
-		this.loyerNu = loyerNuP;
-		this.loyerBatiment = loyerBatimentP;
-		this.idCouleur = idCouleurP;
 		this.cheminSvg = cheminSvgP;
 		
 	}
@@ -68,16 +60,6 @@ public class ModelCase {
 	}
 
 
-	public int getIdCouleur() {
-		return idCouleur;
-	}
-
-
-	public void setIdCouleur(int idCouleur) {
-		this.idCouleur = idCouleur;
-	}
-
-
 	public String getNom() {
 		return nom;
 	}
@@ -88,11 +70,6 @@ public class ModelCase {
 
 	public int getId() {
 		return id;
-	}
-
-	public int getPrix() {
-		// TODO Auto-generated method stub
-		return prix;
 	}
 	
 	public String getCheminSvg() {

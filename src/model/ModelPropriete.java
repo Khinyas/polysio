@@ -1,5 +1,7 @@
 package model;
 
+import controller.ControllerPlateau;
+
 public class ModelPropriete {
 
     private int id;
@@ -12,18 +14,18 @@ public class ModelPropriete {
     private String proprietaire;
     private boolean batiment;
     private String cheminSvg;
+    private int casePlateau;
 
-    public ModelPropriete(int idP, String nomP, String typeCaseP, int prixP, int loyerNuP, int loyerBatimentP, int idCouleurP, String proprietaireP, boolean batimentP, String cheminSvgP) {
+    public ModelPropriete(int idP, boolean batimentP, int casePlateauP, String cheminSvgP, int loyerNuP, int loyerBatimentP, int idCouleurP,  int prixP) {
         this.id = idP;
-        this.nom = nomP;
-        this.typeCase = typeCaseP;
-        this.prix = prixP;
+        this.batiment = batimentP;
+        this.casePlateau = casePlateauP;
+        this.cheminSvg = cheminSvgP;
         this.loyerNu = loyerNuP;
         this.loyerBatiment = loyerBatimentP;
         this.idCouleur = idCouleurP;
-        this.proprietaire = proprietaireP;
-        this.batiment = batimentP;
-        this.cheminSvg = cheminSvgP;
+        this.prix = prixP;
+
 
     }
 
