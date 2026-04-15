@@ -8,7 +8,6 @@ public class ModelCase {
 	private String typeCase;
 	private int positionId;
 	private int positionX;
-	private int idCouleur;
 	private String cheminSvg;
 
 	public ModelCase(int idP, String nomP, String typeCaseP, int positionXP,int positionYP, String cheminSvgP) {
@@ -58,16 +57,6 @@ public class ModelCase {
 
 	public void setTypeCase(String typeCase) {
 		this.typeCase = typeCase;
-	}
-
-
-	public int getIdCouleur() {
-		return idCouleur;
-	}
-
-
-	public void setIdCouleur(int idCouleur) {
-		this.idCouleur = idCouleur;
 	}
 
 
