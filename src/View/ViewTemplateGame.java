@@ -1,16 +1,16 @@
 package View;
 
-import View.composants.BoutonFermerPoPup;
-import View.composants.BoutonLanceDes;
-import View.composants.Footer;
-import View.composants.Header;
+import View.composants.*;
 import controller.ControllerDes;
 import controller.ControllerPlateau;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
+import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,11 +19,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.ModelCase;
 import model.ModelJoueur;
-import model.ModelJoueurCouleur;
 import model.ModelPlateau;
+import model.ModelPropriete;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +43,11 @@ public class ViewTemplateGame extends StackPane {
     private AudioClip sonDeplacement;
     // Ajout pour liste de joueurs / pions
     private List<ViewPion> listePionsGraphiques = new ArrayList<>();
-    private List<ModelJoueur> modelJoueurs;
+    private List<ModelJoueur> listeJoueurs;
+    private List<ModelPropriete> listeProprietes;
+    private List<TilePane> listeInventaireJoueurs = new ArrayList<>();
     private Label lblChrono = new Label();
-    public ViewTemplateGame(ModelPlateau plateauGraphiqueP, ControllerPlateau controllerPlateauP, List<ModelJoueur> joueursP) {
+    public ViewTemplateGame(ModelPlateau plateauGraphiqueP, ControllerPlateau controllerPlateauP, List<ModelJoueur> joueursP, List<ModelPropriete> listeProprietesP) {
         // Utilisation de getResource pour charger l'image depuis le dossier resources
         // ToDo : Background sera notre fond, il faut penser à le créer ou le choisir si juste couleur
         background = new ImageView(new Image(getClass().getResource("/images/accueil.png").toExternalForm()));
@@ -54,25 +57,28 @@ public class ViewTemplateGame extends StackPane {
 
         this.plateauGraphique = plateauGraphiqueP;
         this.controllerPlateau = controllerPlateauP;
-        this.modelJoueurs = joueursP;
+        this.listeJoueurs = joueursP;
+        this.listeProprietes = listeProprietesP;
+        // chrono
         this.lblChrono = new Label("00:00");
         this.lblChrono.setStyle("-fx-font-size: 32px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
-        
-        // chrono
-        
 
         // Structure
         // Conteneur Principal : BorderPane
         layoutPrincipal = new BorderPane();
         // Zone Header
-        layoutPrincipal.setTop(new Header());
+        //layoutPrincipal.setTop(new Header());
+        Region header = new Region();
+        header.setStyle("-fx-background-color: white;");
+        header.prefHeightProperty().bind(layoutPrincipal.heightProperty().multiply(0.01));
+        layoutPrincipal.setTop(header);
         // Zone Footer
         layoutPrincipal.setBottom(new Footer());
         // Zone Gauche
-        Region manchetteGauche = new Region();
-        manchetteGauche.setStyle("-fx-background-color: white;");
-        manchetteGauche.prefWidthProperty().bind(layoutPrincipal.widthProperty().multiply(0.05));
-        layoutPrincipal.setLeft(manchetteGauche);
+        Region espaceGauche = new Region();
+        espaceGauche.setStyle("-fx-background-color: white;");
+        espaceGauche.prefWidthProperty().bind(layoutPrincipal.widthProperty().multiply(0.05));
+        layoutPrincipal.setLeft(espaceGauche);
         // Zone Droite
         setContenuDroite();
         // Zone Centrale
@@ -87,21 +93,23 @@ public class ViewTemplateGame extends StackPane {
 
     // Méthode pour changer le contenu central
     protected void setContenuCentral() {
-        // --- Création des pions pour chaque joueur ---
-        for (ModelJoueur mj : modelJoueurs) {
-            ViewPion pion = new ViewPion(Color.web(mj.getCouleur().getCouleurJoueur())); // Assume que ModelJoueur a getCouleur()
-            listePionsGraphiques.add(pion);
-            placerPionInitial(mj, pion);
-            
 
+        // --- Création des pions pour chaque joueur ---
+        for (ModelJoueur joueur : listeJoueurs) {
+            ViewPion pion = new ViewPion(Color.web(joueur.getCouleur().getCouleurJoueur())); // Assume que ModelJoueur a getCouleur()
+            listePionsGraphiques.add(pion);
+            placerPionInitial(joueur, pion);
+        }
 
         // CORRECTION : on délègue à placerPionSansAnimation() plutôt que
         // de hardcoder col=10/ligne=10 — il lit la position logique du joueur
         // inutile placerPionsSansAnimation();
 
         // Pour le centrer parfaitement dans la case du GridPane
-        GridPane.setHalignment(pionJoueur1, javafx.geometry.HPos.CENTER);
-        GridPane.setValignment(pionJoueur1, javafx.geometry.VPos.CENTER);
+        for (ViewPion pion : listePionsGraphiques) {
+            GridPane.setHalignment(pion, HPos.CENTER);
+            GridPane.setValignment(pion, VPos.CENTER);
+        }
 
         // Lancement de la popup de choix dès le départ
         javafx.application.Platform.runLater(() -> {
@@ -110,6 +118,8 @@ public class ViewTemplateGame extends StackPane {
 
         // --- AJOUT : Conteneur pour forcer le ratio carré du plateau ---
         StackPane conteneurRatio = new StackPane();
+        // aligner le contenu du StackPane à gauche
+        conteneurRatio.setAlignment(Pos.CENTER_LEFT);
         conteneurRatio.getChildren().add(plateauGraphique);
 
         // On lie la largeur et la hauteur du plateau à la plus petite dimension du centre
@@ -121,26 +131,77 @@ public class ViewTemplateGame extends StackPane {
                 Bindings.min(conteneurRatio.widthProperty(), conteneurRatio.heightProperty())
         );
 
+        // CLÉ : on force le conteneurRatio à ne pas dépasser la taille du carré
+        // En limitant sa largeur préférée à sa hauteur, le BorderPane ne lui donne
+        // pas plus de place que nécessaire → la droite se colle naturellement
+        conteneurRatio.prefWidthProperty().bind(conteneurRatio.heightProperty());
+        conteneurRatio.setMaxWidth(Double.MAX_VALUE);
+
         // On place le conteneur de ratio au centre du layout principal
         layoutPrincipal.setCenter(conteneurRatio);
-        }
     }
 
     // Méthode pour changer le contenu de droite
     protected void setContenuDroite() {
-        VBox contenuDroite = new VBox();
+        // Le Contenu de Droite sera une BorderPane avec une TilePane au milieu pour afficher l'inventaire des proprietes
+        //Conteneur Principale de la partie DROITE de l'écran de Jeu :
+        BorderPane contenuDroite = new BorderPane();
         contenuDroite.setStyle("-fx-background-color: white;");
-        contenuDroite.getChildren().add(new Label("Scores des joueurs :"));
-        contenuDroite.prefWidthProperty().bind(layoutPrincipal.widthProperty().multiply(0.25));
-        
-        
-        
-     // --- SECTION CHRONO ---
+        contenuDroite.prefWidthProperty().bind(layoutPrincipal.widthProperty().multiply(0.40));
 
+
+        // H E A D E R de la partie DROITE du Conteneur de Droite de l'écran de jeu :
+        VBox header = new VBox(8);
+        header.setStyle("-fx-background-color: transparent; -fx-padding: 10;");
+        Label labelHeader = new Label("Scores des joueurs :");
+        // --- SECTION CHRONO ---
         Label titreChrono = new Label("TEMPS RESTANT");
         titreChrono.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
-        contenuDroite.getChildren().addAll(titreChrono, this.lblChrono);
-        
+        header.getChildren().addAll(labelHeader, titreChrono, this.lblChrono);
+        contenuDroite.setTop(header);
+
+
+        // GAUCHE
+        Region sousTribuneGauche = new Region();
+        sousTribuneGauche.setStyle("-fx-background-color: yellow;");
+        sousTribuneGauche.setPrefWidth(8);
+        contenuDroite.setLeft(sousTribuneGauche);
+
+
+        // CENTRE
+        VBox inventaire = new VBox(8);
+        inventaire.setStyle("-fx-background-color: grey; -fx-padding: 10;");
+        Label labelInventaire = new Label("Inventaire des joueurs :");
+        inventaire.getChildren().add(labelInventaire);
+
+        for (ModelJoueur joueur : listeJoueurs) {
+            TilePane inventaireJoueur = new TilePane(Orientation.VERTICAL, 5, 10);
+
+            inventaireJoueur.setVgap(2);
+            inventaireJoueur.setHgap(5);
+            inventaireJoueur.setPrefColumns(3); // Optionnel : pour organiser les icônes
+            inventaireJoueur.setStyle("-fx-background-color: " + joueur.getCouleur().getCouleurJoueur() + "; -fx-background-radius: 10; -fx-padding: 10;");
+            listeInventaireJoueurs.add(inventaireJoueur);
+            inventaire.getChildren().add(inventaireJoueur);
+        }
+        contenuDroite.setCenter(inventaire);
+
+
+        // DROITE
+        Region sousTribuneDroite = new Region();
+        sousTribuneDroite.setStyle("-fx-background-color: green;");
+        sousTribuneDroite.setPrefWidth(8);
+        contenuDroite.setRight(sousTribuneDroite);
+
+
+        // BAS
+        Region piedPage = new Region();
+        piedPage.setPrefHeight(20);
+        piedPage.setStyle("-fx-background-color: red;");
+        contenuDroite.setBottom(piedPage);
+
+        // ON FIXE L'ENSEMBLE COMME PARTIE DROITE DE L'ECRAN DE JEU (L'ECRAN EST UNE BORDERPANE ET ICI EST LA PARTIE DROITE)
+
         this.layoutPrincipal.setRight(contenuDroite);
     }
 
@@ -164,8 +225,9 @@ public class ViewTemplateGame extends StackPane {
     // La chaîne récursive dans deplacerPionGraphique garantit
     // que chaque pas attend la fin du précédent → animation fluide.
     private void animerUnPas(ModelJoueur joueur, int posDepartP, int posArriveeP, Runnable onTermine) {
-        ViewCase vcDepart  = controllerPlateau.getViewCaseParPisition(posDepartP);
-        ViewCase vcArrivee = controllerPlateau.getViewCaseParPisition(posArriveeP);
+        System.out.println(controllerPlateau.getJoueurActuel());
+        ViewCase vcDepart  = controllerPlateau.getViewCaseParPosition(posDepartP);
+        ViewCase vcArrivee = controllerPlateau.getViewCaseParPosition(posArriveeP);
 
         ViewPion pionQuiBouge = listePionsGraphiques.get(joueur.getIdJoueur() - 1);
 
@@ -200,8 +262,8 @@ public class ViewTemplateGame extends StackPane {
 
     private void placerPionsSansAnimation() {
         // 1. On parcourt la liste de tous les joueurs du contrôleur
-        for (int i = 0; i < modelJoueurs.size(); i++) {
-            ModelJoueur joueur = modelJoueurs.get(i);
+        for (int i = 0; i < listeJoueurs.size(); i++) {
+            ModelJoueur joueur = listeJoueurs.get(i);
             ViewPion pionGraphique = listePionsGraphiques.get(i);
 
             // 2. On récupère la case où doit être le joueur
@@ -344,9 +406,9 @@ public class ViewTemplateGame extends StackPane {
 
 
     public void lancerAnimationJoueurActuel(int scoreDe) {
-        ModelJoueur j = controllerPlateau.getJoueurActuel();
+        ModelJoueur joueurActuel = controllerPlateau.getJoueurActuel();
         // On lance la récursion pour ce joueur précis
-        animerPasRecursif(j, j.getPosition(), 0, scoreDe);
+        animerPasRecursif(joueurActuel, joueurActuel.getPosition(), 0, scoreDe);
     }
 
     // Lance le pas numéro pasActuel, puis s'appelle elle-même pour le suivant
@@ -374,14 +436,97 @@ public class ViewTemplateGame extends StackPane {
     }
 
     private void afficherPopupEvenement(ModelJoueur joueur) {
-        VBox contenu = new VBox(15);
+        VBox contenu = new VBox(35);
         contenu.setAlignment(Pos.CENTER);
 
         Label titre = new Label("FIN DU TOUR - JOUEUR " + joueur.getIdJoueur());
-        ViewCase carte = new ViewCase(controllerPlateau.getCaseParPosition(joueur.getPosition()));
-        ViewPropriete locationJoueur = new ViewPropriete(controllerPlateau.getProprieteParPosition(joueur.getPosition()));
-        Label msg = new Label("Case : " + carte.getViewCaseName());
-        contenu.getChildren().addAll(titre, msg, carte, locationJoueur);
+        contenu.getChildren().add(titre);
+
+        // CORRECTION : on vérifie null avant tout
+        ModelPropriete propriete = controllerPlateau.getProprieteParPosition(joueur.getPosition());
+// DEBUG — à supprimer après
+        System.out.println("Position joueur : " + joueur.getPosition());
+        System.out.println("Propriete trouvee : " + (propriete != null ? propriete.getNom() + " / casePlateau=" + propriete.getCasePlateau() : "NULL"));
+        if (propriete == null) {
+            // Case spéciale : départ, prison, chance, etc.
+            contenu.getChildren().add(new Label("Case spéciale — pas d'action."));
+        } else {
+            // On affiche la carte de la propriété
+            ViewPropriete locationJoueur = new ViewPropriete(propriete);
+            locationJoueur.setScaleX(1.3);
+            locationJoueur.setScaleY(1.3);
+
+            Label msg = new Label("Case : " + propriete.getNom());
+            contenu.getChildren().addAll(msg, locationJoueur);
+
+            // Todo : Debut Algo Differentiel
+            if ("Rue".equals(propriete.getTypeCase())) {
+
+                if (propriete.getProprietaire() == null) {
+                    // CORRECTION : cas "personne ne possède" → proposer l'achat
+                    // ToDo : Proposer achat de Propriete
+                    Label msgAchat = new Label("Cette propriété est libre ! Prix : " + propriete.getPrix());
+                    contenu.getChildren().add(msgAchat); // ← CORRECTION : ajouté à contenu
+
+                } else if (propriete.getProprietaire().equals(joueur.getPseudonyme())) {
+                    // CORRECTION : le joueur est déjà propriétaire
+                    Label msgProprietaire = new Label("Bienvenue chez vous ! " + propriete.getNom() + " est déjà à vous.");
+                    contenu.getChildren().add(msgProprietaire); // ← CORRECTION : ajouté à contenu
+
+                } else {
+                    // CORRECTION : quelqu'un d'autre possède la propriété → payer le loyer
+                    int loyer;
+                    if (propriete.isBatiment()) {
+                        loyer = propriete.getLoyerBatiment();
+                    } else {
+                        loyer = propriete.getLoyerNu();
+                    }
+
+                    Label msgPaiement = new Label("Propriété de : " + propriete.getProprietaire());
+                    Label msgPaiementSuite = new Label("Vous devez payer : " + loyer);
+                    contenu.getChildren().addAll(msgPaiement, msgPaiementSuite); // ← CORRECTION : ajoutés
+
+                    if (joueur.getPointsCompetences() < loyer) {
+                        Label msgBanqueroute = new Label("Vous n'avez pas assez d'argent — vous avez perdu !");
+                        contenu.getChildren().add(msgBanqueroute); // ← CORRECTION : ajouté
+                        // ToDo : AFFICHER une modale de défaite !
+                    } else {
+                        // ToDo : Bouton Paiement
+                        BoutonPaiement btnPaiement = new BoutonPaiement();
+                        // Todo : Rajouter une modale d'achat de propriete à la place :
+                        btnPaiement.setOnAction(event -> {
+                            nettoyerOverlays();
+                            joueur.setPointsCompetences(joueur.getPointsCompetences() - loyer);
+                            // Joueur suivant dans le moteur
+                            controllerPlateau.passerAuJoueurSuivant();
+                            // Tour suivant avec un léger décalage technique
+                            javafx.application.Platform.runLater(() -> {
+                                choixInitial();
+                            });
+                        });
+                        // ToDo : Fin Bouton à changer
+                        contenu.getChildren().add(btnPaiement);
+                    }
+                }
+                // ToDo Possibilite d achat
+                // ToDo : Bouton Achat
+                BoutonAchat btnAchat = new BoutonAchat();
+                // Todo : Rajouter une modale d'achat de propriete à la place :
+                btnAchat.setOnAction(event -> {
+                    nettoyerOverlays();
+                    ajouterProprieteInventaireJoueur();
+                    controllerPlateau.passerAuJoueurSuivant();
+                    javafx.application.Platform.runLater(() -> {
+                        choixInitial();
+                    });
+                });
+                // ToDo : Fin Bouton à changer
+                contenu.getChildren().add(btnAchat);
+            }
+            // ToDo : If Gare ou Cartes
+            // Todo AJOUTER EST LA POUR TEST
+            //ajouterProprieteInventaireJoueur();
+        }
 
         BoutonFermerPoPup btnFin = new BoutonFermerPoPup();
         btnFin.setText("AU SUIVANT !");
@@ -423,5 +568,53 @@ public class ViewTemplateGame extends StackPane {
             this.lblChrono.setOpacity(1.0);
         }
     }
+
+    protected void ajouterProprieteInventaireJoueur() {
+        ModelJoueur joueur = controllerPlateau.getJoueurActuel();
+        int position = joueur.getPosition();
+
+        ModelPropriete propriete = controllerPlateau.getProprieteParPosition(position);
+        ViewPropriete vueProp = controllerPlateau.getViewProprieteParPosition(position);
+        vueProp.setPrefSize(50, 70);
+        vueProp.setMinSize(50, 70);
+        vueProp.setMaxSize(50, 70);
+
+        // --- ZOOM AU SURVOL ---
+        // On crée la carte en grand qu'on affichera en overlay
+        ViewPropriete vueZoom = new ViewPropriete(propriete);
+        vueZoom.setPrefSize(150, 210); // 3x la taille miniature
+        vueZoom.setMinSize(150, 210);
+        vueZoom.setMaxSize(150, 210);
+        vueZoom.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 4);");
+        vueZoom.setMouseTransparent(true); // ne bloque pas les events souris
+
+        vueProp.setOnMouseEntered(e -> {
+            // On ajoute le zoom par dessus tout (dans le StackPane racine)
+            if (!this.getChildren().contains(vueZoom)) {
+                this.getChildren().add(vueZoom);
+            }
+            // On positionne le zoom à côté du curseur
+            vueZoom.setTranslateX(e.getSceneX() - this.getWidth() / 2 - 80);
+            vueZoom.setTranslateY(e.getSceneY() - this.getHeight() / 2 - 105);
+        });
+
+        vueProp.setOnMouseMoved(e -> {
+            // On suit le curseur si la souris bouge
+            vueZoom.setTranslateX(e.getSceneX() - this.getWidth() / 2 - 80);
+            vueZoom.setTranslateY(e.getSceneY() - this.getHeight() / 2 - 105);
+        });
+
+        vueProp.setOnMouseExited(e -> {
+            // On retire le zoom quand la souris quitte
+            this.getChildren().remove(vueZoom);
+        });
+
+        propriete.setProprietaire(joueur.getPseudonyme());
+
+
+        listeInventaireJoueurs.get(joueur.getIdJoueur() - 1).getChildren().add(vueProp);
+    }
+
+
 }
 

@@ -11,8 +11,6 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 import View.ViewCase;
 import View.ViewTemplateGame;
-import View.ViewTemplateJeu;
-import com.sun.webkit.Timer;
 import main.MainApp;
 import model.*;
 
@@ -34,12 +32,8 @@ public class ControllerPlateau {
         this.listeCases = ControllerCase.casePlateau();
         this.listeProprietes = ControllerPropriete.proprietePlateau();
         this.modelPlateau = new ModelPlateau(this.listeCases, this.listeProprietes);
-        //ModelJoueur joueur1 = new ModelJoueur(1, 0, 0, "#00FFFF");
     
-        
-        
-        
-        
+
         
         
         // On crée la palette de couleur à partir de l'enum ModelJoueurCouleur
@@ -58,7 +52,7 @@ public class ControllerPlateau {
         
      
         
-        this.vueJeu = new ViewTemplateGame(modelPlateau, this, listeJoueurs);
+        this.vueJeu = new ViewTemplateGame(modelPlateau, this, listeJoueurs, listeProprietes);
         this.secondesRestantes = configP.getDureeMinutes() * 60;
         this.vueJeu.actualiserAffichageChrono(getTempsFormate());
         MainApp.basculerEnModeJeu(vueJeu);
@@ -105,7 +99,7 @@ public class ControllerPlateau {
         return listeCases.get(positionP);
     }
 
-    public ViewCase getViewCaseParPisition(int positionP) {
+    public ViewCase getViewCaseParPosition(int positionP) {
         ViewCase viewCase = modelPlateau.getListeViewCases().get(positionP);
         return viewCase;
     }
@@ -114,12 +108,15 @@ public class ControllerPlateau {
         return listeProprietes.get(positionP);
     }
 
+
     public ViewPropriete getViewProprieteParPosition(int positionP) {
         ViewPropriete viewPropriete = modelPlateau.getListeViewPropriete().get(positionP);
         return viewPropriete;
     }
 
-
+    // indexJoueurActuel commence à ZERO (attribut de la classe)
+    // La méthode passerAuJoueur Suivant l'incrémente dans une boucle infinie
+    // LE +1 = joueur suivant, MODULO pour ne pas dépasser l'index Joueur 3 = index 0
     public void passerAuJoueurSuivant() {
         indexJoueurActuel = (indexJoueurActuel + 1) % listeJoueurs.size();
     }

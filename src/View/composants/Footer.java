@@ -7,7 +7,7 @@ import javafx.scene.layout.HBox;
 public class Footer extends HBox {
     public Footer() {
         this.setAlignment(Pos.CENTER);
-        this.setPrefHeight(40);
+        this.setPrefHeight(20);
         this.setStyle("-fx-background-color: #34495e;");
 
         Label credits = new Label("© 2026 POLYSIO - Tous droits réservés");

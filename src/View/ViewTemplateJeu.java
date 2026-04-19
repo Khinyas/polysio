@@ -1,12 +1,10 @@
 package View;
 
-import View.composants.BoutonAcceuil;
 import View.composants.BoutonFermerPoPup;
 import View.composants.BoutonLanceDes;
 import controller.ControllerDes;
 import controller.ControllerPlateau;
 import javafx.animation.*;
-import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -98,8 +96,8 @@ public class ViewTemplateJeu extends StackPane {
     // La chaîne récursive dans deplacerPionGraphique garantit
     // que chaque pas attend la fin du précédent → animation fluide.
     private void animerUnPas(ModelJoueur joueur, int posDepartP, int posArriveeP, Runnable onTermine) {
-        ViewCase vcDepart  = controllerPlateau.getViewCaseParPisition(posDepartP);
-        ViewCase vcArrivee = controllerPlateau.getViewCaseParPisition(posArriveeP);
+        ViewCase vcDepart  = controllerPlateau.getViewCaseParPosition(posDepartP);
+        ViewCase vcArrivee = controllerPlateau.getViewCaseParPosition(posArriveeP);
         
         ViewPion pionQuiBouge = listePionsGraphiques.get(joueur.getIdJoueur() - 1);
 

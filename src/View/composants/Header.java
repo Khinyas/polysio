@@ -115,8 +115,8 @@ public class Header extends HBox {
             // AVATAR UTILISATEUR
             // Avatar (Petit rond ou image qui s'affiche quand l'utilisateur est connecté)
             ImageView avatar = new ImageView(new Image(MainApp.getUtilisateurConnecte().getProfilepicture()));
-            avatar.setFitHeight(120);
-            avatar.setFitWidth(90);
+            avatar.setFitHeight(45);
+            avatar.setFitWidth(45);
 
             // Nom de l'utilisateur
             javafx.scene.control.Label lblName = new javafx.scene.control.Label(MainApp.getUtilisateurConnecte().getUsername());
