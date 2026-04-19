@@ -26,6 +26,7 @@ public class ControllerPlateau {
 //ToDo : Liste de joueurs pour acceder à leur attributs ?
     public List<ModelJoueur> listeJoueurs = new ArrayList<>();
     
+    
     private int indexJoueurActuel = 0;
 
     public ControllerPlateau(ModelPartie configP) {
@@ -145,30 +146,60 @@ public class ControllerPlateau {
         return listeJoueurs.get(indexJoueurActuel);
     }
     
- // Dans ta méthode d'achat ou de paiement de loyer
-    public void payer(ModelJoueur acheteur, int montant) {
-        // 1. On change la valeur en mémoire
-        int nouveauSolde = acheteur.getPointsCompetences() - montant;
-        acheteur.setPointsCompetences(nouveauSolde);
+ 
+    public void payer(ModelJoueur joueur, int montant) {
+        // 1. Mise à jour de la donnée (Modèle)
+        int ancienSolde = joueur.getPointsCompetences();
+        int nouveauSolde = ancienSolde - montant;
+        joueur.setPointsCompetences(nouveauSolde);
         
-        // 2. On demande à la vue de se rafraîchir
-        // 'maVue' doit être ton instance de ViewTemplateGame
-        this.vueJeu.updateScoresUI(this); 
+        // Debug console pour suivre les flux financiers
+        System.out.println("[ECONOMIE] " + joueur.getPseudonyme() + " : " + ancienSolde + " -> " + nouveauSolde);
+
+        // 2. Mise à jour automatique de l'interface (Vue)
+        // On vérifie si la vue est bien liée pour éviter un crash
+        if (this.vueJeu != null) {
+            this.vueJeu.updateScoresUI(this); 
+        } else {
+            System.out.println("Erreur : vueJeu non initialisée dans le Controller.");
+        }
     }
-    public void eliminerJoueurDuMoteur(ModelJoueur joueur) {
-        // On peut par exemple changer son rôle ou un flag
-        // joueur.setElimine(true); // Si tu as ce flag dans ModelJoueur
+    
+    public void verserLoyer(ModelJoueur payeur, int montant, String nomProprietaire) {
+        // 1. Le payeur perd l'argent
+        int soldePayeur = payeur.getPointsCompetences() - montant;
+        payeur.setPointsCompetences(soldePayeur);
         
-        // Ou plus radical : le retirer de la liste des joueurs actifs
+        // 2. On cherche le propriétaire dans la liste pour lui donner l'argent
+        for (ModelJoueur j : listeJoueurs) {
+            if (j.getPseudonyme().equals(nomProprietaire)) {
+                int soldeProprio = j.getPointsCompetences() + montant;
+                j.setPointsCompetences(soldeProprio);
+                System.out.println("[LOYER] " + nomProprietaire + " reçoit " + montant + " PC de " + payeur.getPseudonyme());
+                break;
+            }
+        }
+
+        // 3. Mise à jour de l'affichage pour tout le monde
+        if (this.vueJeu != null) {
+            this.vueJeu.updateScoresUI(this);
+        }
+    }
+    
+    
+    public void retirerJoueurDeLaPartie(ModelJoueur joueur) {
         this.listeJoueurs.remove(joueur);
         
-        // On ajuste l'index pour ne pas sauter le joueur suivant
-        indexJoueurActuel--; 
-        if (indexJoueurActuel < 0) indexJoueurActuel = 0;
-        
-        System.out.println("Le moteur a retiré : " + joueur.getPseudonyme());
-        
-        
+        // Correction de l'index pour éviter de sauter quelqu'un
+        if (indexJoueurActuel >= listeJoueurs.size()) {
+            indexJoueurActuel = 0;
+        } else {
+            indexJoueurActuel--; 
+        }
+    }
+    
+    public boolean estPartieFinie() {
+        return this.listeJoueurs.size() <= 1;
     }
     
     public void afficherEcranResultats(List<ModelJoueur> finalJoueurs) {

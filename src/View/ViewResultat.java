@@ -32,7 +32,7 @@ public class ViewResultat extends StackPane {
             Label lblJoueur = new Label(prefixe + j.getPseudonyme() + " - " + j.getPointsCompetences() + " PC");
             lblJoueur.setStyle("-fx-font-size: 24px; -fx-text-fill: white;");
             
-            // On peut même mettre le gagnant en plus gros
+            // le gagnant en plus gros
             if (i == 0) lblJoueur.setStyle(lblJoueur.getStyle() + "-fx-font-size: 32px; -fx-text-fill: #f1c40f;");
             
             podium.getChildren().add(lblJoueur);
@@ -42,8 +42,8 @@ public class ViewResultat extends StackPane {
         layout.getChildren().addAll(titre, podium, btnMenu);
         
         btnMenu.setOnAction(e -> {
-            // 1. On crée la vue d'accueil
-            // Attention : Vérifie les paramètres nécessaires à ton constructeur de ViewAccueil
+            // 1. On crée la vue d'accueil (Pour l'instant, j'ai reussi que comme ça, vu que c'est pas une vueTemplate)
+           
             ViewAccueil accueil = new ViewAccueil(); 
 
             // 2. On récupère la scène de la fenêtre et on change la racine
