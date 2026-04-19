@@ -16,6 +16,7 @@ public class ModelPlateau extends GridPane {
     private List<ViewCase> listeViewCases = new ArrayList<>();
     private List<ModelPropriete> listePropriete;
     private List<ViewPropriete> listeViewPropriete = new ArrayList<>();;
+    private ArrayList<ModelJoueur> listeJoueurs;
 
     public ModelPlateau(List<ModelCase> listeCasesP, List<ModelPropriete> listeProprieteP) {
         this.listeCases = listeCasesP;
@@ -119,4 +120,7 @@ public class ModelPlateau extends GridPane {
     public List<ViewPropriete> getListeViewPropriete() {
         return listeViewPropriete;
     }
+    
+    
+
 }

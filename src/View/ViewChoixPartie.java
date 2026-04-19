@@ -47,10 +47,13 @@ public class ViewChoixPartie extends ViewTemplate {
         VBox sectionTemps = new VBox(10);
         sectionTemps.getChildren().add(new javafx.scene.control.Label("DURÉE DE LA PARTIE"));
         
+        Button temps1 = new Button("1 min");
         Button temps15 = new Button("15 min");
         Button temps30 = new Button("30 min");
         Button temps60 = new Button("1 heure");
         
+        
+        temps1.setOnAction(e -> controllerChoixPartie.choisirDuree(1));
         temps15.setOnAction(e -> controllerChoixPartie.choisirDuree(15));
         temps30.setOnAction(e -> controllerChoixPartie.choisirDuree(30));
         temps60.setOnAction(e -> controllerChoixPartie.choisirDuree(60));
@@ -61,7 +64,7 @@ public class ViewChoixPartie extends ViewTemplate {
         		controllerChoixPartie.lancerLeJeu();
             });
 
-            sectionTemps.getChildren().addAll(temps15, temps30, temps60);
+            sectionTemps.getChildren().addAll(temps1,temps15, temps30, temps60);
         contenuH.getChildren().addAll(sectionJoueurs, sectionTemps,lancerPartie);
         return contenuH;
     }

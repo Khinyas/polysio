@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import View.ViewPropriete;
+import View.ViewResultat;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -43,7 +44,7 @@ public class ControllerPlateau {
             // On pioche une couleur dans l'enum et on l'attribue ensuite au joueur
             ModelJoueurCouleur couleurAttribue = couleursDisponible[i];
             // On crée chaque joueur avec une ID et une couleur unique
-            ModelJoueur j = new ModelJoueur(i + 1, 0, 0, couleurAttribue);
+            ModelJoueur j = new ModelJoueur(i + 1, 0, 500, couleurAttribue, "Joueur"+(i+1));
             listeJoueurs.add(j);
         }
         
@@ -88,7 +89,7 @@ public class ControllerPlateau {
         return String.format("%02d:%02d", minutes, secondes);
     }
 
-    private void terminerPartie() {
+    public void terminerPartie() {
         this.chrono.stop();
         System.out.println("FIN DE LA PARTIE : Le temps est écoulé !");
         // Logique de fin de partie (ex: MainApp.changerDePage(new ViewResultat()))
@@ -142,6 +143,49 @@ public class ControllerPlateau {
     }
     public ModelJoueur getJoueurActuel() {
         return listeJoueurs.get(indexJoueurActuel);
+    }
+    
+ // Dans ta méthode d'achat ou de paiement de loyer
+    public void payer(ModelJoueur acheteur, int montant) {
+        // 1. On change la valeur en mémoire
+        int nouveauSolde = acheteur.getPointsCompetences() - montant;
+        acheteur.setPointsCompetences(nouveauSolde);
+        
+        // 2. On demande à la vue de se rafraîchir
+        // 'maVue' doit être ton instance de ViewTemplateGame
+        this.vueJeu.updateScoresUI(this); 
+    }
+    public void eliminerJoueurDuMoteur(ModelJoueur joueur) {
+        // On peut par exemple changer son rôle ou un flag
+        // joueur.setElimine(true); // Si tu as ce flag dans ModelJoueur
+        
+        // Ou plus radical : le retirer de la liste des joueurs actifs
+        this.listeJoueurs.remove(joueur);
+        
+        // On ajuste l'index pour ne pas sauter le joueur suivant
+        indexJoueurActuel--; 
+        if (indexJoueurActuel < 0) indexJoueurActuel = 0;
+        
+        System.out.println("Le moteur a retiré : " + joueur.getPseudonyme());
+        
+        
+    }
+    
+    public void afficherEcranResultats(List<ModelJoueur> finalJoueurs) {
+        // 1. Créer la vue
+        ViewResultat vueResultat = new ViewResultat(finalJoueurs);
+
+        // 2. Récupérer la fenêtre actuelle (Stage) via n'importe quel noeud de la vue actuelle
+        // (Ici on suppose que ta vue de jeu s'appelle 'vueJeu')
+        javafx.scene.Scene sceneActuelle = vueJeu.getScene(); 
+        
+        if (sceneActuelle != null) {
+            // On remplace la racine de la scène par la nouvelle vue
+            sceneActuelle.setRoot(vueResultat);
+            System.out.println("Changement de racine vers ViewResultat réussi.");
+        } else {
+            System.out.println("Erreur : Impossible de trouver la scène pour changer de vue.");
+        }
     }
 
     

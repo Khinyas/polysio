@@ -5,15 +5,16 @@ public class ModelJoueur {
 	private int position;
 	private String pseudonyme;
 	private ModelJoueurCouleur couleur;
-	private int pointsCompetences = 500;
+	private int pointsCompetences = 5000;
 	private boolean enPrison;
 	private int toursEnPrison;
 	private ModelJoueurRole roleJoueur = ModelJoueurRole.JOUEUR; // Je définis la valeur par défaut du role ICI
 	private int nombreToursJoues = 0;
 // ToDo : Remplir CFG avec les paramètre de début de game : argent, position etc ??
-	public ModelJoueur(int idJoueurP, int posP, int pcP, ModelJoueurCouleur couleurP){
+	public ModelJoueur(int idJoueurP, int posP, int pcP, ModelJoueurCouleur couleurP, String pseudoP){
 		this.idJoueur = idJoueurP;
 		this.position = posP;
+		this.pseudonyme = pseudoP;
 		this.pointsCompetences= pcP;
 		this.couleur = couleurP;
 		this.enPrison     = false;
@@ -34,6 +35,7 @@ public class ModelJoueur {
 
 	public void setPointsCompetences(int pointsCompetences) {
 		this.pointsCompetences = pointsCompetences;
+		System.out.println("Nouveau solde en mémoire : " + this.pointsCompetences);
 	}
 
 	public boolean avancer(int nbCases) {

@@ -49,6 +49,9 @@ public class ViewTemplateGame extends StackPane {
     private List<ModelPropriete> listeProprietes;
     private List<TilePane> listeInventaireJoueurs = new ArrayList<>();
     private Label lblChrono = new Label();
+    // ajout
+    private List<Label> labelsPC = new ArrayList<>();
+    private boolean partieTerminee = false;
 
     public ViewTemplateGame(ModelPlateau plateauGraphiqueP, ControllerPlateau controllerPlateauP, List<ModelJoueur> joueursP, List<ModelPropriete> listeProprietesP) {
         // Utilisation de getResource pour charger l'image depuis le dossier resources
@@ -178,6 +181,22 @@ public class ViewTemplateGame extends StackPane {
         inventaire.getChildren().add(labelInventaire);
 
         for (ModelJoueur joueur : listeJoueurs) {
+        	
+        	// Label Score
+        	VBox blocJoueur = new VBox(5);
+            
+            // On récupère les valeurs DIRECTEMENT du modèle
+            String nom = (joueur.getPseudonyme() != null) ? joueur.getPseudonyme() : "Joueur " + joueur.getIdJoueur();
+            String pc = String.valueOf(joueur.getPointsCompetences());
+
+            // Création du label avec les valeurs fraîches
+            Label scoreLabel = new Label(nom + " : " + pc + " PC");
+            scoreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;");
+            
+            // AJOUT à la liste pour le rafraîchissement futur
+            labelsPC.add(scoreLabel);
+            
+        	// Inventaire Propriété
             TilePane inventaireJoueur = new TilePane(Orientation.VERTICAL, 5, 10);
 
             inventaireJoueur.setVgap(2);
@@ -185,7 +204,7 @@ public class ViewTemplateGame extends StackPane {
             inventaireJoueur.setPrefColumns(3); // Optionnel : pour organiser les icônes
             inventaireJoueur.setStyle("-fx-background-color: " + joueur.getCouleur().getCouleurJoueur() + "; -fx-background-radius: 10; -fx-padding: 10;");
             listeInventaireJoueurs.add(inventaireJoueur);
-            inventaire.getChildren().add(inventaireJoueur);
+            inventaire.getChildren().addAll(scoreLabel,inventaireJoueur);
         }
         contenuDroite.setCenter(inventaire);
 
@@ -419,7 +438,17 @@ public class ViewTemplateGame extends StackPane {
         if (pasActuel >= nbCasesTotal) {
             // Tous les pas sont terminés — mise à jour du modèle et popup
             boolean passageDepart = joueur.avancer(nbCasesTotal);
-            if (passageDepart) System.out.println(joueur.getIdJoueur() + " passe par Depart !");
+            if (passageDepart) {
+                System.out.println(joueur.getPseudonyme() + " passe par Départ ! +200 PC");
+                int nouveauSolde = joueur.getPointsCompetences() + 200;
+                joueur.setPointsCompetences(nouveauSolde);
+                
+                // 3. ON MET À JOUR L'INTERFACE IMMÉDIATEMENT
+                this.updateScoresUI(controllerPlateau);
+            }
+            
+            
+            this.updateScoresUI(controllerPlateau);
             // inutile joueur.setPosition((positionDeDepart + nbCasesTotal) % 40);
             placerPionsSansAnimation();
 
@@ -475,10 +504,20 @@ public class ViewTemplateGame extends StackPane {
 
                     // ToDo Possibilite d achat
                     // ToDo : Bouton Achat
+                    if (joueur.getPointsCompetences() >= propriete.getPrix()) {
                     BoutonAchat btnAchat = new BoutonAchat();
                     // Todo : Rajouter une modale d'achat de propriete à la place :
                     btnAchat.setOnAction(event -> {
                         nettoyerOverlays();
+                        
+                        //Ajout 19/04
+                     // 1. Soustraire les points dans le modèle
+                        int nouveauSolde = joueur.getPointsCompetences() - propriete.getPrix();
+                        joueur.setPointsCompetences(nouveauSolde);
+                        
+                        // 2. Mettre à jour l'affichage des scores (PC)
+                        this.updateScoresUI(controllerPlateau);
+                        
                         ajouterProprieteInventaireJoueur();
                         // Joueur suivant dans le moteur
                         controllerPlateau.passerAuJoueurSuivant();
@@ -489,6 +528,7 @@ public class ViewTemplateGame extends StackPane {
                     });
                     // ToDo : Fin Bouton à changer
                     contenu.getChildren().add(btnAchat);
+                    }
 
                 } else if (propriete.getProprietaire().equals(joueur.getPseudonyme())) {
                     // CORRECTION : le joueur est déjà propriétaire
@@ -511,6 +551,7 @@ public class ViewTemplateGame extends StackPane {
                     if (joueur.getPointsCompetences() < loyer) {
                         Label msgBanqueroute = new Label("Vous n'avez pas assez d'argent — vous avez perdu !");
                         contenu.getChildren().add(msgBanqueroute); // ← CORRECTION : ajouté
+                        eliminerJoueurGraphiquement(joueur);
                         // ToDo : AFFICHER une modale de défaite !
                     } else {
                         // ToDo : Bouton Paiement
@@ -518,6 +559,14 @@ public class ViewTemplateGame extends StackPane {
                         // Todo : Rajouter une modale d'achat de propriete à la place :
                         btnPaiement.setOnAction(event -> {
                             nettoyerOverlays();
+                            
+                            int nouveauSolde = joueur.getPointsCompetences() - loyer;
+                            joueur.setPointsCompetences(nouveauSolde);
+                            this.updateScoresUI(controllerPlateau);
+                            
+                            
+                            
+                            
                             joueur.setPointsCompetences(joueur.getPointsCompetences() - loyer);
                             // Joueur suivant dans le moteur
                             controllerPlateau.passerAuJoueurSuivant();
@@ -562,6 +611,37 @@ public class ViewTemplateGame extends StackPane {
         return plateauGraphique;
     }
 
+    
+    // ajout 19/04
+
+
+    // Méthode pour afficher les scores au début de la partie
+    public void creerAffichageScores(ControllerPlateau controllerPlateau) {
+        VBox conteneurScores = new VBox(15);
+        conteneurScores.setStyle("-fx-padding: 20; -fx-background-color: rgba(0,0,0,0.3);");
+        
+        // On boucle sur ta liste publique du controller
+        for (ModelJoueur joueur : controllerPlateau.listeJoueurs) {
+            Label labelS = new Label(joueur.getPseudonyme() + " : " + joueur.getPointsCompetences() + " PC");
+            labelS.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
+            
+            labelsPC.add(labelS); // On le sauvegarde ici pour le modifier plus tard
+            conteneurScores.getChildren().add(labelS);
+        }
+        
+        // On l'ajoute à ton layout principal (à droite par exemple)
+        this.layoutPrincipal.setRight(conteneurScores);
+    }
+
+    // LA MÉTHODE DE MISE À JOUR (À appeler après chaque transaction)
+    public void updateScoresUI(ControllerPlateau cp) {
+        for (int i = 0; i < cp.listeJoueurs.size(); i++) {
+            ModelJoueur j = cp.listeJoueurs.get(i);
+            // On met à jour le texte du label correspondant au joueur
+            labelsPC.get(i).setText(j.getPseudonyme() + " : " + j.getPointsCompetences() + " PC");
+        }
+    }
+    
 
     // partie chrono 
 
@@ -574,8 +654,11 @@ public class ViewTemplateGame extends StackPane {
             System.out.println("Chrono mis à jour : " + temps);
             this.lblChrono.setVisible(true);
             this.lblChrono.setOpacity(1.0);
-        }
-    }
+         // Si le temps est écoulé
+            if (temps.equals("00:00")) {
+                terminerPartie();
+        
+    }}}
 
     protected void ajouterProprieteInventaireJoueur() {
         ModelJoueur joueur = controllerPlateau.getJoueurActuel();
@@ -625,5 +708,61 @@ public class ViewTemplateGame extends StackPane {
 
         listeInventaireJoueurs.get(joueur.getIdJoueur() - 1).getChildren().add(vueProp);
     }
+        
+    private void eliminerJoueurGraphiquement(ModelJoueur joueur) {
+        // 1. Trouver l'index du joueur
+        int index = listeJoueurs.indexOf(joueur);
+        if (index == -1) return;
+
+        // 2. Retirer le pion du plateau (GridPane)
+        ViewPion pion = listePionsGraphiques.get(index);
+        plateauGraphique.getChildren().remove(pion);
+
+        // 3. Griser l'affichage dans setContenuDroite
+        Label labelScore = labelsPC.get(index);
+        labelScore.setText(joueur.getPseudonyme() + " : ÉLIMINÉ");
+        labelScore.setStyle("-fx-text-fill: #666666; -fx-font-style: italic;");
+
+        // 4. Masquer son inventaire
+        TilePane inv = listeInventaireJoueurs.get(index);
+        inv.setOpacity(0.2); // Rend le bloc presque invisible
+        inv.setDisable(true);
+
+        // 5. Libérer ses propriétés pour que les autres puissent les racheter
+        for (ModelPropriete prop : listeProprietes) {
+            if (joueur.getPseudonyme().equals(prop.getProprietaire())) {
+                prop.setProprietaire(null);
+                
+            }
+            plateauGraphique.getChildren().remove(listePionsGraphiques.get(index));
+            labelsPC.get(index).setText(joueur.getPseudonyme() + " : ÉLIMINÉ");
+            
+            long survivants = listeJoueurs.stream()
+                    .filter(j -> j.getPointsCompetences() >= 0)
+                    .count();
+
+                if (survivants <= 1) {
+                    controllerPlateau.terminerPartie();}
+            
+        }}
+    
+    private void terminerPartie() {
+        if (partieTerminee) return; // On évite d'appeler la fin plusieurs fois
+        this.partieTerminee = true;
+        
+        // On arrête tout !
+        nettoyerOverlays();
+        System.out.println("PARTIE STOPPÉE");
+        
+        // Appelle ta ViewResultat ou affiche ton message ici
+        javafx.application.Platform.runLater(() -> {
+            // Option A : Si tu veux remplacer le contenu de la fenêtre actuelle
+            controllerPlateau.afficherEcranResultats(this.listeJoueurs);
+            
+            // Option B : Si tu veux juste afficher un overlay par-dessus (plus simple pour tester)
+            // ViewResultat vueRes = new ViewResultat(this.listeJoueurs);
+            // this.getChildren().add(vueRes); 
+        });}
+    
 }
 
