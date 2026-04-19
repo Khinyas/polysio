@@ -36,7 +36,9 @@ public class ViewTemplateGame extends StackPane {
     private ImageView background;
     protected ModelPlateau plateauGraphique;
     private List<ModelCase> listeCases;
-    /** Attributs rajoutés **/
+    /**
+     * Attributs rajoutés
+     **/
     private ControllerPlateau controllerPlateau;
     private ControllerDes controllerDes = new ControllerDes(); // Pour tes dés
     ViewPion pionJoueur1 = new ViewPion(Color.CYAN);
@@ -47,6 +49,7 @@ public class ViewTemplateGame extends StackPane {
     private List<ModelPropriete> listeProprietes;
     private List<TilePane> listeInventaireJoueurs = new ArrayList<>();
     private Label lblChrono = new Label();
+
     public ViewTemplateGame(ModelPlateau plateauGraphiqueP, ControllerPlateau controllerPlateauP, List<ModelJoueur> joueursP, List<ModelPropriete> listeProprietesP) {
         // Utilisation de getResource pour charger l'image depuis le dossier resources
         // ToDo : Background sera notre fond, il faut penser à le créer ou le choisir si juste couleur
@@ -226,7 +229,7 @@ public class ViewTemplateGame extends StackPane {
     // que chaque pas attend la fin du précédent → animation fluide.
     private void animerUnPas(ModelJoueur joueur, int posDepartP, int posArriveeP, Runnable onTermine) {
         System.out.println(controllerPlateau.getJoueurActuel());
-        ViewCase vcDepart  = controllerPlateau.getViewCaseParPosition(posDepartP);
+        ViewCase vcDepart = controllerPlateau.getViewCaseParPosition(posDepartP);
         ViewCase vcArrivee = controllerPlateau.getViewCaseParPosition(posArriveeP);
 
         ViewPion pionQuiBouge = listePionsGraphiques.get(joueur.getIdJoueur() - 1);
@@ -241,8 +244,8 @@ public class ViewTemplateGame extends StackPane {
         // Conversion en coordonnées scène puis dans l'espace local du GridPane
         // → dx/dy dans le même repère que translateX/Y du pion
         javafx.geometry.Point2D cD = plateauGraphique.sceneToLocal(
-                vcDepart .localToScene(vcDepart .getBoundsInLocal().getCenterX(),
-                        vcDepart .getBoundsInLocal().getCenterY()));
+                vcDepart.localToScene(vcDepart.getBoundsInLocal().getCenterX(),
+                        vcDepart.getBoundsInLocal().getCenterY()));
         javafx.geometry.Point2D cA = plateauGraphique.sceneToLocal(
                 vcArrivee.localToScene(vcArrivee.getBoundsInLocal().getCenterX(),
                         vcArrivee.getBoundsInLocal().getCenterY()));
@@ -412,7 +415,7 @@ public class ViewTemplateGame extends StackPane {
     }
 
     // Lance le pas numéro pasActuel, puis s'appelle elle-même pour le suivant
-    private void animerPasRecursif(ModelJoueur joueur,int positionDeDepart, int pasActuel, int nbCasesTotal) {
+    private void animerPasRecursif(ModelJoueur joueur, int positionDeDepart, int pasActuel, int nbCasesTotal) {
         if (pasActuel >= nbCasesTotal) {
             // Tous les pas sont terminés — mise à jour du modèle et popup
             boolean passageDepart = joueur.avancer(nbCasesTotal);
@@ -426,11 +429,11 @@ public class ViewTemplateGame extends StackPane {
             return;
         }
 
-        int posDepart  = (positionDeDepart + pasActuel)     % 40;
+        int posDepart = (positionDeDepart + pasActuel) % 40;
         int posArrivee = (positionDeDepart + pasActuel + 1) % 40;
 
         // Lance ce pas, et quand il est fini lance le suivant
-        animerUnPas(joueur ,posDepart, posArrivee, () ->
+        animerUnPas(joueur, posDepart, posArrivee, () ->
                 animerPasRecursif(joueur, positionDeDepart, pasActuel + 1, nbCasesTotal)
         );
     }
@@ -444,17 +447,19 @@ public class ViewTemplateGame extends StackPane {
 
         // CORRECTION : on vérifie null avant tout
         ModelPropriete propriete = controllerPlateau.getProprieteParPosition(joueur.getPosition());
-// DEBUG — à supprimer après
+        // DEBUG — à supprimer après
         System.out.println("Position joueur : " + joueur.getPosition());
         System.out.println("Propriete trouvee : " + (propriete != null ? propriete.getNom() + " / casePlateau=" + propriete.getCasePlateau() : "NULL"));
+
         if (propriete == null) {
             // Case spéciale : départ, prison, chance, etc.
             contenu.getChildren().add(new Label("Case spéciale — pas d'action."));
         } else {
             // On affiche la carte de la propriété
             ViewPropriete locationJoueur = new ViewPropriete(propriete);
-            locationJoueur.setScaleX(1.3);
-            locationJoueur.setScaleY(1.3);
+            locationJoueur.setPrefSize(120, 170);
+            locationJoueur.setMinSize(120, 170);
+            locationJoueur.setMaxSize(120, 170);
 
             Label msg = new Label("Case : " + propriete.getNom());
             contenu.getChildren().addAll(msg, locationJoueur);
@@ -467,6 +472,23 @@ public class ViewTemplateGame extends StackPane {
                     // ToDo : Proposer achat de Propriete
                     Label msgAchat = new Label("Cette propriété est libre ! Prix : " + propriete.getPrix());
                     contenu.getChildren().add(msgAchat); // ← CORRECTION : ajouté à contenu
+
+                    // ToDo Possibilite d achat
+                    // ToDo : Bouton Achat
+                    BoutonAchat btnAchat = new BoutonAchat();
+                    // Todo : Rajouter une modale d'achat de propriete à la place :
+                    btnAchat.setOnAction(event -> {
+                        nettoyerOverlays();
+                        ajouterProprieteInventaireJoueur();
+                        // Joueur suivant dans le moteur
+                        controllerPlateau.passerAuJoueurSuivant();
+                        // Tour suivant avec un léger décalage technique
+                        javafx.application.Platform.runLater(() -> {
+                            choixInitial();
+                        });
+                    });
+                    // ToDo : Fin Bouton à changer
+                    contenu.getChildren().add(btnAchat);
 
                 } else if (propriete.getProprietaire().equals(joueur.getPseudonyme())) {
                     // CORRECTION : le joueur est déjà propriétaire
@@ -508,24 +530,10 @@ public class ViewTemplateGame extends StackPane {
                         contenu.getChildren().add(btnPaiement);
                     }
                 }
-                // ToDo Possibilite d achat
-                // ToDo : Bouton Achat
-                BoutonAchat btnAchat = new BoutonAchat();
-                // Todo : Rajouter une modale d'achat de propriete à la place :
-                btnAchat.setOnAction(event -> {
-                    nettoyerOverlays();
-                    ajouterProprieteInventaireJoueur();
-                    controllerPlateau.passerAuJoueurSuivant();
-                    javafx.application.Platform.runLater(() -> {
-                        choixInitial();
-                    });
-                });
-                // ToDo : Fin Bouton à changer
-                contenu.getChildren().add(btnAchat);
+                // ToDo : If Gare ou Cartes
+                // Todo AJOUTER EST LA POUR TEST
+                //ajouterProprieteInventaireJoueur();
             }
-            // ToDo : If Gare ou Cartes
-            // Todo AJOUTER EST LA POUR TEST
-            //ajouterProprieteInventaireJoueur();
         }
 
         BoutonFermerPoPup btnFin = new BoutonFermerPoPup();
@@ -553,13 +561,13 @@ public class ViewTemplateGame extends StackPane {
     public ModelPlateau getPlateauGraphique() {
         return plateauGraphique;
     }
-    
-    
+
+
     // partie chrono 
 
     // La méthode que le Controller appellera
- 
-    
+
+
     public void actualiserAffichageChrono(String temps) {
         if (this.lblChrono != null) {
             this.lblChrono.setText(temps);
@@ -574,7 +582,11 @@ public class ViewTemplateGame extends StackPane {
         int position = joueur.getPosition();
 
         ModelPropriete propriete = controllerPlateau.getProprieteParPosition(position);
-        ViewPropriete vueProp = controllerPlateau.getViewProprieteParPosition(position);
+        if (propriete == null) return;
+
+        // CORRECTION : on crée TOUJOURS une nouvelle ViewPropriete pour l'inventaire
+        // au lieu de récupérer celle du plateau (qui est déjà dans le scene graph)
+        ViewPropriete vueProp = new ViewPropriete(propriete);
         vueProp.setPrefSize(50, 70);
         vueProp.setMinSize(50, 70);
         vueProp.setMaxSize(50, 70);
@@ -611,10 +623,7 @@ public class ViewTemplateGame extends StackPane {
 
         propriete.setProprietaire(joueur.getPseudonyme());
 
-
         listeInventaireJoueurs.get(joueur.getIdJoueur() - 1).getChildren().add(vueProp);
     }
-
-
 }
 

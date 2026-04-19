@@ -13,9 +13,11 @@ import java.net.URL;
 
 public class ViewPropriete extends VBox {
     private String viewProprieteName;
+    private int viewProprieteId;
     public ViewPropriete(ModelPropriete modelProprieteP) {
         // Remplissage attribut :
         this.viewProprieteName = modelProprieteP.getNom();
+        this.viewProprieteId = modelProprieteP.getId();
         //  Configuration de la VBox
         this.setAlignment(Pos.CENTER);
         this.setMinSize(50, 50);
@@ -59,5 +61,9 @@ public class ViewPropriete extends VBox {
 
     public String getViewProprieteName() {
         return viewProprieteName;
+    }
+
+    public int getViewProprieteId() {
+        return viewProprieteId;
     }
 }

@@ -94,24 +94,44 @@ public class ControllerPlateau {
         // Logique de fin de partie (ex: MainApp.changerDePage(new ViewResultat()))
     }
 
-    
-    public ModelCase getCaseParPosition(int positionP){
-        return listeCases.get(positionP);
+
+    public ModelCase getCaseParPosition(int positionP) {
+        for (ModelCase modelCase : listeCases) {
+            if (modelCase.getId() == positionP) return modelCase;
+        }
+        return null;
     }
 
     public ViewCase getViewCaseParPosition(int positionP) {
-        ViewCase viewCase = modelPlateau.getListeViewCases().get(positionP);
-        return viewCase;
+        for (ViewCase viewCase : modelPlateau.getListeViewCases()) {
+            ModelCase modelCase = getCaseParPosition(positionP);
+            if (modelCase == null) return null;
+            // On compare par nom ou par position X/Y
+            if (viewCase.getViewCasePositionX() == modelCase.getPositionX()
+                    && viewCase.getViewCasePositionY() == modelCase.getPositionY()) return viewCase;
+        }
+        return null;
     }
 
     public ModelPropriete getProprieteParPosition(int positionP){
-        return listeProprietes.get(positionP);
+        for (ModelPropriete propriete : this.listeProprietes) {
+            if (propriete.getCasePlateau() == positionP) {
+                return propriete;
+            }
+        }
+        return null;
     }
 
 
     public ViewPropriete getViewProprieteParPosition(int positionP) {
-        ViewPropriete viewPropriete = modelPlateau.getListeViewPropriete().get(positionP);
-        return viewPropriete;
+        ModelPropriete modelPropriete = getProprieteParPosition(positionP);
+        if (modelPropriete == null) { return null; }
+        for (ViewPropriete viewPropriete : modelPlateau.getListeViewPropriete()) {
+            if (viewPropriete.getViewProprieteId() == modelPropriete.getId()) {
+                return viewPropriete;
+            }
+        }
+        return null;
     }
 
     // indexJoueurActuel commence à ZERO (attribut de la classe)
