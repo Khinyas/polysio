@@ -5,7 +5,7 @@ public class ModelJoueur {
 	private int position;
 	private String pseudonyme;
 	private ModelJoueurCouleur couleur;
-	private int pointsCompetences = 5000;
+	private int pointsCompetences = 500;
 	private boolean enPrison;
 	private int toursEnPrison;
 	private ModelJoueurRole roleJoueur = ModelJoueurRole.JOUEUR; // Je définis la valeur par défaut du role ICI
