@@ -12,10 +12,10 @@ import java.util.List;
 
 // On utilise StackPane pour pouvoir empiler le background ET le plateau par dessus
 public class ModelPlateau extends GridPane {
-    private static List<ModelCase> listeCases;
-    private static List<ViewCase> listeViewCases = new ArrayList<>();
-    private static List<ModelPropriete> listePropriete;
-    private static List<ViewPropriete> listeViewPropriete = new ArrayList<>();;
+    private List<ModelCase> listeCases;
+    private List<ViewCase> listeViewCases = new ArrayList<>();
+    private List<ModelPropriete> listePropriete;
+    private List<ViewPropriete> listeViewPropriete = new ArrayList<>();;
 
     public ModelPlateau(List<ModelCase> listeCasesP, List<ModelPropriete> listeProprieteP) {
         this.listeCases = listeCasesP;
@@ -43,11 +43,11 @@ public class ModelPlateau extends GridPane {
         this.initialiserPlateau();
     }
 
-    public static List<ModelCase> getListeCases() {
+    public List<ModelCase> getListeCases() {
         return listeCases;
     }
 
-    public static List<ModelPropriete> getListePropriete() {
+    public List<ModelPropriete> getListePropriete() {
         return listePropriete;
     }
 

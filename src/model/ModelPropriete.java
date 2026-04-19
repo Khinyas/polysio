@@ -16,7 +16,7 @@ public class ModelPropriete {
     private String cheminSvg;
     private int casePlateau;
 
-    public ModelPropriete(int idP, boolean batimentP, int casePlateauP, String cheminSvgP, int loyerNuP, int loyerBatimentP, int idCouleurP,  int prixP) {
+    public ModelPropriete(int idP, boolean batimentP, int casePlateauP, String cheminSvgP, int loyerNuP, int loyerBatimentP, int idCouleurP,  int prixP, String nomProprieteP, String typeCaseP) {
         this.id = idP;
         this.batiment = batimentP;
         this.casePlateau = casePlateauP;
@@ -25,8 +25,8 @@ public class ModelPropriete {
         this.loyerBatiment = loyerBatimentP;
         this.idCouleur = idCouleurP;
         this.prix = prixP;
-
-
+        this.nom = nomProprieteP;
+        this.typeCase = typeCaseP;
     }
 
 
@@ -110,6 +110,10 @@ public class ModelPropriete {
 
     public boolean isBatiment() {
         return batiment;
+    }
+
+    public int getCasePlateau() {
+        return casePlateau;
     }
 
     public void setBatiment(boolean batiment) {

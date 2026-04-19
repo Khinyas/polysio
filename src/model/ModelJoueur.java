@@ -5,10 +5,11 @@ public class ModelJoueur {
 	private int position;
 	private String pseudonyme;
 	private ModelJoueurCouleur couleur;
-	private int pointsCompetences;
+	private int pointsCompetences = 500;
 	private boolean enPrison;
 	private int toursEnPrison;
 	private ModelJoueurRole roleJoueur = ModelJoueurRole.JOUEUR; // Je définis la valeur par défaut du role ICI
+	private int nombreToursJoues = 0;
 // ToDo : Remplir CFG avec les paramètre de début de game : argent, position etc ??
 	public ModelJoueur(int idJoueurP, int posP, int pcP, ModelJoueurCouleur couleurP){
 		this.idJoueur = idJoueurP;
@@ -65,9 +66,33 @@ public class ModelJoueur {
 		this.toursEnPrison = 0;
 	}
 
+	public int getNombreToursJoues() {
+		return nombreToursJoues;
+	}
+
+	public void setNombreToursJoues(int nombreToursJoues) {
+		this.nombreToursJoues = nombreToursJoues;
+	}
+
+	public String getPseudonyme() {
+		return pseudonyme;
+	}
+
+	public void setPseudonyme(String pseudonyme) {
+		this.pseudonyme = pseudonyme;
+	}
+
 	@Override
 	public String toString() {
-		return "Joueur{" + pseudonyme + ", pos=" + position + ", argent=" + pointsCompetences + "}";
+		return "Joueur :{" + pseudonyme
+				+ ", pos :" + position
+				+ ", argent :" + pointsCompetences
+				+ ", couleur :" + couleur
+				+ ", enPrison :" + enPrison
+				+ ", toursEnPrison :" + toursEnPrison
+				+ ", toursEnPrison :" + toursEnPrison
+				+ ", nombre de tour(s) joue(s) :" + nombreToursJoues
+		+ "}";
 	}
 
 }
