@@ -50,29 +50,29 @@ public class ViewAccueil extends ViewTemplate {
         	System.out.println("Bouton charger partie");
         });
         
-        Button btnRegles = new Button();
+      /*  Button btnRegles = new Button();
         btnRegles.setText("Règles");
         btnRegles.setOnAction(event -> {
         	System.out.println("Regles du jeu");
-        });
+        }); */
         
-        Button btnScores = new Button();
+      /*  Button btnScores = new Button();
         btnScores.setText("Scores");
         btnScores.setOnAction(event -> {
         	System.out.println("Affiche le score");
-        });
+        }); */
         
-        Button btnSalleC119 = new Button();
+     /*   Button btnSalleC119 = new Button();
         btnSalleC119.setText("Salle C119");
         btnSalleC119.setOnAction(event -> {
         	System.out.println("Crédits du jeu");
-        });
+        }); */
         
-        Button btnOptions = new Button();
+     /*   Button btnOptions = new Button();
         btnOptions.setText("Options");
         btnOptions.setOnAction(event -> {
         	System.out.println("Options du jeu");
-        });
+        }); */
         
         Button btnQuitterJeu = new Button("Quitter le jeu");
         btnQuitterJeu.setOnAction(event -> {
@@ -80,34 +80,26 @@ public class ViewAccueil extends ViewTemplate {
 		    System.exit(0); // Ferme la fenêtre
 		});
         
-        Button btnProfil = new Button();
+    /*    Button btnProfil = new Button();
         btnProfil.setText("Profil");
         btnProfil.setOnAction(event -> {
         	System.out.println("Profil du joueur");
-        });
+        }); */
         
-        Button btnViewExo = new Button();
-            btnViewExo.setText("Test menu");
-            btnViewExo.setOnAction(event -> {
-            System.out.println("Bouton cliqué, allons vers Exo");
-            ViewTemplate viewExo = new ViewTemplate("/images/accueil.png");
-            
-            MainApp.changerDePage(viewExo);
-            
-            });
+     
             
         ModelUser user = MainApp.getUtilisateurConnecte();
         
         if(user != null) {
-        	contenuH1.getChildren().addAll(btnRegles,btnScores,btnSalleC119);
-            contenuH2.getChildren().addAll(btnOptions,btnProfil,btnQuitterJeu);
-            contenuV.getChildren().addAll(btnChoixPartie,btnChargePartie,contenuH1,contenuH2,btnViewExo);
+        	// contenuH1.getChildren().addAll(btnRegles,btnScores,btnSalleC119);
+            contenuH2.getChildren().addAll(btnQuitterJeu);
+            contenuV.getChildren().addAll(btnChoixPartie,btnChargePartie,contenuH1,contenuH2);
         return contenuV;
         } else {
         
-        	contenuH1.getChildren().addAll(btnRegles,btnScores,btnSalleC119);
-            contenuH2.getChildren().addAll(btnOptions,btnQuitterJeu);
-            contenuV.getChildren().addAll(btnChoixPartie,btnChargePartie,contenuH1,contenuH2,btnViewExo);
+        	// contenuH1.getChildren().addAll(btnRegles,btnScores,btnSalleC119);
+            contenuH2.getChildren().addAll(btnQuitterJeu);
+            contenuV.getChildren().addAll(btnChoixPartie,btnChargePartie,contenuH1,contenuH2);
         return contenuV; 
         }
         
