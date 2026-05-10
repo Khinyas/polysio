@@ -47,7 +47,7 @@ public class ControllerInscription {
 
         if (!isComplex(passwordP)){
             System.out.println("Le champ password est incorrect ! ");
-            afficherAlerte("Password Invalide", "2 Majuscules, 4 Miniscules, 4 chiffres, 2 symboles.");
+            afficherAlerte("Password Invalide", "2 Majuscules, 4 Miniscules, 2 chiffres, 2 symboles (12 caractères min).");
             return;
         }
 
@@ -92,10 +92,13 @@ public class ControllerInscription {
     }
 
     private boolean isComplex(String password) {
+        // Changement de la contrainte à 12 caractères pour correspondre à la DB partagée
         if (password.length() < 12) {
             afficherAlerte("Password trop court", "Le Password doit contenir au moins 12 caractères.");
             return false; // On s'arrête là pour ne pas spammer d'autres alertes
         }
+
+        // Regex mise à jour pour être robuste avec les symboles et la longueur de 12
         String regexPassword = "^(?=(.*[A-Z]){2,})(?=(.*[a-z]){4,})(?=(.*[0-9]){2,})(?=(.*[-+!*$@%?&]){2,}).{12,}$";
 
         if (!password.matches("^(?=(.*[A-Z]){2,}).*$")) {
@@ -119,6 +122,7 @@ public class ControllerInscription {
     }
 
     private boolean isLenghtValid(String texte) {
+        // Changement de la contrainte à 12 caractères (longueur > 11)
         return texte.length() > 11;
     }
 
