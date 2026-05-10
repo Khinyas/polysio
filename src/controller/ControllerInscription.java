@@ -31,7 +31,7 @@ public class ControllerInscription {
 
         // Vérification longueur et caractères interdits
         if (!isLenghtValid(usernameP)) {
-            afficherAlerte("Longueur incorrecte", "L'username doit contenir au moins 8 caractères.");
+            afficherAlerte("Longueur incorrecte", "L'username doit contenir au moins 12 caractères.");
             return;
         }
         if (contientCaractereInterdit(usernameP)) {
@@ -45,9 +45,9 @@ public class ControllerInscription {
             return;
         }
 
-        if (!isLenghtValid(passwordP)){
+        if (!isComplex(passwordP)){
             System.out.println("Le champ password est incorrect ! ");
-            afficherAlerte("Longueur incorrecte", "Le password doit contenir au moins 8 caractères.");
+            afficherAlerte("Password Invalide", "2 Majuscules, 4 Miniscules, 4 chiffres, 2 symboles.");
             return;
         }
 
@@ -91,8 +91,35 @@ public class ControllerInscription {
         return email.matches(regexEmail);
     }
 
+    private boolean isComplex(String password) {
+        if (password.length() < 12) {
+            afficherAlerte("Password trop court", "Le Password doit contenir au moins 12 caractères.");
+            return false; // On s'arrête là pour ne pas spammer d'autres alertes
+        }
+        String regexPassword = "^(?=(.*[A-Z]){2,})(?=(.*[a-z]){4,})(?=(.*[0-9]){2,})(?=(.*[\\W]){2,}).{12,}$";
+
+        if (!password.matches("^(?=(.*[A-Z]){2,}).*$")) {
+            afficherAlerte("Password Incorrect", "Le Password doit comporter au moins 2 majuscules.");
+            return false;
+        }
+        if (!password.matches("^(?=(.*[a-z]){4,}).*$")) {
+            afficherAlerte("Password Incorrect", "Le Password doit comporter au moins 4 minuscules.");
+            return false;
+        }
+        if (!password.matches("^(?=(.*[0-9]){2,}).*$")) {
+            afficherAlerte("Password Incorrect", "Le Password doit comporter au moins 2 chiffres.");
+            return false;
+        }
+        if (!password.matches("^(?=(.*[\\W]){2,}).*$")) {
+            afficherAlerte("Password Incorrect", "Le Password doit comporter au moins 2 symboles.");
+            return false;
+        }
+
+        return password.matches(regexPassword);
+    }
+
     private boolean isLenghtValid(String texte) {
-        return texte.length() > 7;
+        return texte.length() > 11;
     }
 
     private boolean passwordCompare(String texte, String confirmTexte) {
