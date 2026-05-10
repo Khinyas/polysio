@@ -25,7 +25,7 @@ public class ControllerPropriete {
                             rs.getInt("id_propriete"),
                             rs.getBoolean("batiment"),
                             rs.getInt("id_case_plateau"),
-                            rs.getString("chemin_svg"),
+                            rs.getString("chemin_png"),
                             rs.getInt("loyer_nue"),
                             rs.getInt("loyer_batiment"),
                             rs.getInt("id_couleur"),

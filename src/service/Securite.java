@@ -10,12 +10,13 @@ import java.util.Base64;
 
 public class Securite {
     public static String hacherPassword(String passwordClairP) {
-        String passwordWithPrivateKey = passwordClairP + MainApp.cfgApp.get("db.privateKey");
+        String passwordWithPrivateKey = passwordClairP.trim() + MainApp.cfgApp.get("db.privateKey");
         return BCrypt.hashpw(passwordWithPrivateKey, BCrypt.gensalt(12));
     }
 
     public static Boolean verifyPassword(String passwordSaisi, String passwordHashedP) {
         // BCrypt extrait lui-même le sel du hash stocké pour comparer
-        return BCrypt.checkpw(passwordSaisi, passwordHashedP);
+        String passwordSaisiWithPrivateKey = passwordSaisi.trim() + MainApp.cfgApp.get("db.privateKey");
+        return BCrypt.checkpw(passwordSaisiWithPrivateKey, passwordHashedP);
     }
 }

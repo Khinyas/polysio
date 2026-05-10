@@ -8,7 +8,6 @@ public class ModelCase {
 	private String typeCase;
 	private int positionId;
 	private int positionX;
-	private String cheminSvg;
 	private String cheminPng;
 
 	public ModelCase(int idP, String nomP, String typeCaseP, int positionXP,int positionYP, String cheminSvgP, String cheminPngP) {
@@ -17,7 +16,7 @@ public class ModelCase {
 		this.typeCase = typeCaseP;
 		this.positionX = positionXP;
 		this.positionY = positionYP;
-		this.cheminSvg = cheminSvgP;
+		this.cheminPng = cheminPng;
 		this.cheminPng = cheminPngP;
 		
 	}
@@ -75,7 +74,7 @@ public class ModelCase {
 	}
 	
 	public String getCheminSvg() {
-		return cheminSvg;
+		return cheminPng;
 	}
 
 	public String getCheminPng() {
@@ -87,7 +86,7 @@ public class ModelCase {
 	}
 
 	public void setCheminSvg(String cheminSvg) {
-		this.cheminSvg = cheminSvg;
+		this.cheminPng = cheminSvg;
 	}
 
 }

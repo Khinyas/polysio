@@ -13,14 +13,14 @@ public class ModelPropriete {
     private int idCouleur;
     private String proprietaire;
     private boolean batiment;
-    private String cheminSvg;
+    private String cheminPng;
     private int casePlateau;
 
-    public ModelPropriete(int idP, boolean batimentP, int casePlateauP, String cheminSvgP, int loyerNuP, int loyerBatimentP, int idCouleurP,  int prixP, String nomProprieteP, String typeCaseP) {
+    public ModelPropriete(int idP, boolean batimentP, int casePlateauP, String cheminPngP, int loyerNuP, int loyerBatimentP, int idCouleurP,  int prixP, String nomProprieteP, String typeCaseP) {
         this.id = idP;
         this.batiment = batimentP;
         this.casePlateau = casePlateauP;
-        this.cheminSvg = cheminSvgP;
+        this.cheminPng = cheminPngP;
         this.loyerNu = loyerNuP;
         this.loyerBatiment = loyerBatimentP;
         this.idCouleur = idCouleurP;
@@ -68,12 +68,12 @@ public class ModelPropriete {
     }
 
     public String getCheminSvg() {
-        return cheminSvg;
+        return cheminPng;
     }
 
 
     public void setCheminSvg(String cheminSvg) {
-        this.cheminSvg = cheminSvg;
+        this.cheminPng = cheminSvg;
     }
 
     public void setId(int id) {

@@ -14,6 +14,8 @@ import static service.GestionAffichage.afficherAlerte;
 public class ControllerInscription {
     public ControllerInscription(String usernameP, String passwordP, String confirmPasswordP, String emailP) {
         System.out.println("Tentative d'inscription pour : " + usernameP);
+        String passwordPropre = passwordP.trim();
+        String confirmPasswordPropre = confirmPasswordP.trim();
 
         // CONTROL DE SAISIE :
         if (usernameP == null || usernameP.isBlank() ) {
@@ -39,26 +41,26 @@ public class ControllerInscription {
             return;
         }
 
-        if (passwordP == null || passwordP.isBlank()){
+        if (passwordPropre == null || passwordPropre.isBlank()){
             System.out.println("Le champ password est incorrect ! ");
             afficherAlerte("Password Incorrect", "Le champ password est incorrect !");
             return;
         }
 
-        if (!isComplex(passwordP)){
+        if (!isComplex(passwordPropre)){
             System.out.println("Le champ password est incorrect ! ");
             afficherAlerte("Password Invalide", "2 Majuscules, 4 Miniscules, 2 chiffres, 2 symboles (12 caractères min).");
             return;
         }
 
-        if (confirmPasswordP == null || confirmPasswordP.isBlank()) {
+        if (confirmPasswordPropre == null || confirmPasswordPropre.isBlank()) {
             System.out.println("Le champ confirmPassword est incorrect ! ");
             afficherAlerte("Confirm Password Absent", "Le champ confirmPassword est Incorrect");
             return;
         }
 
         // Utilisation du ! car on veut agir si les mots de passe ne sont PAS identiques
-        if (!passwordCompare(passwordP, confirmPasswordP)) {
+        if (!passwordCompare(passwordPropre, confirmPasswordPropre)) {
             System.out.println("Les Passwords ne sont pas identiques! ");
             afficherAlerte("Password Compare", "Les Passwords ne sont pas identiques!");
             return;
@@ -72,7 +74,7 @@ public class ControllerInscription {
 
         // Si on arrive ici, tout est OK
         System.out.println("✅ Inscription valide, envoi en base de données...");
-        String passwordHache = Securite.hacherPassword(passwordP);
+        String passwordHache = Securite.hacherPassword(passwordPropre);
         DAOUser.insererUser(usernameP, passwordHache, emailP);
         MainApp.cfgPolysio.set("db.utilisateur", "");
         ViewConnexion connexion = new ViewConnexion();
