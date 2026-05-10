@@ -41,6 +41,7 @@ public class DAOAcces {
                 "?autoReconnect=" + MainApp.cfgApp.get("db.autoReconnect") +
                 "&useSSL=" + MainApp.cfgApp.get("db.useSSL") +
                 "&serverTimezone=" + MainApp.cfgApp.get("db.serverTimezone") +
+                "&characterEncoding=" + MainApp.cfgApp.get("db.characterEncoding") +
                 "&allowPublicKeyRetrieval=true";
         try  {
             Class.forName(driver);

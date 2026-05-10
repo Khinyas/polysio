@@ -27,7 +27,7 @@ private String viewCaseName;
         // Style temporaire pour le débug (à supprimer plus tard)
        // this.setStyle("-fx-border-color: red; -fx-border-width: 1;");
 
-        String chemin = modelCaseP.getCheminSvg();
+        String chemin = modelCaseP.getCheminPng();
 
         try {
             // Utilisation explicite du type URL au lieu de var
