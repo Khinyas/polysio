@@ -96,7 +96,7 @@ public class ControllerInscription {
             afficherAlerte("Password trop court", "Le Password doit contenir au moins 12 caractères.");
             return false; // On s'arrête là pour ne pas spammer d'autres alertes
         }
-        String regexPassword = "^(?=(.*[A-Z]){2,})(?=(.*[a-z]){4,})(?=(.*[0-9]){2,})(?=(.*[\\W]){2,}).{12,}$";
+        String regexPassword = "^(?=(.*[A-Z]){2,})(?=(.*[a-z]){4,})(?=(.*[0-9]){2,})(?=(.*[-+!*$@%?&]){2,}).{12,}$";
 
         if (!password.matches("^(?=(.*[A-Z]){2,}).*$")) {
             afficherAlerte("Password Incorrect", "Le Password doit comporter au moins 2 majuscules.");
@@ -110,7 +110,7 @@ public class ControllerInscription {
             afficherAlerte("Password Incorrect", "Le Password doit comporter au moins 2 chiffres.");
             return false;
         }
-        if (!password.matches("^(?=(.*[\\W]){2,}).*$")) {
+        if (!password.matches("^(?=(.*[-+!*$@%?&]){2,}).*$")) {
             afficherAlerte("Password Incorrect", "Le Password doit comporter au moins 2 symboles.");
             return false;
         }
