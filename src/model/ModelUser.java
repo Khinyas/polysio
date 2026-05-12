@@ -34,7 +34,6 @@ public class ModelUser {
     }
 
 
-
     //GETTERS SETTERS
     public ModelUser setId(int id) {
         this.id = id;
