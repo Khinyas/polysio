@@ -32,13 +32,9 @@ public class Header extends HBox {
         this.boutonAcceuil = new BoutonAcceuil();
         this.getChildren().add(boutonAcceuil);
 
-        //Test Bouton Lancer Des
-        Button boutonDes = new Button();
-        boutonDes.setOnAction(event ->{
-            ViewLancerDes lancerDés = new ViewLancerDes();
-            MainApp.changerDePage(lancerDés);
+       
 
-        });
+        
         ModelUser user = MainApp.getUtilisateurConnecte();
         if (user == null) {
 

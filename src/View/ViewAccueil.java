@@ -44,11 +44,11 @@ public class ViewAccueil extends ViewTemplate {
         	
             MainApp.changerDePage(viewChoixPartie);});
         	
-        Button btnChargePartie = new Button();
+      /*  Button btnChargePartie = new Button();
         btnChargePartie.setText("Charger une partie");
         btnChargePartie.setOnAction(event -> {
         	System.out.println("Bouton charger partie");
-        });
+        }); */
         
       /*  Button btnRegles = new Button();
         btnRegles.setText("Règles");
@@ -93,13 +93,13 @@ public class ViewAccueil extends ViewTemplate {
         if(user != null) {
         	// contenuH1.getChildren().addAll(btnRegles,btnScores,btnSalleC119);
             contenuH2.getChildren().addAll(btnQuitterJeu);
-            contenuV.getChildren().addAll(btnChoixPartie,btnChargePartie,contenuH1,contenuH2);
+            contenuV.getChildren().addAll(btnChoixPartie,contenuH1,contenuH2);
         return contenuV;
         } else {
         
         	// contenuH1.getChildren().addAll(btnRegles,btnScores,btnSalleC119);
             contenuH2.getChildren().addAll(btnQuitterJeu);
-            contenuV.getChildren().addAll(btnChoixPartie,btnChargePartie,contenuH1,contenuH2);
+            contenuV.getChildren().addAll(btnChoixPartie,contenuH1,contenuH2);
         return contenuV; 
         }
         
