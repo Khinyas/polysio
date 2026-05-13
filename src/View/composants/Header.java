@@ -1,6 +1,5 @@
 package View.composants;
 import View.ViewAdmin;
-import View.ViewLancerDes;
 import controller.ControllerProfil;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,7 +18,6 @@ public class Header extends HBox {
     private BoutonAcceuil boutonAcceuil;
     private BoutonInscription boutonInscription;
     private BoutonConnexion boutonConnexion;
-    private BoutonDes boutonDes;
     private BoutonDeconnexion boutonDeconnexion;
 
     public Header() {
