@@ -27,11 +27,28 @@ public class DAOUser {
         return false; // L'UTILISATEUR N EXISTE PAS = FALSE (VALEUR PAR DEFAULT PRESUME)
     }
 
-    // CONNECTER UN UTILISATEUR
-    public static ModelUser connexionUtilisateur(String usernameP, String passwordP) {
-        String reqSQL = "SELECT * FROM polysio.utilisateur WHERE pseudo = ?";
+    public static int reqRecuperationId(String usernameP) {
+        String reqSQL = "SELECT id_utilisateur, pseudo FROM polysio.utilisateur WHERE pseudo = ?";
         try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
             pst.setString(1, usernameP);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    int id = rs.getInt("id_utilisateur");
+                    return id; // Si resultat alors il existe
+                }
+            }
+        } catch (SQLException erreur) {
+            System.err.println("Erreur SQL lors du checkUser : " + erreur.getMessage());
+            erreur.printStackTrace();
+        }
+        return -1;
+    }
+
+    // CONNECTER UN UTILISATEUR
+    public static ModelUser connexionUtilisateur(int idP, String usernameP, String passwordP) {
+        String reqSQL = "SELECT * FROM polysio.utilisateur WHERE id_utilisateur = ?";
+        try (PreparedStatement pst = DAOAcces.getConnexion().prepareStatement(reqSQL)) {
+            pst.setInt(1, idP);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     // Utilisateur Existe en base de données

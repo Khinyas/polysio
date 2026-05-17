@@ -12,21 +12,32 @@ public class ConfigLoader {
     // Constructeur pour instancier des fichiers :
     public ConfigLoader(String filenameP) {
         this.filename = filenameP;
-        File file = new File(filename); // Ici filename est celui hérité du constructeur
+
+        // Essaie 1 : chemin relatif classique (fonctionne dans IntelliJ)
+        File file = new File(filenameP);
+
+        // Essaie 2 : juste le nom du fichier à côté du JAR (fonctionne en production)
+        if (!file.exists()) {
+            String nomFichier = new File(filenameP).getName();
+            file = new File(System.getProperty("user.dir") + File.separator + nomFichier);
+        }
+
         if (file.exists()) {
             try (InputStream input = new FileInputStream(file)) {
                 props.load(input);
-                System.out.println("✅ Configuration chargée du fichier : " + filename + "...");
+                System.out.println("✅ Configuration chargée du fichier : " + file.getAbsolutePath() + "...");
             } catch (IOException erreur) {
                 System.err.println("❌ Erreur critique : " + erreur.getMessage());
             }
+        } else {
+            System.err.println("❌ Fichier introuvable : " + file.getAbsolutePath());
         }
     }
 
 
     public String get(String key) {
         // ToDo : Attention à supprimer
-        System.out.println("Valeur trouvée : " + props.getProperty(key));
+        System.out.println("Valeur trouvée : " + "trouvée");
         return props.getProperty(key);
     }
 
@@ -50,7 +61,8 @@ public class ConfigLoader {
             return;
         }
 
-        try (OutputStream output = new FileOutputStream(filename)) {
+        try (OutputStream output = new FileOutputStream(
+                System.getProperty("user.dir") + File.separator + new File(filename).getName())) {
             props.store(output, "Mise à jour automatique du fichier " + filename);
             System.out.println("💾 Fichier sauvegardé : " + filename);
         } catch (IOException erreur) {

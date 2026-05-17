@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Main-Class: main.MainApp
+Class-Path: jbcrypt-0.4.jar mysql-connector-j-9.6.0.jar javafx.base.jar 
+ javafx.controls.jar javafx.fxml.jar javafx.graphics.jar javafx.media.ja
+ r javafx.swing.jar javafx.web.jar javafx-swt.jar jdk.jsobject.jar jfx.i
+ ncubator.input.jar jfx.incubator.richtext.jar
+

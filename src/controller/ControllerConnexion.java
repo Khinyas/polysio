@@ -35,7 +35,8 @@ public class ControllerConnexion {
             return;
         }
         // ICI , on suppose que Si l'user existe mais profil est null, c'est que le mot de passe est faux
-        validerIdentitication(usernameP, passwordP);
+        int idUtilisateur = DAOUser.reqRecuperationId(usernameP);
+        validerIdentitication(idUtilisateur, usernameP, passwordP);
         if (MainApp.getUtilisateurConnecte() != null) {
 
             // 2 On crée la nouvelle vue (Accueil) avec le profil
@@ -52,8 +53,8 @@ public class ControllerConnexion {
     }
 
     // LOGIQUE METIER :
-    private void validerIdentitication(String usernameP, String passowrdP) {
-        ModelUser userProfil = DAOUser.connexionUtilisateur(usernameP, passowrdP);
+    private void validerIdentitication(int idP, String usernameP, String passowrdP) {
+        ModelUser userProfil = DAOUser.connexionUtilisateur(idP, usernameP, passowrdP);
         if (userProfil != null) {
             System.out.println("Succès : Utilisateur récupéré, profil Construit ! ");
             MainApp.setUtilisateurConnecte(userProfil);

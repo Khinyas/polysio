@@ -84,4 +84,12 @@ public class ModelUser {
     public void setProfilepicture(String profilepicture) {
         this.profilepicture = profilepicture;
     }
+
+
+    @Override
+    public String toString() {
+        return "User : {" + username + ",  Email : {" + email +", role : " + role + "}";
+    }
+
+
 }

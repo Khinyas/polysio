@@ -86,20 +86,17 @@ public class ControllerInscription {
         String regexInterdit = ".*[^a-zA-Z0-9_].*";
         return texte.matches(regexInterdit);
     }
-
     private boolean isEmailValide(String email) {
         // Regex simple : texte + @ + texte + . + texte
         String regexEmail = "^[A-Za-z0-9+_.-]+@(.+)$";
         return email.matches(regexEmail);
     }
-
     private boolean isComplex(String password) {
         // Changement de la contrainte à 12 caractères pour correspondre à la DB partagée
         if (password.length() < 12) {
             afficherAlerte("Password trop court", "Le Password doit contenir au moins 12 caractères.");
             return false; // On s'arrête là pour ne pas spammer d'autres alertes
         }
-
         // Regex mise à jour pour être robuste avec les symboles et la longueur de 12
         String regexPassword = "^(?=(.*[A-Z]){2,})(?=(.*[a-z]){4,})(?=(.*[0-9]){2,})(?=(.*[-+!*$@%?&]){2,}).{12,}$";
 
@@ -119,10 +116,8 @@ public class ControllerInscription {
             afficherAlerte("Password Incorrect", "Le Password doit comporter au moins 2 symboles.");
             return false;
         }
-
         return password.matches(regexPassword);
     }
-
     private boolean isLenghtValid(String texte) {
         // Changement de la contrainte à 12 caractères (longueur > 11)
         return texte.length() > 11;

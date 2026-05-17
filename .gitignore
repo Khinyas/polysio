@@ -78,6 +78,7 @@ out/
 resources/config.properties
 application.properties
 application-*.properties
+config.properties
 .env
 *.key
 *.pem
