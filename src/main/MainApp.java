@@ -31,7 +31,7 @@ public class MainApp extends Application {
         // et de mettre la nouvelle vue à la place
         mainStage.getScene().setRoot(nouvellePage);
     }
-    public void setUtilisateurConnecte(ModelUser user) {
+    public static void setUtilisateurConnecte(ModelUser user) {
         utilisateurConnecte = user;
     }
 
