@@ -36,12 +36,12 @@ public class ViewAccueil extends ViewTemplate {
         VBox contenuV = new VBox(40);
         contenuV.setAlignment(Pos.CENTER);
         contenuV.setPadding(new Insets(20, 0, 30, 20));
-        
+
         Button btnChoixPartie = new Button();
         btnChoixPartie.setText("Lancer une partie");
         	btnChoixPartie.setOnAction(event -> {
-        	ViewChoixPartie viewChoixPartie = new ViewChoixPartie(); 
-        	
+        	ViewChoixPartie viewChoixPartie = new ViewChoixPartie();
+
             MainApp.changerDePage(viewChoixPartie);});
         	
       /*  Button btnChargePartie = new Button();
@@ -99,7 +99,7 @@ public class ViewAccueil extends ViewTemplate {
         
         	// contenuH1.getChildren().addAll(btnRegles,btnScores,btnSalleC119);
             contenuH2.getChildren().addAll(btnQuitterJeu);
-            contenuV.getChildren().addAll(btnChoixPartie,contenuH1,contenuH2);
+            contenuV.getChildren().addAll(contenuH1,contenuH2);
         return contenuV; 
         }
         

@@ -35,25 +35,22 @@ public class Header extends HBox {
         
         ModelUser user = MainApp.getUtilisateurConnecte();
         if (user == null) {
-
-
             // --- CAS : UTILISATEUR NON CONNECTÉ ---
-
             // Bouton Inscription
             this.boutonInscription = new BoutonInscription();
             //Bouton Connexion
             this.boutonConnexion = new BoutonConnexion();
-
-
-
             // Remplissage Conteneur (On ajoute uniquement les boutons de navigation standard)
             this.getChildren().addAll(boutonInscription, boutonConnexion);
 
         } else {
             // ---------------------   UTILISATEUR CONNECTE  :
-
             // Bouton Deconnexion
             this.boutonDeconnexion = new BoutonDeconnexion();
+            // Seulement si boutonConnexion existe
+            if (this.boutonConnexion != null) {
+                this.boutonConnexion.setVisible(false);
+            }
             this.getChildren().add(boutonDeconnexion);
             // --- CORRECTION ICI ---
             // Au lieu de setHgrow sur le bouton (qui ne marcherait pas bien),
